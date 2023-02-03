@@ -6,9 +6,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.listener.ClickListener;
@@ -31,7 +34,10 @@ public class HoleCenterActivity extends BaseActivity {
     ImageView searchBtn;
     SwipeRefreshLayout eSwipeRefreshLayout;
     RecyclerView eRecyclerView;
-
+    LinearLayout SearchHot;
+    LinearLayout SearchTime;
+    RelativeLayout SearchBox;
+    Switch aSwitch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +105,19 @@ public class HoleCenterActivity extends BaseActivity {
 //                });
             }
         });
+        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(aSwitch.isChecked()){
+//
+                    SearchBox.setVisibility(buttonView.VISIBLE);
+                }else {
+//
+                    SearchBox.setVisibility(buttonView.GONE);
+                }
 
+            }
+        });
         eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -121,6 +139,10 @@ public class HoleCenterActivity extends BaseActivity {
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
         TaskCenter = findViewById(R.id.id_ll_taskCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
+        SearchBox = findViewById(R.id.id_rl_search);
+        SearchHot = findViewById(R.id.id_ll_search_hot);
+        SearchTime = findViewById(R.id.id_ll_search_time);
+        aSwitch = findViewById(R.id.id_sw_check);
 
     }
 

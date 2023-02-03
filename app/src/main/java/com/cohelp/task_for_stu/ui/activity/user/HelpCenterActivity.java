@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -37,6 +39,10 @@ public class HelpCenterActivity extends BaseActivity {
     LinearLayout TaskCenter;
     LinearLayout HoleCenter;
     LinearLayout UserCenter;
+    LinearLayout SearchHot;
+    LinearLayout SearchTime;
+    RelativeLayout SearchBox;
+    Switch aSwitch;
     TextView all;
     TextView waitedSolve;
     TextView solved;
@@ -230,6 +236,10 @@ public class HelpCenterActivity extends BaseActivity {
 //        solved = findViewById(R.id.id_tv_solved);
         searchedContent = findViewById(R.id.id_et_search);
         searchBtn = findViewById(R.id.id_iv_search);
+        SearchHot = findViewById(R.id.id_ll_search_hot);
+        SearchTime = findViewById(R.id.id_ll_search_time);
+        SearchBox = findViewById(R.id.id_rl_search);
+        aSwitch = findViewById(R.id.id_sw_check);
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
         eRecyclerView = findViewById(R.id.id_recyclerview);
 

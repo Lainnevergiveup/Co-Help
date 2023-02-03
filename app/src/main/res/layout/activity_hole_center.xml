@@ -64,7 +64,6 @@
                         android:layout_gravity="center"
                         android:text="热度"
                         android:textSize="20dp"
-                        android:textColor="#1296db"
                         android:textStyle="bold" />
                 </LinearLayout>
                 <View
@@ -100,6 +99,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:id="@+id/id_sw_check"
+                android:checked="true"
                 />
 
         </LinearLayout>

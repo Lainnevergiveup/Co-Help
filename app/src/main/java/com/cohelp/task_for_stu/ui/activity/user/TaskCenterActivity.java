@@ -58,6 +58,9 @@ public class TaskCenterActivity extends BaseActivity {
     LinearLayout TaskCenter;
     LinearLayout HoleCenter;
     LinearLayout UserCenter;
+    LinearLayout SearchHot;
+    LinearLayout SearchTime;
+
     EditText searchedContent;
     ImageView searchBtn;
     SwipeRefreshLayout eSwipeRefreshLayout;
@@ -250,8 +253,9 @@ public class TaskCenterActivity extends BaseActivity {
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
         eRecyclerView = findViewById(R.id.id_recyclerview);
         SearchBox = findViewById(R.id.id_rl_search);
-
-
+        SearchHot = findViewById(R.id.id_ll_search_hot);
+        SearchTime = findViewById(R.id.id_ll_search_time);
+        aSwitch = findViewById(R.id.id_sw_check);
         eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
 //        eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
