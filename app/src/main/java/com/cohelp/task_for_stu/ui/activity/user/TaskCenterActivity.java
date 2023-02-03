@@ -3,11 +3,15 @@ package com.cohelp.task_for_stu.ui.activity.user;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,7 +62,8 @@ public class TaskCenterActivity extends BaseActivity {
     ImageView searchBtn;
     SwipeRefreshLayout eSwipeRefreshLayout;
     RecyclerView eRecyclerView;
-
+    RelativeLayout SearchBox;
+    Switch aSwitch;
     TaskAdapter taskAdapter;
     List<Task> taskList;
     TaskBiz taskBiz;
@@ -74,7 +79,9 @@ public class TaskCenterActivity extends BaseActivity {
         setContentView(R.layout.activity_task_center);
         intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
-        okHttpUtils = new OkHttpUtils();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            okHttpUtils = new OkHttpUtils();
+        }
         okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
         initView();
         initEvent();
@@ -114,77 +121,21 @@ public class TaskCenterActivity extends BaseActivity {
             public void onClick(View v) {toHoleCenterActivity();}
         });
 
-//        all.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //TODO 展示全部状态（除未审核的信息）
-//                loadAll();
-//            }
-//        });
+        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(aSwitch.isChecked()){
+//
+                    SearchBox.setVisibility(buttonView.VISIBLE);
+                }else {
+//
+                    SearchBox.setVisibility(buttonView.GONE);
+                }
 
-//        help.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //TODO 展示互助
-//                startLoadingProgress();
-//                taskBiz.searchByState(Config.TASK_HELP, new CommonCallback<List<Task>>() {
-//                    @Override
-//                    public void onError(Exception e) {
-//                        stopLoadingProgress();
-//                        T.showToast(e.getMessage());
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(List<Task> response) {
-//                        stopLoadingProgress();
-//                        T.showToast("查询成功！");
-//                        updateList(response);
-//                    }
-//                });
-//            }
-//        });
-//        tree.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //TODO 展示树洞界面
-//                startLoadingProgress();
-//                taskBiz.searchByState(Config.TASK_TREE, new CommonCallback<List<Task>>() {
-//                    @Override
-//                    public void onError(Exception e) {
-//                        stopLoadingProgress();
-//                        T.showToast(e.getMessage());
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(List<Task> response) {
-//                        stopLoadingProgress();
-//                        T.showToast("查询成功！");
-//                        updateList(response);
-//                    }
-//                });
-//            }
-//        });
-//        act.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //TODO 展示活动页面
-//                startLoadingProgress();
-//                taskBiz.searchByState(Config.TASK_ACTIVITY, new CommonCallback<List<Task>>() {
-//                    @Override
-//                    public void onError(Exception e) {
-//                        stopLoadingProgress();
-//                        T.showToast(e.getMessage());
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(List<Task> response) {
-//                        stopLoadingProgress();
-//                        T.showToast("查询成功!");
-//                        updateList(response);
-//                    }
-//                });
-//            }
-//        });
+            }
+        });
+
+
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -298,6 +249,9 @@ public class TaskCenterActivity extends BaseActivity {
         searchBtn = findViewById(R.id.id_iv_search);
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
         eRecyclerView = findViewById(R.id.id_recyclerview);
+        SearchBox = findViewById(R.id.id_rl_search);
+
+
         eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
 //        eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {

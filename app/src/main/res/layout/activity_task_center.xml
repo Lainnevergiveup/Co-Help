@@ -5,92 +5,105 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.activity.user.HelpCenterActivity">
-   <include layout="@layout/sa_toolbar"
+    tools:context=".ui.activity.user.TaskCenterActivity">
+    <include layout="@layout/sa_toolbar"
         />
-
-    <RelativeLayout
-        android:background="@drawable/search_solid"
-        android:layout_marginTop="15sp"
-        android:layout_marginLeft="15sp"
-        android:layout_marginRight="15sp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="70dp"
+            android:orientation="horizontal"
+            >
+            <RelativeLayout
+                android:background="@drawable/search_solid"
+                android:layout_marginTop="15sp"
+                android:layout_marginLeft="15sp"
+                android:visibility="visible"
+                android:id="@+id/id_rl_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/id_iv_search"
+                    android:layout_width="30sp"
+                    android:layout_height="30sp"
+                    android:layout_marginTop="5sp"
+                    android:src="@drawable/search" />
 
-        <EditText
-            android:id="@+id/id_et_search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="35sp"
-            android:hint="按标题搜索"
-            android:inputType="textLongMessage" />
+                <EditText
+                    android:id="@+id/id_et_search"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="35sp"
+                    android:hint="按标题搜索" />
 
-        <ImageView
-            android:id="@+id/id_iv_search"
-            android:layout_marginTop="5sp"
-            android:layout_width="30sp"
-            android:layout_height="30sp"
-            android:src="@drawable/search" />
+            </RelativeLayout>
+            <LinearLayout
+                android:background="@drawable/search_solid"
+                android:layout_marginTop="15sp"
+                android:layout_marginLeft="15sp"
+                android:layout_marginRight="100sp"
+                android:id="@+id/id_ll_search1"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/id_ll_search_hot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-    </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="热度"
+                        android:textSize="20dp"
+                        android:textColor="#1296db"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/lfile_lightgray"/>
+                <LinearLayout
+                    android:id="@+id/id_ll_search_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-<!--    <LinearLayout-->
-<!--        android:layout_marginTop="15sp"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:layout_height="wrap_content">-->
-<!--        <TextView-->
-<!--            android:id="@+id/id_tv_activity"-->
-<!--            android:text="活动"-->
-<!--            android:textColor="#1296db"-->
-<!--            android:gravity="center"-->
-<!--            android:textStyle="bold"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-<!--        <View-->
-<!--            android:layout_width="1dp"-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="时间"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
 
-<!--            android:layout_height="match_parent"-->
-<!--            android:background="@color/lfile_gray"/>-->
-<!--        <TextView-->
-<!--            android:id="@+id/id_tv_help"-->
-<!--            android:textColor="#1296db"-->
-<!--            android:textStyle="bold"-->
-<!--           android:gravity="center"-->
-<!--            android:text="互助"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-<!--        <View-->
-<!--            android:layout_width="1dp"-->
-<!--            android:layout_marginLeft="0dp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:background="@color/lfile_lightgray"/>-->
-<!--        <TextView-->
-<!--            android:id="@+id/id_tv_treehole"-->
-<!--            android:textColor="#1296db"-->
-<!--            android:textStyle="bold"-->
-<!--            android:gravity="center"-->
-<!--            android:layout_weight="1"-->
-<!--            android:text="树洞"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-<!--&lt;!&ndash;        <View&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_width="1dp"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_marginLeft="25sp"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_height="match_parent"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:background="@color/lfile_lightgray"/>&ndash;&gt;-->
-<!--&lt;!&ndash;        <TextView&ndash;&gt;-->
-<!--&lt;!&ndash;            android:id="@+id/id_tv_doing"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:textColor="#1296db"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:textStyle="bold"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:text="进行中"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_marginLeft="25sp"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_width="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_height="wrap_content"/>&ndash;&gt;-->
-<!--    </LinearLayout>-->
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="50dp"
+            android:layout_height="50dp">
+
+            <Switch
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/id_sw_check"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+
 
 
     <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout
@@ -153,14 +166,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/task_bottom_chosed" />
+                android:src="@drawable/task_bottom" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="互助"
-                android:textColor="#1296db"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -207,4 +219,6 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
+
+
 </LinearLayout>
