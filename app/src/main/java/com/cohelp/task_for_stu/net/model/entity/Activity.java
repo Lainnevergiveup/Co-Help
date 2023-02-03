@@ -80,6 +80,37 @@ public class Activity implements Serializable {
      */
     private static final int typeNumber = 1;
 
+    /**
+     *组织id
+     */
+    private Integer teamId;
+
+    public Integer getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Integer teamId) {
+        this.teamId = teamId;
+    }
+
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "id=" + id +
+                ", activityOwnerId=" + activityOwnerId +
+                ", activityTitle='" + activityTitle + '\'' +
+                ", activityDetail='" + activityDetail + '\'' +
+                ", activityTime=" + activityTime +
+                ", activityLike=" + activityLike +
+                ", activityComment=" + activityComment +
+                ", activityLabel='" + activityLabel + '\'' +
+                ", activityCollect=" + activityCollect +
+                ", activityState=" + activityState +
+                ", activityCreateTime=" + activityCreateTime +
+                ", teamId=" + teamId +
+                '}';
+    }
+
     public Activity() {
     }
 
@@ -230,22 +261,5 @@ public class Activity implements Serializable {
         return result;
     }
 
-    @Override
-    public String toString() {
-
-        return "Activity{" +
-                "id=" + id +
-                ", activityOwnerId=" + activityOwnerId +
-                ", activityTitle='" + activityTitle + '\'' +
-                ", activityDetail='" + activityDetail + '\'' +
-                ", activityTime=" + activityTime +
-                ", activityLike=" + activityLike +
-                ", activityComment=" + activityComment +
-                ", activityLabel='" + activityLabel + '\'' +
-                ", activityCollect=" + activityCollect +
-                ", activityState=" + activityState +
-                ", activityCreateTime=" + activityCreateTime +
-                '}';
-    }
-//    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    //    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 }

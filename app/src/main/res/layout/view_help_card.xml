@@ -26,21 +26,20 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/help_create_time"
+            android:id="@+id/help_lable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2020-01-18"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/help_title" />
 
-        <ImageView
+        <com.cohelp.task_for_stu.ui.view.AvatorImageView
             android:id="@+id/help_author_pic"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="16dp"
+            android:layout_height="14dp"
             android:src="@drawable/user_bottom_chosed"
             app:layout_constraintStart_toStartOf="@+id/help_title"
-            app:layout_constraintTop_toBottomOf="@+id/help_title"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/help_title" />
 
         <TextView
             android:id="@+id/help_author_name"
@@ -53,12 +52,12 @@
             app:layout_constraintTop_toBottomOf="@id/help_title"  />
 
         <TextView
-            android:id="@+id/help_address"
+            android:id="@+id/help_paid"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="earth"
-            app:layout_constraintEnd_toEndOf="@id/help_create_time"
+            app:layout_constraintEnd_toEndOf="@id/help_lable"
             app:layout_constraintTop_toBottomOf="@id/help_author_name"  />
 
         <TextView

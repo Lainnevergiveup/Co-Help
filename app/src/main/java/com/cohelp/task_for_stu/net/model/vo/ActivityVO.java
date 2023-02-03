@@ -85,6 +85,19 @@ public class ActivityVO implements Serializable {
      */
     private LocalDateTime activityCreateTime;
 
+    /**
+     *组织id
+     */
+    private Integer teamId;
+
+    public Integer getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Integer teamId) {
+        this.teamId = teamId;
+    }
+
     public Integer getId() {
         return id;
     }

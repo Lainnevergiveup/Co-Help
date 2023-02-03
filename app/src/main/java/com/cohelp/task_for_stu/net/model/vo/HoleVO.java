@@ -74,6 +74,19 @@ public class HoleVO implements Serializable {
      */
     private Date holeCreateTime;
 
+    /**
+     *组织id
+     */
+    private Integer teamId;
+
+    public Integer getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Integer teamId) {
+        this.teamId = teamId;
+    }
+
     @Override
     public String toString() {
         return "HoleVO{" +

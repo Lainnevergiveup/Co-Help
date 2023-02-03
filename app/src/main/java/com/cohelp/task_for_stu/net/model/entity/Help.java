@@ -202,6 +202,36 @@ public class Help implements Serializable {
     private static final int typeNumber = 2;
 
     private static final long serialVersionUID = 1L;
+    /**
+     *组织id
+     */
+    private Integer teamId;
+
+    public Integer getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Integer teamId) {
+        this.teamId = teamId;
+    }
+
+    @Override
+    public String toString() {
+        return "Help{" +
+                "id=" + id +
+                ", helpOwnerId=" + helpOwnerId +
+                ", helpTitle='" + helpTitle + '\'' +
+                ", helpDetail='" + helpDetail + '\'' +
+                ", helpPaid=" + helpPaid +
+                ", helpLike=" + helpLike +
+                ", helpCollect=" + helpCollect +
+                ", helpComment=" + helpComment +
+                ", helpLabel='" + helpLabel + '\'' +
+                ", helpState=" + helpState +
+                ", helpCreateTime=" + helpCreateTime +
+                ", teamId=" + teamId +
+                '}';
+    }
 
     @Override
     public boolean equals(Object that) {
@@ -246,25 +276,4 @@ public class Help implements Serializable {
         return result;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", helpOwnerId=").append(helpOwnerId);
-        sb.append(", helpTitle=").append(helpTitle);
-        sb.append(", helpDetail=").append(helpDetail);
-        sb.append(", helpPaid=").append(helpPaid);
-        sb.append(", helpLike=").append(helpLike);
-        sb.append(", helpCollect=").append(helpCollect);
-        sb.append(", helpComment=").append(helpComment);
-        sb.append(", helpLabel=").append(helpLabel);
-        sb.append(", helpState=").append(helpState);
-        sb.append(", helpCreateTime=").append(helpCreateTime);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
-    }
 }

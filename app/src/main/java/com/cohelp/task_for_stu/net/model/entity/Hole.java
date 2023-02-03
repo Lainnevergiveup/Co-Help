@@ -104,6 +104,36 @@ public class Hole implements Serializable {
      */
     private static final int typeNumber = 3;
 
+    /**
+     *组织id
+     */
+    private Integer teamId;
+
+    public Integer getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Integer teamId) {
+        this.teamId = teamId;
+    }
+
+    @Override
+    public String toString() {
+        return "Hole{" +
+                "id=" + id +
+                ", holeOwnerId=" + holeOwnerId +
+                ", holeTitle='" + holeTitle + '\'' +
+                ", holeDetail='" + holeDetail + '\'' +
+                ", holeLike=" + holeLike +
+                ", holeCollect=" + holeCollect +
+                ", holeComment=" + holeComment +
+                ", holeLabel='" + holeLabel + '\'' +
+                ", holeState=" + holeState +
+                ", holeCreateTime=" + holeCreateTime +
+                ", teamId=" + teamId +
+                '}';
+    }
+
     public Integer getId() {
         return id;
     }
@@ -225,27 +255,6 @@ public class Hole implements Serializable {
         result = prime * result + ((getHoleState() == null) ? 0 : getHoleState().hashCode());
         result = prime * result + ((getHoleCreateTime() == null) ? 0 : getHoleCreateTime().hashCode());
         return result;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", holeOwnerId=").append(holeOwnerId);
-        sb.append(", holeTitle=").append(holeTitle);
-        sb.append(", holeDetail=").append(holeDetail);
-        sb.append(", holeLike=").append(holeLike);
-        sb.append(", holeCollect=").append(holeCollect);
-        sb.append(", holeComment=").append(holeComment);
-        sb.append(", holeLabel=").append(holeLabel);
-        sb.append(", holeState=").append(holeState);
-        sb.append(", holeCreateTime=").append(holeCreateTime);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
     }
 
 }
