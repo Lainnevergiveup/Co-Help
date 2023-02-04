@@ -50,7 +50,8 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="601dp">
+            android:layout_height="601dp"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -61,6 +62,7 @@
                     android:id="@+id/text_MessageTitle"
                     android:layout_width="match_parent"
                     android:layout_height="66dp"
+                    android:textSize="25dp"
                     android:text="标题" />
 
                 <LinearLayout
@@ -68,7 +70,7 @@
                     android:layout_height="74dp"
                     android:orientation="horizontal">
 
-                    <ImageView
+                    <com.cohelp.task_for_stu.ui.view.AvatorImageView
                         android:id="@+id/image_UserIcon"
                         android:layout_width="76dp"
                         android:layout_height="match_parent"
@@ -86,7 +88,12 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
                 </LinearLayout>
-
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="测试文字"
+                    android:textSize="20dp"
+                    />
 
     </LinearLayout>
 
@@ -94,7 +101,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <Space
@@ -127,7 +135,7 @@
                 android:layout_weight="1" />
 
             <ImageButton
-                android:id="@+id/imageButton_Commit"
+                android:id="@+id/imageButton_Comment"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

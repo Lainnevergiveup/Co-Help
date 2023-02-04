@@ -17,6 +17,7 @@ import java.util.List;
 
 public class HoleAdapter extends RecyclerView.Adapter<HoleAdapter.ViewHolder> {
     private List<DetailResponse> holeList;
+    private OnItemListenter mItemClickListener;
     static class ViewHolder extends RecyclerView.ViewHolder{
         ImageView ownerAvater;
         TextView holeTitle;
@@ -37,10 +38,20 @@ public class HoleAdapter extends RecyclerView.Adapter<HoleAdapter.ViewHolder> {
         this.holeList = holeList;
     }
 
+    public void setHoleList(List<DetailResponse> holeList) {
+        this.holeList = holeList;
+    }
+    public interface OnItemListenter{
+        void onItemClick(View view, int postion);
+    }
+
+    public void setOnItemClickListener(OnItemListenter mItemClickListener){
+        this.mItemClickListener = mItemClickListener;
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_activity_card,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_hole_card,parent,false);
         HoleAdapter.ViewHolder viewHolder = new HoleAdapter.ViewHolder(view);
         return viewHolder;
     }
@@ -51,7 +62,12 @@ public class HoleAdapter extends RecyclerView.Adapter<HoleAdapter.ViewHolder> {
         HoleVO hole = detailResponse.getHoleVO();
         holder.holeTitle.setText(hole.getHoleTitle());
 
-
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mItemClickListener.onItemClick(view,position);
+            }
+        });
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.cohelp.task_for_stu.R;
 
 public class DetailActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

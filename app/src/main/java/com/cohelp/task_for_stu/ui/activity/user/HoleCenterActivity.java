@@ -1,9 +1,12 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -16,10 +19,16 @@ import android.widget.Switch;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.listener.ClickListener;
 import com.cohelp.task_for_stu.net.CommonCallback;
+import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
+import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
+import com.cohelp.task_for_stu.ui.adpter.ActivityAdapter;
+import com.cohelp.task_for_stu.ui.adpter.HoleAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.ui.vo.Task;
+import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.leon.lfilepickerlibrary.utils.StringUtils;
 
@@ -38,22 +47,30 @@ public class HoleCenterActivity extends BaseActivity {
     LinearLayout SearchTime;
     RelativeLayout SearchBox;
     Switch aSwitch;
+
+    OkHttpUtils okHttpUtils;
+    List<DetailResponse> holeList;
+    Integer conditionType = 0;
+
+    HoleAdapter holeAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hole_center);
+        initTools();
         initView();
         initEvent();
         setTitle("树洞");
+    }
+    private void initTools(){
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            okHttpUtils = new OkHttpUtils();
+        }
+        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
     }
     private void initEvent() {
-//        setToolbar(R.drawable.common_add, new ClickListener() {
-//            @Override
-//            public void click() {
-//                toCreateNewTaskActivity();
-//            }
-//        });
 
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,24 +102,16 @@ public class HoleCenterActivity extends BaseActivity {
             public void onClick(View view) {
                 //TODO 从服务端搜索
                 String s = searchedContent.getText().toString();
-                if(!StringUtils.isEmpty(s)){
+                if(StringUtils.isEmpty(s)){
                     T.showToast("查询的标题不能为空哦~");
                 }
-                startLoadingProgress();
-//                taskBiz.searchByTitle(s, new CommonCallback<List<Task>>() {
-//                    @Override
-//                    public void onError(Exception e) {
-//                        stopLoadingProgress();
-//                        T.showToast(e.getMessage());
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(List<Task> response) {
-//                        stopLoadingProgress();
-//                        T.showToast("查询成功！");
-//                        updateList(response);
-//                    }
-//                });
+                else {
+                    startLoadingProgress();
+
+                    stopLoadingProgress();
+                }
+
+
             }
         });
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -121,29 +130,45 @@ public class HoleCenterActivity extends BaseActivity {
         eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
             @Override
             public void onRefresh() {
-//                loadAll();
+                refreshHoleList();
             }
         });
 
-        eSwipeRefreshLayout.setOnPullUpRefreshListener(new SwipeRefreshLayout.OnPullUpRefreshListener() {
-            @Override
-            public void onPullUpRefresh() {
-//                loadAll();
-            }
-        });
 
     }
 
     private void initView(){
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
-        TaskCenter = findViewById(R.id.id_ll_taskCenter);
+        TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
         SearchBox = findViewById(R.id.id_rl_search);
         SearchHot = findViewById(R.id.id_ll_search_hot);
         SearchTime = findViewById(R.id.id_ll_search_time);
+        searchBtn = findViewById(R.id.id_iv_search);
         aSwitch = findViewById(R.id.id_sw_check);
+        eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
+        eRecyclerView = findViewById(R.id.id_recyclerview);
+        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
+        eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
 
+        getHoleList();
+        holeAdapter = new HoleAdapter(holeList);
+//        holeList.add(new Hole("强奸","wow", 0,0,0,"friend"));
+        holeAdapter.setOnItemClickListener(new HoleAdapter.OnItemListenter(){
+            @Override
+            public void onItemClick(View view, int postion) {
+                Intent intent = new Intent(HoleCenterActivity.this,DetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("detailResponse",holeList.get(postion));
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        eRecyclerView.setAdapter(holeAdapter);
     }
 
     private void toUserCenterActivity() {
@@ -167,5 +192,28 @@ public class HoleCenterActivity extends BaseActivity {
         Intent intent = new Intent(this, HoleCenterActivity.class);
         startActivity(intent);
         finish();
+    }
+    private synchronized void getHoleList(){
+        Thread t1 = new Thread(()->{
+            holeList = okHttpUtils.holeList(conditionType);
+        });
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    private synchronized void refreshHoleList(){
+        getHoleList();
+        holeAdapter.setHoleList(holeList);
+        eRecyclerView.setAdapter(holeAdapter);
+        eSwipeRefreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //关闭刷新
+                eSwipeRefreshLayout.setRefreshing(false);
+            }
+        },1000);
     }
 }
