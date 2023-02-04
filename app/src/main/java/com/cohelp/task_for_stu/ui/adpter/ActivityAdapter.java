@@ -128,7 +128,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         holder.ownerAvater.setImageURL(detailResponse.getPublisherAvatarUrl());
         holder.activityContext.setText(activityVO.getActivityDetail());
         holder.activityTitle.setText(activityVO.getActivityTitle());
-        holder.activityTime.setText(activityVO.getActivityTime().toString());
+        holder.activityTime.setText(activityVO.getActivityCreateTime().toString());
         System.out.println(position);
 //        holder.activityAddress.setText(activityVO);
         holder.itemView.setOnClickListener(new View.OnClickListener() {

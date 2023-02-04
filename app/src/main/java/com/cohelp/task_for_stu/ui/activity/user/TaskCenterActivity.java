@@ -1,6 +1,5 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -12,42 +11,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cohelp.task_for_stu.R;
-import com.cohelp.task_for_stu.biz.TaskBiz;
-import com.cohelp.task_for_stu.config.Config;
 import com.cohelp.task_for_stu.listener.ClickListener;
-import com.cohelp.task_for_stu.net.CommonCallback;
-import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
-import com.cohelp.task_for_stu.net.gsonTools.GSON;
+
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
-import com.cohelp.task_for_stu.net.model.domain.HoleListRequest;
-import com.cohelp.task_for_stu.net.model.domain.Result;
-import com.cohelp.task_for_stu.net.model.entity.Hole;
 import com.cohelp.task_for_stu.net.model.entity.User;
-import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
-import com.cohelp.task_for_stu.net.model.vo.HoleVO;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.ActivityAdapter;
-import com.cohelp.task_for_stu.ui.adpter.HoleAdapter;
-import com.cohelp.task_for_stu.ui.adpter.TaskAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
-import com.cohelp.task_for_stu.ui.vo.Task;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.leon.lfilepickerlibrary.utils.StringUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 /*
@@ -67,30 +49,31 @@ public class TaskCenterActivity extends BaseActivity {
     RecyclerView eRecyclerView;
     RelativeLayout SearchBox;
     Switch aSwitch;
-    TaskAdapter taskAdapter;
-    List<Task> taskList;
-    TaskBiz taskBiz;
     List<DetailResponse> activityVOList = new ArrayList<>();
     User user;
     OkHttpUtils okHttpUtils;
     Intent intent;
 
     ActivityAdapter activityAdapter;
+
+    Integer conditionState = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_center);
+        initTools();
+        initView();
+        initEvent();
+        setTitle("首页");
+    }
+    private void initTools(){
         intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             okHttpUtils = new OkHttpUtils();
         }
         okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
-        initView();
-        initEvent();
-        setTitle("首页");
     }
-
     private void initEvent() {
         setToolbar(R.drawable.common_add, new ClickListener() {
             @Override
@@ -105,13 +88,6 @@ public class TaskCenterActivity extends BaseActivity {
                 toHelpCenterActivity();
             }
         });
-
-//        TaskCenter.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                toTaskCenterActivity();
-//            }
-//        });
 
         UserCenter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,24 +120,23 @@ public class TaskCenterActivity extends BaseActivity {
             public void onClick(View view) {
                 //TODO 从服务端搜索
                 String s = searchedContent.getText().toString();
-                if(!StringUtils.isEmpty(s)){
+                if(StringUtils.isEmpty(s)){
                     T.showToast("查询的标题不能为空哦~");
                 }
-                startLoadingProgress();
-                taskBiz.searchByTitle(s, new CommonCallback<List<Task>>() {
-                    @Override
-                    public void onError(Exception e) {
-                        stopLoadingProgress();
-                        T.showToast(e.getMessage());
-                    }
-
-                    @Override
-                    public void onSuccess(List<Task> response) {
-                        stopLoadingProgress();
-                        T.showToast("查询成功！");
-                        updateList(response);
-                    }
-                });
+                else {
+                    startLoadingProgress();
+                    searchActivity(s);
+                    activityAdapter.setActivityList(activityVOList);
+                    eRecyclerView.setAdapter(activityAdapter);
+                    eSwipeRefreshLayout.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            //关闭刷新
+                            eSwipeRefreshLayout.setRefreshing(false);
+                        }
+                    },1000);
+                }
+                stopLoadingProgress();
             }
         });
 
@@ -172,71 +147,33 @@ public class TaskCenterActivity extends BaseActivity {
                 System.out.println("isrefreshing");
                 Toast.makeText(TaskCenterActivity.this,eSwipeRefreshLayout.isRefreshing()?"正在刷新":"刷新完成"
                         ,Toast.LENGTH_SHORT).show();
-                getActivityList();
-//                activityAdapter = new ActivityAdapter(activityVOList);
-//                activityAdapter.setOnItemClickListener(new ActivityAdapter.OnItemListenter(){
-//                    @Override
-//                    public void onItemClick(View view, int postion) {
-//                        System.out.println("lisetn in act");
-//                        Intent intent = new Intent(TaskCenterActivity.this,DetailActivity.class);
-//                        Bundle bundle = new Bundle();
-//                        bundle.putSerializable("detailResponse",activityVOList.get(postion));
-//                        intent.putExtras(bundle);
-//                        startActivity(intent);
-//                    }
-//                });
-                activityAdapter.setActivityList(activityVOList);
-                eRecyclerView.setAdapter(activityAdapter);
-                eSwipeRefreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //关闭刷新
-                        eSwipeRefreshLayout.setRefreshing(false);
-                    }
-                },1000);
+                refreshActivityListData();
+
             }
         });
 
-//        eSwipeRefreshLayout.setOnPullUpRefreshListener(new SwipeRefreshLayout.OnPullUpRefreshListener() {
-//            @Override
-//            public void onPullUpRefresh() {
-//                loadAll();
-//            }
-//        });
+        SearchHot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                conditionState = 0;
+                refreshActivityListData();
+            }
+        });
+
+        SearchTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                conditionState = 1;
+                refreshActivityListData();
+            }
+        });
     }
 
     private void toCreateNewTaskActivity() {
         //TODO 创建新任务
         Intent intent = new Intent(this,CreateNewTaskActivity.class);
-        startActivityForResult(intent,1001);
-    }
-
-    private void loadAll() {
-        //TODO 查询所有问题
-        startLoadingProgress();
-        getActivityList();
-        ActivityAdapter activityAdapter = new ActivityAdapter(this,activityVOList);
-//        System.out.println("holeList="+holeList);
-//        HoleAdapter holeAdapter = new HoleAdapter(holeList);
-        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        eRecyclerView.setAdapter(activityAdapter);
-        stopLoadingProgress();
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private void updateList(List<Task> response) {
-        taskList.clear();
-        taskList.addAll(response);
-        taskAdapter.notifyDataSetChanged();
-        eSwipeRefreshLayout.setRefreshing(false);
-        eSwipeRefreshLayout.setPullUpRefreshing(false);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        loadAll();
+//        startActivityForResult(intent,1001);
+        startActivity(intent);
     }
 
     private void initView() {
@@ -258,27 +195,8 @@ public class TaskCenterActivity extends BaseActivity {
         aSwitch = findViewById(R.id.id_sw_check);
         eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-//        eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                //判断是否在刷新
-//                System.out.println("isrefreshing");
-//                Toast.makeText(TaskCenterActivity.this,eSwipeRefreshLayout.isRefreshing()?"正在刷新":"刷新完成"
-//                        ,Toast.LENGTH_SHORT).show();
-//                getActivityList();
-//                eSwipeRefreshLayout.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        //关闭刷新
-//                        eSwipeRefreshLayout.setRefreshing(false);
-//                    }
-//                },1000);
-//            }
-//        });
-        taskBiz = new TaskBiz();
-        taskList = new ArrayList<>();
-        taskAdapter = new TaskAdapter(this,taskList);
-        getActivityList();
+
+        getActivityList(conditionState);
         activityAdapter = new ActivityAdapter(this,activityVOList);
 //        holeList.add(new Hole("强奸","wow", 0,0,0,"friend"));
         activityAdapter.setOnItemClickListener(new ActivityAdapter.OnItemListenter(){
@@ -296,7 +214,6 @@ public class TaskCenterActivity extends BaseActivity {
         eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         eRecyclerView.setAdapter(activityAdapter);
-//        loadAll();
     }
 
 
@@ -319,13 +236,14 @@ public class TaskCenterActivity extends BaseActivity {
         finish();
     }
     private void toHoleCenterActivity(){
-
+        Intent intent = new Intent(this, HelpCenterActivity.class);
+        startActivity(intent);
+        finish();
     }
-    private synchronized void getActivityList(){
+    private synchronized void getActivityList(Integer CconditionType){
 
         Thread t1 = new Thread(()->{
-            activityVOList = okHttpUtils.activityList();
-//            holeList = okHttpUtils.holeList();
+            activityVOList = okHttpUtils.activityList(conditionState);
         });
         t1.start();
         try {
@@ -334,5 +252,28 @@ public class TaskCenterActivity extends BaseActivity {
             e.printStackTrace();
         }
 
+    }
+    private synchronized void  searchActivity(String key){
+        Thread t1 = new Thread(()->{
+            activityVOList = okHttpUtils.search(key,1);
+        });
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    private synchronized void refreshActivityListData(){
+        getActivityList(conditionState);
+        activityAdapter.setActivityList(activityVOList);
+        eRecyclerView.setAdapter(activityAdapter);
+        eSwipeRefreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //关闭刷新
+                eSwipeRefreshLayout.setRefreshing(false);
+            }
+        },1000);
     }
 }

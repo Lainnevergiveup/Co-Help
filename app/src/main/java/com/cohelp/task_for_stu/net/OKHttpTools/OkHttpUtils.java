@@ -4,14 +4,17 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.alibaba.fastjson.JSON;
 import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.ActivityListRequest;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.HelpListRequest;
 import com.cohelp.task_for_stu.net.model.domain.HoleListRequest;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
+import com.cohelp.task_for_stu.net.model.domain.IdAndTypeList;
 import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
+import com.cohelp.task_for_stu.net.model.domain.SearchRequest;
 import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.net.model.entity.Help;
 import com.cohelp.task_for_stu.net.model.entity.Hole;
@@ -84,9 +87,9 @@ public class OkHttpUtils {
     }
 
 
-    public List<DetailResponse> activityList(){
+    public List<DetailResponse> activityList(Integer conditionType){
         ActivityListRequest activityListRequest = new ActivityListRequest();
-        activityListRequest.setConditionType(0);
+        activityListRequest.setConditionType(conditionType);
 //        activityListRequest.setDayNum(2);
         String req = gson.toJson(activityListRequest);
         okHttp.sendRequest(baseURL+"/activity/list",req,cookie);
@@ -131,7 +134,7 @@ public class OkHttpUtils {
         }
         System.out.println(res);
     }
-    public List<Hole> holeList(){
+    public List<DetailResponse> holeList(Integer conditionType){
         HoleListRequest holeListRequest = new HoleListRequest();
         holeListRequest.setConditionType(1);
         String req = gson.toJson(holeListRequest);
@@ -144,27 +147,7 @@ public class OkHttpUtils {
         }
         System.out.println(res);
         Result<List<DetailResponse>> result = gson.fromJson(res, new TypeToken<Result<List<DetailResponse>>>(){}.getType());
-        List<Hole> list = null;
-        if (result.getData()!=null){
-            list = new ArrayList<>();
-            for (DetailResponse d : result.getData()){
-                Hole t = new Hole();
-                HoleVO s = d.getHoleVO();
-                t.setId(s.getId());
-                t.setHoleCollect(s.getHoleCollect());
-                t.setHoleComment(s.getHoleComment());
-                t.setHoleLike(s.getHoleLike());
-                t.setHoleDetail(s.getHoleDetail());
-                t.setHoleLabel(s.getHoleLabel());
-                t.setHoleLabel(s.getHoleLabel());
-                t.setHoleTitle(s.getHoleTitle());
-                t.setHoleOwnerId(s.getHoleOwnerId());
-                t.setHoleCreateTime(s.getHoleCreateTime());
-                list.add(t);
-            }
-        }
-        System.out.println(list);
-        return list;
+        return result.getData();
     }
     /*
     Help相关接口
@@ -189,23 +172,22 @@ public class OkHttpUtils {
         System.out.println(result.getMessage());
         System.out.println(res);
     }
-//    public List<Help> helpList(){
-//        HelpListRequest helpListRequest = new HelpListRequest();
-//        helpListRequest.setConditionType(1);
-//        String req = gson.toJson(helpListRequest);
-//        okHttp.sendRequest(baseURL+"/help/list",req,cookie);
-//        String res = null;
-//        try {
-//            res = okHttp.getResponse().body().string();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(res);
-//        Result<List<DetailResponse>> result = gson.fromJson(res, new TypeToken<Result<List<DetailResponse>>>(){}.getType());
-//
-//        return null;
-//
-//    }
+    public List<DetailResponse> helpList(Integer conditionType){
+        HelpListRequest helpListRequest = new HelpListRequest();
+        helpListRequest.setConditionType(conditionType);
+        String req = gson.toJson(helpListRequest);
+        okHttp.sendRequest(baseURL+"/help/list",req,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(res);
+        Result<List<DetailResponse>> result = gson.fromJson(res, new TypeToken<Result<List<DetailResponse>>>(){}.getType());
+        System.out.println(result);
+        return result.getData();
+    }
 
 
     /*
@@ -270,7 +252,32 @@ public class OkHttpUtils {
         return result.getData();
     }
 
+    /*
 
+     */
+    public List<DetailResponse> search(String key,Integer type){
+        SearchRequest searchRequest = new SearchRequest();
 
+        searchRequest.setKey(key);
+        List<Integer> list = new ArrayList<>();
+        list.add(type);
+        searchRequest.setTypes(list);
+        String searchMessage = ToJsonString.toJson(searchRequest);
+
+        okHttp.sendRequest(baseURL+"/general/search",searchMessage,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        Gson gson = new Gson();
+//        //这个类型写啥？list有1,2,3这里知识查了activity的
+        Result<List<DetailResponse>> userResult = gson.fromJson(res,new TypeToken<Result<List<DetailResponse>>>(){}.getType());
+//        Result<IdAndTypeList> parseObject = JSON.parseObject(res, new Result<IdAndTypeList>().getClass());
+//        System.out.println("data:"+parseObject);
+        System.out.println(userResult);
+        return userResult.getData();
+    }
 
 }

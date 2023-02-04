@@ -24,4 +24,20 @@ public class SearchRequest implements Serializable {
     private List<Integer> types;
 
     private static final long serialVersionUID = 1L;
+
+    public List<Integer> getTypes() {
+        return types;
+    }
+
+    public void setTypes(List<Integer> types) {
+        this.types = types;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 }
