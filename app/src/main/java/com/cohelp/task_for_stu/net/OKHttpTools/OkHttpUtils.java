@@ -38,6 +38,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class OkHttpUtils {
     OKHttp okHttp;
@@ -60,6 +61,7 @@ public class OkHttpUtils {
     public OkHttpUtils() {
         okHttp = new OKHttp();
         gson = new GSON().gsonSetter();
+//        cookie = SessionUtils.getCookiePreference(this);
 //        help = new Help();
     }
 
@@ -69,8 +71,11 @@ public class OkHttpUtils {
     public void activityPublish(Activity activity, Map<String,String> nameAndPath){
         String act = gson.toJson(activity);
         okHttp.sendMediaRequest(baseURL+"/activity/publish","activity",act,nameAndPath,cookie);
+        System.out.println(cookie);
         String res = null;
+
         try {
+            ResponseBody body = okHttp.getResponse().body();
             res = okHttp.getResponse().body().string();
         } catch (IOException e) {
             e.printStackTrace();

@@ -104,7 +104,7 @@ public class OKHttp {
     }
     public void sendMediaRequest(String ip, String contentType, String content, Map<String,String> nameAndPath,String cookie){
         Map<String,String> map = new HashMap<>();
-        map.put("签名.PNG","/Users/lain/Pictures/lyh/1_inch_lyh.png");
+//        map.put("签名.PNG","/Users/lain/Pictures/lyh/1_inch_lyh.png");
          client = new OkHttpClient().newBuilder()
                 .build();
         MediaType mediaType = MediaType.parse("text/plain");
@@ -114,12 +114,12 @@ public class OKHttp {
             Iterator<Map.Entry<String,String>> fileList = nameAndPath.entrySet().iterator();
             while (fileList.hasNext()){
                 Map.Entry<String,String> entry = fileList.next();
-                builder.addFormDataPart("file",entry.getKey(),
+                builder.addFormDataPart("file",entry.getValue(),
                         RequestBody.create(MediaType.parse("application/octet-stream"),
                                 new File(entry.getValue())));
             }
         }
-
+        System.out.println(cookie);
         body = builder.build();
         request = new Request.Builder()
                  .url(ip)
