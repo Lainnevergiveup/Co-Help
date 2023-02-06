@@ -6,9 +6,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.activity.user.CreateNewQuestionActivity">
-    <include layout="@layout/common_toolbar"/>
+    <include layout="@layout/common_toolbar" />
     <!--    Integer reward;-->
-    <!--    String title;-->
+<!--        String title;-->
     <!--    String desc;-->
 
     <EditText
@@ -23,19 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textLongMessage"/>
-
-    <EditText
-        android:id="@+id/id_et_reward"
-        android:layout_marginTop="20sp"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20sp"
-        android:background="@drawable/search_solid"
-        android:paddingTop="5dp"
-        android:paddingLeft="5dp"
-        android:hint="输入采纳积分"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="number"/>
 
     <LinearLayout
         android:layout_marginTop="20sp"
@@ -72,24 +59,49 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/id_et_content"
-        android:layout_marginTop="20sp"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20sp"
-        android:background="@drawable/search_solid"
-        android:gravity="top"
-        android:paddingTop="5dp"
-        android:paddingLeft="5dp"
-        android:hint="输入您的任务描述"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="240sp"
-        android:inputType="textMultiLine"/>
+        android:layout_height="400dp"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:enabled="false"
+            android:focusable="false"
+            android:id="@+id/id_et_content"
+            android:gravity="top"
+            android:hint="活动详情描述..."
+            android:maxLines="5" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:padding="5dp">
+            <GridView
+                android:id="@+id/gridview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:numColumns="4" />
+        </LinearLayout>
+    </LinearLayout>
+<!--    <EditText-->
+<!--        android:id="@+id/id_et_content"-->
+<!--        android:layout_marginTop="20sp"-->
+<!--        android:layout_marginLeft="20sp"-->
+<!--        android:layout_marginRight="20sp"-->
+<!--        android:background="@drawable/search_solid"-->
+<!--        android:gravity="top"-->
+<!--        android:paddingTop="5dp"-->
+<!--        android:paddingLeft="5dp"-->
+<!--        android:hint="输入您的任务描述"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="240sp"-->
+<!--        android:inputType="textMultiLine"/>-->
 
     <Button
         android:id="@+id/id_btn_submit"
-        android:text="提交"
+        android:text="发布"
         android:layout_marginTop="20sp"
         android:layout_marginLeft="20sp"
         android:layout_marginRight="20sp"
