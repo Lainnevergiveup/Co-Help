@@ -60,7 +60,7 @@ public class HelpCenterActivity extends BaseActivity {
     HelpAdapter helpAdapter;
     OkHttpUtils okHttpUtils;
     int conditionType = 0;
-
+    String labelType = "全部";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

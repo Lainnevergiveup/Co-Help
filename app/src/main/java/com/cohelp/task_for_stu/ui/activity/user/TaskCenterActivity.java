@@ -22,6 +22,7 @@ import com.cohelp.task_for_stu.listener.ClickListener;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
+import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.ActivityAdapter;
@@ -214,6 +215,10 @@ public class TaskCenterActivity extends BaseActivity {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("detailResponse",activityVOList.get(postion));
                 intent.putExtras(bundle);
+                IdAndType idAndType = new IdAndType(activityVOList.get(postion).getActivityVO().getId(),1);
+                new Thread(()->{
+                    System.out.println(okHttpUtils.getDetail(idAndType));
+                }).start();
                 startActivity(intent);
             }
         });

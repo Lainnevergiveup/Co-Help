@@ -16,6 +16,7 @@ import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.domain.SearchRequest;
 import com.cohelp.task_for_stu.net.model.entity.Activity;
+import com.cohelp.task_for_stu.net.model.entity.Collect;
 import com.cohelp.task_for_stu.net.model.entity.Help;
 import com.cohelp.task_for_stu.net.model.entity.Hole;
 import com.cohelp.task_for_stu.net.model.entity.User;
@@ -258,7 +259,7 @@ public class OkHttpUtils {
     }
 
     /*
-
+    General
      */
     public List<DetailResponse> search(String key,Integer type){
         SearchRequest searchRequest = new SearchRequest();
@@ -284,5 +285,43 @@ public class OkHttpUtils {
         System.out.println(userResult);
         return userResult.getData();
     }
-
+    public DetailResponse getDetail(IdAndType idAndType){
+        String idAndTypeJson = gson.toJson(idAndType);
+        okHttp.sendRequest(baseURL+"/general/getdetail",idAndTypeJson,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<DetailResponse> userResult = gson.fromJson(res,new TypeToken<Result<DetailResponse>>(){}.getType());
+        return userResult.getData();
+    }
+    /*
+    Remark
+     */
+    public void remark(int type,int id){
+        okHttp.sendRequest(baseURL+"/topic/like/"+type+"/"+id,"",cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(res);
+    }
+    /*
+    Collect
+     */
+    public void insertCollection(Collect collect){
+        String collectRequset = gson.toJson(collect);
+        okHttp.sendRequest(baseURL+"/collect/insertcollectrecord",collectRequset,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(res);
+    }
 }
