@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -76,6 +77,7 @@ public class TaskCenterActivity extends BaseActivity {
     }
     private void initEvent() {
         setToolbar(R.drawable.common_add, new ClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void click() {
                 toCreateNewTaskActivity();
@@ -155,20 +157,25 @@ public class TaskCenterActivity extends BaseActivity {
         SearchHot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startLoadingProgress();
                 conditionState = 0;
                 refreshActivityListData();
+                stopLoadingProgress();
             }
         });
 
         SearchTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startLoadingProgress();
                 conditionState = 1;
                 refreshActivityListData();
+                stopLoadingProgress();
             }
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void toCreateNewTaskActivity() {
         //TODO 创建新任务
         Intent intent = new Intent(this,CreateNewTaskActivity.class);

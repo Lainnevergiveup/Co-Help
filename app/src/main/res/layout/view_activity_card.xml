@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:text="不想玩啦一二三四五六七八九十一二三四五六七八九十"
             android:singleLine="true"
-            android:maxEms="15"
+            android:maxEms="10"
             app:layout_constraintStart_toStartOf="@+id/act_title"
             app:layout_constraintTop_toBottomOf="@+id/act_author_pic" />
 

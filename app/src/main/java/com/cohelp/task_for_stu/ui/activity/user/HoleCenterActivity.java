@@ -1,5 +1,6 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +33,7 @@ import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.leon.lfilepickerlibrary.utils.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HoleCenterActivity extends BaseActivity {
@@ -49,7 +51,7 @@ public class HoleCenterActivity extends BaseActivity {
     Switch aSwitch;
 
     OkHttpUtils okHttpUtils;
-    List<DetailResponse> holeList;
+    List<DetailResponse> holeList = new ArrayList<>();
     Integer conditionType = 0;
 
     HoleAdapter holeAdapter;
@@ -71,7 +73,13 @@ public class HoleCenterActivity extends BaseActivity {
         okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
     }
     private void initEvent() {
-
+        setToolbar(R.drawable.common_add, new ClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void click() {
+                toCreateNewHoleActivity();
+            }
+        });
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,26 +115,14 @@ public class HoleCenterActivity extends BaseActivity {
                 }
                 else {
                     startLoadingProgress();
-
+                    refreshHoleList();
                     stopLoadingProgress();
                 }
 
 
             }
         });
-        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(aSwitch.isChecked()){
-//
-                    SearchBox.setVisibility(buttonView.VISIBLE);
-                }else {
-//
-                    SearchBox.setVisibility(buttonView.GONE);
-                }
 
-            }
-        });
         eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -192,6 +188,11 @@ public class HoleCenterActivity extends BaseActivity {
         Intent intent = new Intent(this, HoleCenterActivity.class);
         startActivity(intent);
         finish();
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void toCreateNewHoleActivity(){
+        Intent intent = new Intent(this,CreateNewHoleActivity.class);
+        startActivity(intent);
     }
     private synchronized void getHoleList(){
         Thread t1 = new Thread(()->{
