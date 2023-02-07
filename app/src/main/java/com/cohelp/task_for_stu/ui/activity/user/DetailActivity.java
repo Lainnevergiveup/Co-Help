@@ -90,5 +90,15 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+    private void viewSetData(){
 
+
+
+
+    }
+
+    private synchronized void getCommentList(){
+
+
+    }
 }
