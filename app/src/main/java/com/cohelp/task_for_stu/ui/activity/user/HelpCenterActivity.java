@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,6 +14,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +34,7 @@ import com.cohelp.task_for_stu.utils.T;
 import com.leon.lfilepickerlibrary.utils.StringUtils;
 
 
+import java.util.ArrayList;
 import java.util.List;
 /*
 问答中心
@@ -52,11 +55,12 @@ public class HelpCenterActivity extends BaseActivity {
     ImageView searchBtn;
     SwipeRefreshLayout eSwipeRefreshLayout;
     RecyclerView eRecyclerView;
-
+    Integer conditionState = 0;
     List<DetailResponse> helpList;
     HelpAdapter helpAdapter;
     OkHttpUtils okHttpUtils;
     int conditionType = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,9 +82,10 @@ public class HelpCenterActivity extends BaseActivity {
 
     private void initEvent() {
         setToolbar(R.drawable.common_add, new ClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void click() {
-                toCreateNewQuestionActivity();
+                toCreateNewHelpActivity();
             }
         });
 
@@ -100,7 +105,9 @@ public class HelpCenterActivity extends BaseActivity {
 
         HoleCenter.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {toHoleCenterActivity();}
+            public void onClick(View v) {
+                toHoleCenterActivity();
+            }
         });
 
         UserCenter.setOnClickListener(new View.OnClickListener() {
@@ -115,10 +122,9 @@ public class HelpCenterActivity extends BaseActivity {
             public void onClick(View view) {
                 //TODO 从服务端搜索
                 String s = searchedContent.getText().toString();
-                if(StringUtils.isEmpty(s)){
+                if (StringUtils.isEmpty(s)) {
                     T.showToast("查询的标题不能为空哦~");
-                }
-                else {
+                } else {
                     startLoadingProgress();
                     refreshHelpListData();
                     stopLoadingProgress();
@@ -128,20 +134,14 @@ public class HelpCenterActivity extends BaseActivity {
             }
         });
 
-        eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-                refreshHelpListData();
-            }
-        });
-
-
     }
+
+
 
 
     private synchronized void refreshHelpListData(){
         getHelpList();
+        helpAdapter.setHelpList(helpList);
         eRecyclerView.setAdapter(helpAdapter);
         eSwipeRefreshLayout.postDelayed(new Runnable() {
             @Override
@@ -192,10 +192,10 @@ public class HelpCenterActivity extends BaseActivity {
 
     }
 
-    private void toCreateNewQuestionActivity() {
-        Intent intent = new Intent(this,CreateNewQuestionActivity.class);
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void toCreateNewHelpActivity() {
+        Intent intent = new Intent(this,CreateNewHelpActivity.class);
         startActivity(intent);
-        finish();
     }
 
 
@@ -234,5 +234,6 @@ public class HelpCenterActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
+
 
 }

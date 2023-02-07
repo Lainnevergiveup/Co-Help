@@ -125,7 +125,7 @@ public class ImageTool {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, opts);
-        opts.inSampleSize = computeSampleSize(opts, -1, 128 * 128);
+        opts.inSampleSize = computeSampleSize(opts, -1, 256 * 256);
         opts.inJustDecodeBounds = false;
         try {
             bitmap = BitmapFactory.decodeFile(filePath, opts);

@@ -1,5 +1,8 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,44 +25,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
-
 import com.bigkoo.pickerview.TimePickerView;
-import com.cohelp.task_for_stu.R;
-import com.cohelp.task_for_stu.UserInfoHolder;
 import com.cohelp.task_for_stu.bean.BaseTask;
-import com.cohelp.task_for_stu.bean.User;
 import com.cohelp.task_for_stu.biz.TaskBiz;
 import com.cohelp.task_for_stu.config.Config;
-import com.cohelp.task_for_stu.net.CommonCallback;
-import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
-import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
+import com.cohelp.task_for_stu.R;
+import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.ui.vo.Task;
-import com.cohelp.task_for_stu.utils.BasicUtils;
 import com.cohelp.task_for_stu.utils.ImageTool;
-import com.cohelp.task_for_stu.utils.SessionUtils;
-import com.cohelp.task_for_stu.utils.T;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class CreateNewTaskActivity extends BaseActivity {
+public class CreateNewHoleActivity extends BaseActivity {
+
     EditText title;
     EditText content;
-    EditText reward;
-    EditText startTime;
-    EditText endTime;
-    Button button;
+    Button publish;
     TaskBiz taskBiz;
     Task task;
     BaseTask baseTask;
@@ -73,38 +63,37 @@ public class CreateNewTaskActivity extends BaseActivity {
     private ImageView img;
     private List<String> list;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_new_task);
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+        setContentView(R.layout.activity_create_new_hole);
         askPermissions();
         setUpToolBar();
-        setTitle("创建活动");
+        setTitle("创建树洞");
         initView();
         initEvent();
     }
     private void initEvent() {
-        endTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pickerView.show(endTime);
-            }
-        });
-        startTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pickerView.show(startTime);
-            }
-        });
-        button.setOnClickListener(new View.OnClickListener() {
+//        endTime.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                pickerView.show(endTime);
+//            }
+//        });
+//        startTime.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                pickerView.show(startTime);
+//            }
+//        });
+        publish.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-//                String te = title.getText().toString();
-//                String ct = content.getText().toString();
-//                String pt = startTime.getText().toString();
-//                String lb = label.getText().toString();
+                String te = title.getText().toString();
+                String ct = content.getText().toString();
+
 
                 HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
                 for (int i =0;i<list.size()-1;i++){
@@ -114,18 +103,16 @@ public class CreateNewTaskActivity extends BaseActivity {
                     okHttpUtils.activityPublish(new Activity(null,null,"nice","wow", LocalDateTime.now(),0,0,"",0,0,null),stringStringHashMap);
                 }).start();
                 upload();
-                toTaskCenterActivity();
+                toHoleCenterActivity();
             }
         });
         initData();
     }
-
     private void initView() {
         title = findViewById(R.id.id_et_title);
         content = findViewById(R.id.id_et_content);
-        button = findViewById(R.id.id_btn_submit);
-        startTime = findViewById(R.id.id_et_startDate);
-        endTime = findViewById(R.id.id_et_endDate);
+        publish = findViewById(R.id.id_btn_submit);
+
         gridView = findViewById(R.id.gridview);
         task = new Task();
         taskBiz = new TaskBiz();
@@ -136,32 +123,27 @@ public class CreateNewTaskActivity extends BaseActivity {
         Calendar endDate = Calendar.getInstance();
         startDate.setTime(new Date());
         endDate.setTime(new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7));
-        pickerView = new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
-            @Override
-            public void onTimeSelect(Date date, View v) {
-                EditText tv = (EditText) v;
-                tv.setText(Config.dateFormat.format(date));
-                if(tv == startTime){
-                    task.getContext().setStartDate(date);
-                }else if(tv == endTime){
-                    task.getContext().setEndDate(date);
-                }
-            }
-        }).setType(new boolean[]{true, true, true, true, true, false})
-                .setLabel(" 年", "月", "日", "时", "分", "")
-                .isCenterLabel(true)
-                .setDividerColor(Color.DKGRAY)
-                .setContentSize(20)
-                .setDate(selectedDate)
-                .setRangDate(startDate, endDate)
-                .setDecorView(null)
-                .build();
+//        pickerView = new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
+//            @Override
+//            public void onTimeSelect(Date date, View v) {
+//                EditText tv = (EditText) v;
+//                tv.setText(Config.dateFormat.format(date));
+//                if(tv == startTime){
+//                    task.getContext().setStartDate(date);
+//                }else if(tv == endTime){
+//                    task.getContext().setEndDate(date);
+//                }
+//            }
+//        }).setType(new boolean[]{true, true, true, true, true, false})
+//                .setLabel(" 年", "月", "日", "时", "分", "")
+//                .isCenterLabel(true)
+//                .setDividerColor(Color.DKGRAY)
+//                .setContentSize(20)
+//                .setDate(selectedDate)
+//                .setRangDate(startDate, endDate)
+//                .setDecorView(null)
+//                .build();
 
-    }
-    private void toTaskCenterActivity() {
-        Intent intent = new Intent(this,TaskCenterActivity.class);
-        startActivity(intent);
-        finish();
     }
     private void upload()  {
         Bitmap bitmap;
@@ -193,11 +175,17 @@ public class CreateNewTaskActivity extends BaseActivity {
                         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         startActivityForResult(intent, 0);
                     } else {
-                        Toast.makeText(CreateNewTaskActivity.this, "最多只能放7张照片", Toast.LENGTH_LONG).show();
+                        Toast.makeText(CreateNewHoleActivity.this, "最多只能放7张照片", Toast.LENGTH_LONG).show();
                     }
                 }
             }
         });
+    }
+
+    private void toHoleCenterActivity(){
+        Intent intent = new Intent(this,HoleCenterActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void refreshAdapter() {
@@ -228,15 +216,15 @@ public class CreateNewTaskActivity extends BaseActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            final ViewHolder holder;
+            final GVAdapter.ViewHolder holder;
             if (convertView == null) {
                 convertView = LayoutInflater.from(getApplication()).inflate(R.layout.activity_add_photo, parent, false);
-                holder = new ViewHolder();
+                holder = new GVAdapter.ViewHolder();
                 holder.imageView = (ImageView) convertView.findViewById(R.id.main_gridView_item_photo);
                 holder.checkBox = (CheckBox) convertView.findViewById(R.id.main_gridView_item_cb);
                 convertView.setTag(holder);
             } else {
-                holder = (ViewHolder) convertView.getTag();
+                holder = (GVAdapter.ViewHolder) convertView.getTag();
             }
             String s = list.get(position);
             if (!s.equals(IMG_ADD_TAG)) {
@@ -315,7 +303,4 @@ public class CreateNewTaskActivity extends BaseActivity {
         }
 
     }
-
-
-
 }

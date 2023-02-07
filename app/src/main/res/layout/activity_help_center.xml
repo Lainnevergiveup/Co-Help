@@ -23,7 +23,7 @@
                 android:layout_marginTop="15sp"
                 android:layout_marginLeft="15sp"
                 android:visibility="visible"
-                android:id="@+id/id_ll_search"
+                android:id="@+id/id_rl_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
@@ -103,6 +103,7 @@
 
         </LinearLayout>
     </LinearLayout>
+
     <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout
         android:id="@+id/id_swiperefresh"
         android:layout_width="match_parent"

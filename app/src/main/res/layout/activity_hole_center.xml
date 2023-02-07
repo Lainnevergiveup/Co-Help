@@ -42,67 +42,11 @@
                     android:hint="按标题搜索" />
 
             </RelativeLayout>
-            <LinearLayout
-                android:background="@drawable/search_solid"
-                android:layout_marginTop="15sp"
-                android:layout_marginLeft="15sp"
-                android:layout_marginRight="100sp"
-                android:id="@+id/id_ll_search1"
-                android:visibility="visible"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:id="@+id/id_ll_search_hot"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="热度"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/lfile_lightgray"/>
-                <LinearLayout
-                    android:id="@+id/id_ll_search_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="时间"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="50dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="50dp"
-            android:layout_height="50dp">
 
-            <Switch
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/id_sw_check"
-                android:checked="true"
-                />
-
-        </LinearLayout>
     </LinearLayout>
 
 
