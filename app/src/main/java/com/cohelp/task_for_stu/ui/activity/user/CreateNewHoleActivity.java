@@ -30,11 +30,13 @@ import com.cohelp.task_for_stu.bean.BaseTask;
 import com.cohelp.task_for_stu.biz.TaskBiz;
 import com.cohelp.task_for_stu.config.Config;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.model.entity.Hole;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.ui.vo.Task;
 import com.cohelp.task_for_stu.utils.ImageTool;
+import com.cohelp.task_for_stu.utils.SessionUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
@@ -55,6 +57,7 @@ public class CreateNewHoleActivity extends BaseActivity {
     BaseTask baseTask;
     TimePickerView pickerView;
     OkHttpUtils okHttpUtils = new OkHttpUtils();
+
     private static final int IMG_COUNT = 8;
     private static final String IMG_ADD_TAG = "a";
     private GridView gridView;
@@ -62,12 +65,13 @@ public class CreateNewHoleActivity extends BaseActivity {
     private GVAdapter adapter;
     private ImageView img;
     private List<String> list;
-
+    Hole hole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_hole);
+        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
         askPermissions();
         setUpToolBar();
         setTitle("创建树洞");
@@ -93,14 +97,14 @@ public class CreateNewHoleActivity extends BaseActivity {
             public void onClick(View view) {
                 String te = title.getText().toString();
                 String ct = content.getText().toString();
-
+                hole = new Hole(te,ct,1,1,0,"1");
 
                 HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
                 for (int i =0;i<list.size()-1;i++){
                     stringStringHashMap.put(i+"",list.get(i));
                 }
                 new Thread(()->{
-                    okHttpUtils.activityPublish(new Activity(null,null,"nice","wow", LocalDateTime.now(),0,0,"",0,0,null),stringStringHashMap);
+                    okHttpUtils.holePublish(hole,stringStringHashMap);
                 }).start();
                 upload();
                 toHoleCenterActivity();

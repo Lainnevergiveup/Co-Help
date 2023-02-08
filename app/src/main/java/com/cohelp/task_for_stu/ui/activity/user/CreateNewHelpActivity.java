@@ -1,7 +1,6 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -22,7 +21,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.bigkoo.pickerview.TimePickerView;
@@ -30,11 +30,13 @@ import com.cohelp.task_for_stu.bean.BaseTask;
 import com.cohelp.task_for_stu.biz.TaskBiz;
 import com.cohelp.task_for_stu.config.Config;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.model.entity.Help;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.ui.vo.Task;
 import com.cohelp.task_for_stu.utils.ImageTool;
+import com.cohelp.task_for_stu.utils.SessionUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
@@ -45,19 +47,24 @@ import java.util.HashMap;
 import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class CreateNewHelpActivity extends BaseActivity {
+public class CreateNewHelpActivity extends BaseActivity{
 
     EditText title;
     EditText content;
     EditText reward;
     EditText startTime;
     EditText endTime;
-    CheckBox lb_money;
-    CheckBox lb_nomoney;
+    RadioButton lb_money;
+    RadioButton lb_nomoney;
+    RadioGroup paid,label;
+    int Paid;
+    String Label;
+    RadioButton lb1,lb2,lb3,lb4,lb5;
     EditText lb_diy;
     Button publish;
     TaskBiz taskBiz;
     Task task;
+    Help help;
     BaseTask baseTask;
     TimePickerView pickerView;
     OkHttpUtils okHttpUtils = new OkHttpUtils();
@@ -67,13 +74,14 @@ public class CreateNewHelpActivity extends BaseActivity {
     //    private GridAdapter adapterr;
     private GVAdapter adapter;
     private ImageView img;
-    private List<String> list,list_lb;
+    private List<String> list;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_help);
+        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
         askPermissions();
         setUpToolBar();
         setTitle("创建互助");
@@ -87,32 +95,63 @@ public class CreateNewHelpActivity extends BaseActivity {
 //                pickerView.show(endTime);
 //            }
 //        });
-        startTime.setOnClickListener(new View.OnClickListener() {
+//        startTime.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                pickerView.show(startTime);
+//            }
+//        });
+        paid.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                pickerView.show(startTime);
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case R.id.id_rb_paid:
+                        Paid = 1;
+                        break;
+                    case R.id.id_rb_nopaid:
+                        Paid = 0;
+                        break;
+                }
             }
         });
+
+        label.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case R.id.id_rb_1:
+                        Label = lb1.getText().toString();
+                        break;
+                    case R.id.id_rb_2:
+                        Label = lb2.getText().toString();
+                        break;
+                    case R.id.id_rb_3:
+                        Label = lb3.getText().toString();
+                        break;
+                    case R.id.id_rb_4:
+                        Label = lb4.getText().toString();
+                        break;
+                    case R.id.id_rb_5:
+                        Label = lb_diy.getText().toString();
+                        break;
+                }
+            }
+        });
+
         publish.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
                 String te = title.getText().toString();
                 String ct = content.getText().toString();
-                String pt = startTime.getText().toString();
-//                String lb = label.getText().toString();
-                if(lb_money.isChecked()){
-                    list_lb.add("有偿");
-                }
-                if(lb_nomoney.isChecked()){
-                    list_lb.add("无偿");
-                }
+                help = new Help(te,ct,1,1,1,1,Label);
+
                 HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
                 for (int i =0;i<list.size()-1;i++){
                     stringStringHashMap.put(i+"",list.get(i));
                 }
                 new Thread(()->{
-                    okHttpUtils.activityPublish(new Activity(null,null,"nice","wow", LocalDateTime.now(),0,0,"",0,0,null),stringStringHashMap);
+                    okHttpUtils.helpPublish(help,stringStringHashMap);
                 }).start();
                 upload();
                 toHelpCenterActivity();
@@ -126,8 +165,15 @@ public class CreateNewHelpActivity extends BaseActivity {
         publish = findViewById(R.id.id_btn_submit);
         startTime = findViewById(R.id.id_et_startDate);
 //        endTime = findViewById(R.id.id_et_endDate);
-        lb_money = findViewById(R.id.id_cb_money);
-        lb_nomoney = findViewById(R.id.id_cb_no_money);
+        lb_money = findViewById(R.id.id_rb_paid);
+        lb_nomoney = findViewById(R.id.id_rb_nopaid);
+        paid = findViewById(R.id.id_rg_paid);
+        lb1 = findViewById(R.id.id_rb_1);
+        lb2 = findViewById(R.id.id_rb_2);
+        lb3 = findViewById(R.id.id_rb_3);
+        lb4 = findViewById(R.id.id_rb_4);
+        lb5 = findViewById(R.id.id_rb_5);
+        label = findViewById(R.id.id_rg_label);
         lb_diy = findViewById(R.id.id_et_diy);
         gridView = findViewById(R.id.gridview);
         task = new Task();
@@ -213,6 +259,8 @@ public class CreateNewHelpActivity extends BaseActivity {
         }
         adapter.notifyDataSetChanged();
     }
+
+
 
     private class GVAdapter extends BaseAdapter {
         @Override

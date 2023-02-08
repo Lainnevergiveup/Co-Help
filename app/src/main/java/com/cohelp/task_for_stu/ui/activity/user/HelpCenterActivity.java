@@ -44,19 +44,17 @@ public class HelpCenterActivity extends BaseActivity {
     LinearLayout TaskCenter;
     LinearLayout HoleCenter;
     LinearLayout UserCenter;
-    LinearLayout SearchHot;
-    LinearLayout SearchTime;
+    TextView lb1,lb2,lb3,lb4,lb5;
     RelativeLayout SearchBox;
     Switch aSwitch;
     TextView all;
-    TextView waitedSolve;
-    TextView solved;
+
     EditText searchedContent;
     ImageView searchBtn;
     SwipeRefreshLayout eSwipeRefreshLayout;
     RecyclerView eRecyclerView;
     Integer conditionState = 0;
-    List<DetailResponse> helpList;
+    List<DetailResponse> helpList = new ArrayList<>();
     HelpAdapter helpAdapter;
     OkHttpUtils okHttpUtils;
     int conditionType = 0;
@@ -116,7 +114,19 @@ public class HelpCenterActivity extends BaseActivity {
                 toUserCenterActivity();
             }
         });
+        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(aSwitch.isChecked()){
+//
+                    SearchBox.setVisibility(buttonView.VISIBLE);
+                }else {
+//
+                    SearchBox.setVisibility(buttonView.GONE);
+                }
 
+            }
+        });
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,11 +143,14 @@ public class HelpCenterActivity extends BaseActivity {
 
             }
         });
+        eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshHelpListData();
+            }
+        });
 
     }
-
-
-
 
     private synchronized void refreshHelpListData(){
         getHelpList();
@@ -163,11 +176,14 @@ public class HelpCenterActivity extends BaseActivity {
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
-        all = findViewById(R.id.id_tv_all);
+        lb1 = findViewById(R.id.id_tv_lb1);
+        lb2 = findViewById(R.id.id_tv_lb2);
+        lb3 = findViewById(R.id.id_tv_lb3);
+        lb4 = findViewById(R.id.id_tv_lb4);
+        lb5 = findViewById(R.id.id_tv_lb5);
+
         searchedContent = findViewById(R.id.id_et_search);
         searchBtn = findViewById(R.id.id_iv_search);
-        SearchHot = findViewById(R.id.id_ll_search_hot);
-        SearchTime = findViewById(R.id.id_ll_search_time);
         SearchBox = findViewById(R.id.id_rl_search);
         aSwitch = findViewById(R.id.id_sw_check);
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
@@ -233,6 +249,8 @@ public class HelpCenterActivity extends BaseActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+
     }
 
 
