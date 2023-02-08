@@ -1,6 +1,9 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -20,6 +23,7 @@ import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.entity.Collect;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
+import com.cohelp.task_for_stu.ui.adpter.CommentAdapter;
 import com.cohelp.task_for_stu.ui.view.AvatorImageView;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -41,9 +45,16 @@ public class DetailActivity extends AppCompatActivity {
     ImageButton commentButton;
 
     View view;
+    View view2;
+    RecyclerView commentRecycleView;
 
     BottomSheetDialog bottomSheetDialog;
+    BottomSheetDialog bottomSheetDialog2;
+
     BottomSheetBehavior bottomSheetBehavior;
+    BottomSheetBehavior bottomSheetBehavior2;
+
+    CommentAdapter commentAdapter;
 
     OkHttpUtils okHttpUtils;
     Intent intent;
@@ -57,6 +68,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         initTools();
+        getComment();
         initView();
         initEvent();
 
@@ -76,10 +88,13 @@ public class DetailActivity extends AppCompatActivity {
             okHttpUtils = new OkHttpUtils();
         }
         okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+        idAndType = new IdAndType(detail.getActivityVO().getId(),1);
     }
 
     private void initView(){
         view = LayoutInflater.from(this).inflate(R.layout.view_comment_bottomsheet, null, false);
+        view2 = LayoutInflater.from(this).inflate(R.layout.view_comment_bottomsheet, null, false);
+
         reportButton = (Button)findViewById(R.id.button_MutRelease);
         returnButton = (Button) findViewById(R.id.button_Cancel);
 
@@ -94,12 +109,21 @@ public class DetailActivity extends AppCompatActivity {
         topicDetail = (TextView) findViewById(R.id.text_TopicDetail);
         avatorName = (TextView) findViewById(R.id.text_UserId);
 
+        commentRecycleView = (RecyclerView) view.findViewById(R.id.dialog_bottomsheet_rv_lists);
         bottomSheetDialog = new BottomSheetDialog(this,R.style.BottomSheetDialogStyle1);
-        idAndType = new IdAndType(detail.getActivityVO().getId(),1);
+
+        bottomSheetDialog2 = new BottomSheetDialog(this,R.style.BottomSheetDialog);
+
+        setBottomSheet();
+        initCommentRecycleView();
+
+
     }
 
     private void initEvent(){
-        setBottomSheet();
+
+
+
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,9 +148,9 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (bottomSheetDialog!=null){
-                    getComment();
                     System.out.println(remarkList);
                     bottomSheetDialog.show();
+                    bottomSheetDialog2.show();
                 }
             }
         });
@@ -143,12 +167,6 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-    private void viewSetData(){
-
-
-
-
-    }
     private void setBottomSheet(){
         bottomSheetDialog.setCanceledOnTouchOutside(true);
         bottomSheetDialog.getWindow().setDimAmount(0f);
@@ -157,6 +175,27 @@ public class DetailActivity extends AppCompatActivity {
         bottomSheetBehavior = BottomSheetBehavior.from((View) view.getParent());
         //dialog的高度
         bottomSheetBehavior.setPeekHeight(getWindowHeight());
+
+        bottomSheetDialog2.setCanceledOnTouchOutside(true);
+        bottomSheetDialog2.getWindow().setDimAmount(0f);
+        bottomSheetDialog2.setContentView(view2);
+        //用户行为
+        bottomSheetBehavior2 = BottomSheetBehavior.from((View) view2.getParent());
+        //dialog的高度
+        bottomSheetBehavior2.setPeekHeight(getWindowHeight()/2);
+    }
+    private void initCommentRecycleView(){
+
+        commentRecycleView.setHasFixedSize(true);
+        commentRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        commentRecycleView.setItemAnimator(new DefaultItemAnimator());
+        if (commentAdapter==null){
+            commentAdapter = new CommentAdapter(remarkList);
+        }
+        else{
+            commentAdapter.setCommentList(remarkList);
+        }
+        commentRecycleView.setAdapter(commentAdapter);
     }
     /**
      * 计算高度(初始化可以设置默认高度)
@@ -168,13 +207,14 @@ public class DetailActivity extends AppCompatActivity {
         DisplayMetrics displayMetrics = res.getDisplayMetrics();
         int heightPixels = displayMetrics.heightPixels;
         //设置弹窗高度为屏幕高度的3/4
-        return heightPixels - heightPixels / 4;
+        return heightPixels - heightPixels / 9;
     }
     private synchronized void getComment(){
 
         try {
             Thread t1 = new Thread(()->{
             remarkList = okHttpUtils.getCommentList(idAndType);
+                System.out.println(remarkList);
             });
             t1.start();
             t1.join();

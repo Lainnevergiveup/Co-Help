@@ -45,6 +45,7 @@ import com.cohelp.task_for_stu.utils.T;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -105,8 +106,9 @@ public class CreateNewTaskActivity extends BaseActivity {
                 String te = title.getText().toString();
                 String ct = content.getText().toString();
                 String pt = startTime.getText().toString();
+                LocalDateTime dateTime=LocalDateTime.parse(pt, DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm"));
 //                String lb = label.getText().toString();
-                activity = new Activity(null,null,te,ct,LocalDateTime.now(),0,0,"",0,0,null);
+                activity = new Activity(null,null,te,ct,dateTime,0,0,"",0,0,null);
                 HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
                 for (int i =0;i<list.size()-1;i++){
                     stringStringHashMap.put(i+"",list.get(i));

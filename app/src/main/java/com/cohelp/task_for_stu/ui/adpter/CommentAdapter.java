@@ -59,7 +59,7 @@ public class CommentAdapter  extends RecyclerView.Adapter<CommentAdapter.ViewHol
     @Override
     public void onBindViewHolder(@NonNull CommentAdapter.ViewHolder holder, int position) {
         RemarkVO remark = commentList.get(position);
-        holder.helpTitle.setText(remark.getTopicId());
+//        holder.helpTitle.setText(remark.getTopicId());
         holder.helpContext.setText(remark.getRemarkContent());
         holder.ownerName.setText(remark.getRemarkOwnerName());
         holder.ownerAvater.setImageURL(remark.getRemarkOwnerAvatar());
