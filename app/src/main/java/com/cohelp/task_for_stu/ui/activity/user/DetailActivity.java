@@ -3,8 +3,11 @@ package com.cohelp.task_for_stu.ui.activity.user;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -32,6 +35,8 @@ public class DetailActivity extends AppCompatActivity {
     ImageButton likeButton;
     ImageButton collectButton;
     ImageButton commentButton;
+
+    View view;
 
     BottomSheetDialog bottomSheetDialog;
     BottomSheetBehavior bottomSheetBehavior;
@@ -69,6 +74,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initView(){
+        view = LayoutInflater.from(this).inflate(R.layout.view_comment_bottomsheet, null, false);
         reportButton = (Button)findViewById(R.id.button_MutRelease);
         returnButton = (Button) findViewById(R.id.button_Cancel);
 
@@ -83,10 +89,12 @@ public class DetailActivity extends AppCompatActivity {
         topicDetail = (TextView) findViewById(R.id.text_TopicDetail);
         avatorName = (TextView) findViewById(R.id.text_UserId);
 
+        bottomSheetDialog = new BottomSheetDialog(this,R.style.BottomSheetDialogStyle1);
 
     }
 
     private void initEvent(){
+        setBottomSheet();
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,7 +118,9 @@ public class DetailActivity extends AppCompatActivity {
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (bottomSheetDialog!=null){
+                    bottomSheetDialog.show();
+                }
             }
         });
         collectButton.setOnClickListener(new View.OnClickListener() {
@@ -136,5 +146,26 @@ public class DetailActivity extends AppCompatActivity {
     private synchronized void getCommentList(){
 
 
+    }
+    private void setBottomSheet(){
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
+        bottomSheetDialog.getWindow().setDimAmount(0f);
+        bottomSheetDialog.setContentView(view);
+        //用户行为
+        bottomSheetBehavior = BottomSheetBehavior.from((View) view.getParent());
+        //dialog的高度
+        bottomSheetBehavior.setPeekHeight(getWindowHeight());
+    }
+    /**
+     * 计算高度(初始化可以设置默认高度)
+     *
+     * @return
+     */
+    private int getWindowHeight() {
+        Resources res = this.getResources();
+        DisplayMetrics displayMetrics = res.getDisplayMetrics();
+        int heightPixels = displayMetrics.heightPixels;
+        //设置弹窗高度为屏幕高度的3/4
+        return heightPixels - heightPixels / 4;
     }
 }
