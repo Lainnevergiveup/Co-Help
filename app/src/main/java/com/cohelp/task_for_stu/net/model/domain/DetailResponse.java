@@ -39,6 +39,14 @@ public class DetailResponse implements Serializable {
      */
     ArrayList<String> imagesUrl;
 
+    /**
+     *是否点赞
+     */
+    private Integer isLiked;
+    /**
+     *是否收藏
+     */
+    private Integer isCollected;
     public ActivityVO getActivityVO() {
         return activityVO;
     }
@@ -79,4 +87,19 @@ public class DetailResponse implements Serializable {
         this.imagesUrl = imagesUrl;
     }
 
+    public Integer getIsLiked() {
+        return isLiked;
+    }
+
+    public void setIsLiked(Integer isLiked) {
+        this.isLiked = isLiked;
+    }
+
+    public Integer getIsCollected() {
+        return isCollected;
+    }
+
+    public void setIsCollected(Integer isCollected) {
+        this.isCollected = isCollected;
+    }
 }
