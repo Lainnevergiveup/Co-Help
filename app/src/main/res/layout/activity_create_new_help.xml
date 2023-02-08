@@ -10,6 +10,14 @@
     <!--    Integer reward;-->
     <!--        String title;-->
     <!--    String desc;-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
 
     <EditText
         android:id="@+id/id_et_title"
@@ -183,4 +191,6 @@
         android:background="@drawable/btn_bg_pink"
         style="@style/Button_Large_Pink"
         android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

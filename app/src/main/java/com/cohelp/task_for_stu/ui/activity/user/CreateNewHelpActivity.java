@@ -157,6 +157,12 @@ public class CreateNewHelpActivity extends BaseActivity{
                 toHelpCenterActivity();
             }
         });
+        lb_diy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         initData();
     }
     private void initView() {

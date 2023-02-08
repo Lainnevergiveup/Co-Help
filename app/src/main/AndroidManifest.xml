@@ -27,6 +27,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Task_for_stu"
         android:usesCleartextTraffic="true"
+        android:windowSoftInputMode="adjustResize"
+        android:fitsSystemWindows="true"
         tools:ignore="ExtraText">
         <activity
             android:name=".ui.activity.user.CreateNewHoleActivity"
