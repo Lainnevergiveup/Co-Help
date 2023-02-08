@@ -62,6 +62,7 @@ public class CreateNewTaskActivity extends BaseActivity {
     Button button;
     TaskBiz taskBiz;
     Task task;
+    Activity activity;
     BaseTask baseTask;
     TimePickerView pickerView;
     OkHttpUtils okHttpUtils = new OkHttpUtils();
@@ -101,17 +102,17 @@ public class CreateNewTaskActivity extends BaseActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-//                String te = title.getText().toString();
-//                String ct = content.getText().toString();
-//                String pt = startTime.getText().toString();
+                String te = title.getText().toString();
+                String ct = content.getText().toString();
+                String pt = startTime.getText().toString();
 //                String lb = label.getText().toString();
-
+                activity = new Activity(null,null,te,ct,LocalDateTime.now(),0,0,"",0,0,null);
                 HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
                 for (int i =0;i<list.size()-1;i++){
                     stringStringHashMap.put(i+"",list.get(i));
                 }
                 new Thread(()->{
-                    okHttpUtils.activityPublish(new Activity(null,null,"nice","wow", LocalDateTime.now(),0,0,"",0,0,null),stringStringHashMap);
+                    okHttpUtils.activityPublish(activity,stringStringHashMap);
                 }).start();
                 upload();
                 toTaskCenterActivity();

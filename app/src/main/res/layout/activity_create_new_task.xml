@@ -59,23 +59,19 @@
         </LinearLayout>
 
     </LinearLayout>
-    <LinearLayout
+    <EditText
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_margin="16dp"
-        android:orientation="vertical">
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:enabled="false"
-            android:focusable="false"
-            android:id="@+id/id_et_content"
-            android:gravity="top"
-            android:hint="活动详情描述..."
-            android:maxLines="5" />
+        android:layout_height="200dp"
+        android:layout_margin="20sp"
+
+        android:id="@+id/id_et_content"
+        android:gravity="top"
+        android:hint="活动详情描述..."
+        android:maxLines="5" />
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="250dp"
 
             android:padding="5dp">
             <GridView
@@ -84,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:numColumns="4" />
         </LinearLayout>
-    </LinearLayout>
+
 <!--    <EditText-->
 <!--        android:id="@+id/id_et_content"-->
 <!--        android:layout_marginTop="20sp"-->

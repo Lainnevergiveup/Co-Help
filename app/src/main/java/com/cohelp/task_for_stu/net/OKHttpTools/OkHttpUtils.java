@@ -117,10 +117,10 @@ public class OkHttpUtils {
     /*
     Hole相关接口
      */
-    public void holePublish(Hole hole){
+    public void holePublish(Hole hole,Map<String,String> nameAndPath){
         String act = gson.toJson(hole);
         System.out.println(act);
-        okHttp.sendMediaRequest(baseURL+"/hole/publish","hole",act,null,cookie);
+        okHttp.sendMediaRequest(baseURL+"/hole/publish","hole",act,nameAndPath,cookie);
         String res = null;
         try {
             res = okHttp.getResponse().body().string();
@@ -158,10 +158,10 @@ public class OkHttpUtils {
     /*
     Help相关接口
      */
-    public void helpPublish(Help help){
+    public void helpPublish(Help help,Map<String,String> nameAndPaht){
         String act = gson.toJson(help);
         System.out.println(act);
-        okHttp.sendMediaRequest(baseURL+"/help/publish","help",act,null,cookie);
+        okHttp.sendMediaRequest(baseURL+"/help/publish","help",act,nameAndPaht,cookie);
         String res = okHttp.getResponse().toString();
         System.out.println(res);
     }
