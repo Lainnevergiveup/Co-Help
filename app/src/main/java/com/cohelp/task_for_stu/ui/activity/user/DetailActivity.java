@@ -16,12 +16,16 @@ import android.widget.TextView;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
+import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.entity.Collect;
 import com.cohelp.task_for_stu.net.model.entity.User;
+import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.ui.view.AvatorImageView;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -45,7 +49,8 @@ public class DetailActivity extends AppCompatActivity {
     Intent intent;
 
     DetailResponse detail;
-
+    List<RemarkVO> remarkList;
+    IdAndType idAndType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +95,7 @@ public class DetailActivity extends AppCompatActivity {
         avatorName = (TextView) findViewById(R.id.text_UserId);
 
         bottomSheetDialog = new BottomSheetDialog(this,R.style.BottomSheetDialogStyle1);
-
+        idAndType = new IdAndType(detail.getActivityVO().getId(),1);
     }
 
     private void initEvent(){
@@ -119,6 +124,8 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (bottomSheetDialog!=null){
+                    getComment();
+                    System.out.println(remarkList);
                     bottomSheetDialog.show();
                 }
             }
@@ -142,11 +149,6 @@ public class DetailActivity extends AppCompatActivity {
 
 
     }
-
-    private synchronized void getCommentList(){
-
-
-    }
     private void setBottomSheet(){
         bottomSheetDialog.setCanceledOnTouchOutside(true);
         bottomSheetDialog.getWindow().setDimAmount(0f);
@@ -167,5 +169,17 @@ public class DetailActivity extends AppCompatActivity {
         int heightPixels = displayMetrics.heightPixels;
         //设置弹窗高度为屏幕高度的3/4
         return heightPixels - heightPixels / 4;
+    }
+    private synchronized void getComment(){
+
+        try {
+            Thread t1 = new Thread(()->{
+            remarkList = okHttpUtils.getCommentList(idAndType);
+            });
+            t1.start();
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

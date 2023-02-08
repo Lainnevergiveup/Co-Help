@@ -22,6 +22,7 @@ import com.cohelp.task_for_stu.net.model.entity.Hole;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
 import com.cohelp.task_for_stu.net.model.vo.HoleVO;
+import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.utils.GsonUtil;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.google.gson.Gson;
@@ -295,6 +296,18 @@ public class OkHttpUtils {
             e.printStackTrace();
         }
         Result<DetailResponse> userResult = gson.fromJson(res,new TypeToken<Result<DetailResponse>>(){}.getType());
+        return userResult.getData();
+    }
+    public List<RemarkVO> getCommentList(IdAndType idAndType){
+        String idAndTypeJson = gson.toJson(idAndType);
+        okHttp.sendRequest(baseURL+"/general/getremarklist",idAndTypeJson,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<List<RemarkVO>> userResult = gson.fromJson(res,new TypeToken<Result<List<RemarkVO>>>(){}.getType());
         return userResult.getData();
     }
     /*
