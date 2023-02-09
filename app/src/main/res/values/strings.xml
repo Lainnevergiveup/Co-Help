@@ -18,4 +18,9 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="team_organize">组团\n招人</string>
+    <string name="find">寻物\n启事</string>
+    <string name="help">跑腿\n代取</string>
+    <string name="questions">问题\n求助</string>
+
 </resources>

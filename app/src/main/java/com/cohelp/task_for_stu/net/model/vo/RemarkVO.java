@@ -26,6 +26,7 @@ public class RemarkVO {
     /**
      * 评论链顶层（根）ID
      */
+       // 2->4
     private Integer topId;
     /**
      * 评论目标是否为话题（0：否 1：是）

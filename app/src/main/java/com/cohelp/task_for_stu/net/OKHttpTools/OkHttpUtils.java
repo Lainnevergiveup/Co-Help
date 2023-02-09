@@ -230,7 +230,17 @@ public class OkHttpUtils {
         System.out.println(okHttp.getResponse());
         System.out.println(okHttp.getResponse().body().string());
     }
-
+    public User getUser(){
+        okHttp.sendGetRequest(baseURL+"/user/current",cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<User> result = gson.fromJson(res, new TypeToken<Result<User>>(){}.getType());
+        return result.getData();
+    }
     /*
     image相关接口
      */
@@ -310,6 +320,12 @@ public class OkHttpUtils {
         Result<List<RemarkVO>> userResult = gson.fromJson(res,new TypeToken<Result<List<RemarkVO>>>(){}.getType());
         return userResult.getData();
     }
+
+    public void sortCommentList(List<RemarkVO> commentList){
+
+
+
+    }
     /*
     Remark
      */
@@ -323,6 +339,7 @@ public class OkHttpUtils {
         }
         System.out.println(res);
     }
+
     /*
     Collect
      */

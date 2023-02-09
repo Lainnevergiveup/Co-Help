@@ -232,9 +232,9 @@ public class test {
         remarkActivity.setTopId(1);
         remarkActivity.setTargetIsActivity(1);
         LocalDateTime localDateTime = LocalDateTime.now();
-        remarkActivity.setRemarkTime(localDateTime);
-        remarkRequest.setRemarkActivity(remarkActivity);
-        remarkRequest.setType(1);
+//        remarkActivity.setRemarkTime(localDateTime);
+//        remarkRequest.setRemarkActivity(remarkActivity);
+//        remarkRequest.setType(1);
 //        remarkRequest.setRemarkHelp(null);
 //        remarkRequest.setRemarkHole(null);
 //        String remarkMessage = ToJsonString.toJson(remarkRequest);
@@ -418,11 +418,11 @@ public class test {
         System.out.println(cookieval);
 
         LocalDateTime localDateTime = LocalDateTime.now();
-        history.setId(null);
-        history.setTopicId(1);
-        history.setTopicType(2);
-        history.setUserId(1);
-        history.setViewTime(localDateTime);
+//        history.setId(null);
+//        history.setTopicId(1);
+//        history.setTopicType(2);
+//        history.setUserId(1);
+//        history.setViewTime(localDateTime);
 
         String inserthistory = JSON.toJSONStringWithDateFormat(history, "yyyy-MM-dd HH:mm:ss");
 //        String inserthistory = ToJsonString.toJson(history);

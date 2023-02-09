@@ -1,6 +1,7 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,8 +17,12 @@ import com.cohelp.task_for_stu.biz.UserBiz;
 import com.cohelp.task_for_stu.config.Config;
 import com.cohelp.task_for_stu.listener.ClickListener;
 import com.cohelp.task_for_stu.net.CommonCallback;
+import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
+import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.ui.CircleTransform;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
+import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.squareup.picasso.Picasso;
 
@@ -45,10 +50,14 @@ public class BasicInfoActivity extends BaseActivity {
 
     com.cohelp.task_for_stu.net.model.entity.User transferUser;
     UserBiz userBiz;
+
+    Intent intent;
+    OkHttpUtils okHttpUtils;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basic_info);
+        initTools();
         initView();
         initEvent();
         setTitle("个人中心");
@@ -69,9 +78,9 @@ public class BasicInfoActivity extends BaseActivity {
         Browsing_history = findViewById(R.id.id_tv_browsing_history);
         Personal_homepage = findViewById(R.id.id_tv_personal_homepage);
         userBiz = new UserBiz();
-        Intent intent = getIntent();
 
-        transferUser = (com.cohelp.task_for_stu.net.model.entity.User) intent.getSerializableExtra("user");
+        getUser();
+
         nickname.setText(transferUser.getUserAccount());
 
         //Thread thread = new
@@ -269,5 +278,26 @@ public class BasicInfoActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         userBiz.onDestory();
+    }
+    private void initTools(){
+        intent = getIntent();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            okHttpUtils = new OkHttpUtils();
+        }
+        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+    }
+    private synchronized void getUser(){
+        Thread t1 = new Thread(()->{
+            transferUser=okHttpUtils.getUser();
+        });
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

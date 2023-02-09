@@ -143,11 +143,11 @@ public class test2 {
         System.out.println(cookieval);
 
         LocalDateTime localDateTime = LocalDateTime.now();
-        history.setId(null);
-        history.setTopicId(1);
-        history.setTopicType(2);
-        history.setUserId(1);
-        history.setViewTime(localDateTime);
+//        history.setId(null);
+//        history.setTopicId(1);
+//        history.setTopicType(2);
+//        history.setUserId(1);
+//        history.setViewTime(localDateTime);
 
         String inserthistory = JSON.toJSONStringWithDateFormat(history, "yyyy-MM-dd HH:mm:ss");
 //        String inserthistory = ToJsonString.toJson(history);
