@@ -1,9 +1,5 @@
 package com.cohelp.task_for_stu;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
 import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.ToJsonString;
 import com.cohelp.task_for_stu.net.gsonTools.GSON;
@@ -15,18 +11,13 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
-public class ExampleUnitTest {
+public class Test {
     OKHttp okHttp  = new OKHttp();
     //    LoginRequest loginRequest = new LoginRequest();
     Gson gson = new GSON().gsonSetter();
     Activity activity;
     LoginRequest loginRequest = new LoginRequest();
-    @Test
+    @org.junit.Test
     public String getImageById(){
         loginRequest.setUserAccount("1234567890");//debug
         loginRequest.setUserPassword( "1234567890");//debug

@@ -50,5 +50,24 @@ public class ImageTest {
         System.out.println(result.getData());
 
     }
+    @Test
+    public String getImageById(){
+        loginRequest.setUserAccount("1234567890");//debug
+        loginRequest.setUserPassword( "1234567890");//debug
+        String loginMessage = ToJsonString.toJson(loginRequest);
 
+        okHttp.sendRequest("http://43.143.90.226:9090/user/login",loginMessage);
+        String cookieval = okHttp.getResponse().header("Set-Cookie");
+        System.out.println(cookieval);
+        okHttp.sendGetRequest("http://43.143.90.226:9090/image/getimagebyid?imageId=1",cookieval);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<String> result = gson.fromJson(res, new TypeToken<Result<String>>(){}.getType());
+        System.out.println(result);
+        return result.getData();
+    }
 }
