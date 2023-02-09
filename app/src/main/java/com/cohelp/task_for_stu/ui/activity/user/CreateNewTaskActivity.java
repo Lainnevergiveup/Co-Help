@@ -128,7 +128,7 @@ public class CreateNewTaskActivity extends BaseActivity {
         content = findViewById(R.id.id_et_content);
         button = findViewById(R.id.id_btn_submit);
         startTime = findViewById(R.id.id_et_startDate);
-        endTime = findViewById(R.id.id_et_endDate);
+//        endTime = findViewById(R.id.id_et_endDate);
         gridView = findViewById(R.id.gridview);
         task = new Task();
         taskBiz = new TaskBiz();

@@ -127,6 +127,7 @@ public class HelpCenterActivity extends BaseActivity {
 
             }
         });
+
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

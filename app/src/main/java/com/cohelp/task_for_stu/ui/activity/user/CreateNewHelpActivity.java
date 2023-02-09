@@ -3,6 +3,7 @@ package com.cohelp.task_for_stu.ui.activity.user;
 import androidx.annotation.RequiresApi;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,9 +12,12 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -51,7 +55,6 @@ public class CreateNewHelpActivity extends BaseActivity{
 
     EditText title;
     EditText content;
-    EditText reward;
     EditText startTime;
     EditText endTime;
     RadioButton lb_money;
@@ -137,6 +140,19 @@ public class CreateNewHelpActivity extends BaseActivity{
                 }
             }
         });
+//        lb_diy.setOnKeyListener(new View.OnKeyListener() {
+//          @Override
+//          public boolean onKey(View v, int keyCode, KeyEvent event) {
+//              //del key is disabled ,resolved by this way
+//              if (event != null&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+//
+//                  InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                  in.hideSoftInputFromWindow(lb_diy.getApplicationWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+//              }
+//              return true;
+//          }
+//
+//      });
 
         publish.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -144,7 +160,7 @@ public class CreateNewHelpActivity extends BaseActivity{
             public void onClick(View view) {
                 String te = title.getText().toString();
                 String ct = content.getText().toString();
-                help = new Help(te,ct,1,1,1,1,Label);
+                help = new Help(te,ct,Paid,1,1,1,Label);
 
                 HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
                 for (int i =0;i<list.size()-1;i++){

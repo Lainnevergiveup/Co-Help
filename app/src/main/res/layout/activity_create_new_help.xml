@@ -13,184 +13,186 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
 
-    <EditText
-        android:id="@+id/id_et_title"
-        android:layout_marginTop="20sp"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20sp"
-        android:background="@drawable/search_solid"
-        android:paddingTop="5dp"
-        android:paddingLeft="5dp"
-        android:hint="输入您的标题"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textLongMessage"/>
-
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20sp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:id="@+id/id_rg_paid"
-            >
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:text="有偿"
-                android:id="@+id/id_rb_paid"
-                android:textSize="20dp"
-                android:layout_height="wrap_content">
-            </RadioButton>
-            <RadioButton
-                android:layout_marginLeft="20dp"
-                android:layout_width="wrap_content"
-                android:text="无偿"
-                android:id="@+id/id_rb_nopaid"
-                android:textSize="20dp"
-                android:layout_height="wrap_content">
-
-            </RadioButton>
-
-        </RadioGroup>
-
-    <EditText
-        android:layout_margin="16dp"
-        android:id="@+id/id_et_content"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:gravity="top"
-        android:hint="互助详情描述..."
-        android:maxLines="5" />
-
-    <!--    <EditText-->
-    <!--        android:id="@+id/id_et_content"-->
-    <!--        android:layout_marginTop="20sp"-->
-    <!--        android:layout_marginLeft="20sp"-->
-    <!--        android:layout_marginRight="20sp"-->
-    <!--        android:background="@drawable/search_solid"-->
-    <!--        android:gravity="top"-->
-    <!--        android:paddingTop="5dp"-->
-    <!--        android:paddingLeft="5dp"-->
-    <!--        android:hint="输入您的任务描述"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="240sp"-->
-    <!--        android:inputType="textMultiLine"/>-->
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_margin="16dp">
-
-            <GridView
-                android:id="@+id/gridview"
+            <EditText
+                android:id="@+id/id_et_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:numColumns="4" />
-        </LinearLayout>
-    <LinearLayout
-        android:layout_marginTop="20sp"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20sp"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="vertical"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20sp"
-            android:text="标签:"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            >
+                android:layout_marginLeft="20sp"
+                android:layout_marginTop="20sp"
+                android:layout_marginRight="20sp"
+                android:background="@drawable/search_solid"
+                android:hint="输入您的标题"
+                android:inputType="textLongMessage"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp" />
 
-        </TextView>
-       <RelativeLayout
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:orientation="horizontal"
-           android:layout_marginTop="10dp"
-           >
+            <RadioGroup
+                android:id="@+id/id_rg_paid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20sp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-           <RadioGroup
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:id="@+id/id_rg_label"
-               android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/id_rb_paid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="有偿"
+                    android:textSize="20dp"></RadioButton>
 
-               <RadioButton
-                   android:id="@+id/id_rb_1"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="组团招人">
+                <RadioButton
+                    android:id="@+id/id_rb_nopaid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="无偿"
+                    android:textSize="20dp">
 
-               </RadioButton>
+                </RadioButton>
 
-               <RadioButton
-                   android:id="@+id/id_rb_2"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="寻物启事">
+            </RadioGroup>
 
-               </RadioButton>
+            <EditText
+                android:id="@+id/id_et_content"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_margin="16dp"
+                android:gravity="top"
+                android:hint="互助详情描述..."
+                android:maxLines="5" />
 
-               <RadioButton
-                   android:id="@+id/id_rb_3"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="跑腿代取">
-
-               </RadioButton>
-
-               <RadioButton
-                   android:id="@+id/id_rb_4"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="问题求助">
-
-               </RadioButton>
-
-               <RadioButton
-                   android:id="@+id/id_rb_5"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content">
-
-               </RadioButton>
-
-           </RadioGroup>
-
-           <EditText
-               android:id="@+id/id_et_diy"
-               android:layout_width="100dp"
-               android:layout_height="wrap_content"
-
-               android:layout_marginTop="20sp"
-               android:gravity="center"
-               android:hint="自定义"
-               android:textColorHighlight="@color/black"
-               android:textSize="15sp">
-
-           </EditText>
+            <!--    <EditText-->
+            <!--        android:id="@+id/id_et_content"-->
+            <!--        android:layout_marginTop="20sp"-->
+            <!--        android:layout_marginLeft="20sp"-->
+            <!--        android:layout_marginRight="20sp"-->
+            <!--        android:background="@drawable/search_solid"-->
+            <!--        android:gravity="top"-->
+            <!--        android:paddingTop="5dp"-->
+            <!--        android:paddingLeft="5dp"-->
+            <!--        android:hint="输入您的任务描述"-->
+            <!--        android:layout_width="match_parent"-->
+            <!--        android:layout_height="240sp"-->
+            <!--        android:inputType="textMultiLine"/>-->
 
 
-       </RelativeLayout>
-    <Button
-        android:id="@+id/id_btn_submit"
-        android:text="发布"
-        android:layout_marginTop="20sp"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20sp"
-        android:layout_width="match_parent"
-        android:background="@drawable/btn_bg_pink"
-        style="@style/Button_Large_Pink"
-        android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_margin="16dp">
+
+                <GridView
+                    android:id="@+id/gridview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:numColumns="4" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20sp"
+                android:layout_marginTop="20sp"
+                android:layout_marginRight="20sp"
+                android:orientation="vertical" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20sp"
+                android:text="标签:"
+                android:textColor="@color/black"
+                android:textSize="20sp">
+
+            </TextView>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <RadioGroup
+                    android:id="@+id/id_rg_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/id_rb_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="组团招人">
+
+                    </RadioButton>
+
+                    <RadioButton
+                        android:id="@+id/id_rb_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="寻物启事">
+
+                    </RadioButton>
+
+                    <RadioButton
+                        android:id="@+id/id_rb_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="跑腿代取">
+
+                    </RadioButton>
+
+                    <RadioButton
+                        android:id="@+id/id_rb_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="问题求助">
+
+                    </RadioButton>
+
+                    <RadioButton
+                        android:id="@+id/id_rb_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </RadioButton>
+
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/id_et_diy"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center"
+                android:hint="自定义"
+                android:maxLength="7"
+                android:textColorHighlight="@color/black"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/id_btn_submit"
+                style="@style/Button_Large_Pink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20sp"
+                android:layout_marginTop="10sp"
+                android:layout_marginRight="20sp"
+                android:background="@drawable/btn_bg_pink"
+                android:text="发布" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

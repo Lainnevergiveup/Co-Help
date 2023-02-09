@@ -40,13 +40,14 @@ public class MyTaskActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_task);
         setUpToolBar();
-        setTitle("我的任务");
+        setTitle("我的发布");
         initView();
         initEvent();
         loadAll();
     }
 
     private void initEvent() {
+
 
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,12 +74,7 @@ public class MyTaskActivity extends BaseActivity {
             }
         });
 
-        all.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadAll();
-            }
-        });
+
         //todo 展示接受过和发布过的任务，需要重新写业务方法
         taskSolved.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,9 +153,6 @@ public class MyTaskActivity extends BaseActivity {
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
         TaskCenter = findViewById(R.id.id_ll_taskCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
-        all = findViewById(R.id.id_tv_all);
-        taskSolved = findViewById(R.id.id_tv_taskSolved);
-        taskPosted = findViewById(R.id.id_tv_taskPosted);
         eRecyclerView = findViewById(R.id.id_recyclerview);
         taskBiz = new TaskBiz();
         taskList = new ArrayList<>();

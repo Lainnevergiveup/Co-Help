@@ -5,60 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.activity.user.MyQuestionActivity">
-    <include layout="@layout/common_toolbar"/>
-    <LinearLayout
+    tools:context=".ui.activity.user.MyTaskActivity">
+    <include layout="@layout/sa_toolbar"/>
+
+
+    <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout
+        android:id="@+id/id_swiperefresh"
+        android:layout_width="match_parent"
         android:layout_marginTop="15sp"
-        android:orientation="horizontal"
+        android:layout_marginLeft="15sp"
+        android:layout_marginRight="15sp"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/id_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </androidx.recyclerview.widget.RecyclerView>
+    </com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout>
+
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/id_tv_all"
-            android:text="全部"
-            android:layout_marginLeft="40sp"
-            android:textColor="#1296db"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <View
-            android:layout_width="1dp"
-            android:layout_marginLeft="25sp"
-            android:layout_height="match_parent"
-            android:background="@color/lfile_gray"/>
-        <TextView
-            android:id="@+id/id_tv_repeated"
-            android:textColor="#1296db"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:text="我回答过的"
-            android:layout_marginLeft="25sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <View
-            android:layout_width="1dp"
-            android:layout_marginLeft="25sp"
-            android:layout_height="match_parent"
-            android:background="@color/lfile_lightgray"/>
-        <TextView
-            android:id="@+id/id_tv_asked"
-            android:textColor="#1296db"
-            android:textStyle="bold"
-            android:text="我提出过的"
-            android:layout_marginLeft="25sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/id_recyclerview"
-        android:layout_marginTop="5sp"
-        android:layout_marginLeft="25sp"
-        android:layout_marginRight="25sp"
-        android:layout_width="match_parent"
-        android:layout_height="500sp">
-    </androidx.recyclerview.widget.RecyclerView>
-
-
+        android:layout_height="1dp"
+        android:background="@color/lfile_lightgray"/>
+    <!--    1296db-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,14 +47,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/task_bottom_chosed" />
+                android:src="@drawable/task_bottom" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="活动"
-                android:textColor="#1296db"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -99,14 +69,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/task_bottom_chosed" />
+                android:src="@drawable/task_bottom" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="互助"
-                android:textColor="#1296db"
+
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -143,13 +113,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/user_bottom" />
+                android:src="@drawable/user_bottom_chosed" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="个人中心"
+                android:textColor="#1296db"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>

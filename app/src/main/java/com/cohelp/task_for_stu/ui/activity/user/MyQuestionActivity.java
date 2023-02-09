@@ -153,10 +153,6 @@ public class MyQuestionActivity extends BaseActivity {
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
         TaskCenter = findViewById(R.id.id_ll_taskCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
-
-        all = findViewById(R.id.id_tv_all);
-        repeated = findViewById(R.id.id_tv_repeated);
-        asked = findViewById(R.id.id_tv_asked);
         eRecyclerView = findViewById(R.id.id_recyclerview);
         questionBiz = new QuestionBiz();
         questionList = new ArrayList<>();

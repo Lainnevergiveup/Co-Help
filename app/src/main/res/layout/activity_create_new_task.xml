@@ -42,22 +42,6 @@
             android:layout_height="wrap_content"
             android:inputType="datetime"/>
 
-        <LinearLayout
-            android:gravity="right"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <EditText
-                android:focusable="false"
-                android:id="@+id/id_et_endDate"
-                android:background="@drawable/search_solid"
-                android:paddingTop="5dp"
-                android:paddingLeft="5dp"
-                android:hint="输入结束时间"
-                android:layout_width="150sp"
-                android:layout_height="wrap_content"
-                android:inputType="datetime"/>
-        </LinearLayout>
-
     </LinearLayout>
     <EditText
         android:layout_width="match_parent"
