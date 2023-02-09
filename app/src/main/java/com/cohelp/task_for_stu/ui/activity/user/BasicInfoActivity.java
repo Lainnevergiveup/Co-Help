@@ -36,12 +36,9 @@ public class BasicInfoActivity extends BaseActivity {
     TextView logOut;
     TextView Browsing_history;
     TextView Personal_homepage;
-    TextView Setting;
-    TextView Publish_manage;
-    TextView Collect;
-    ImageView myTask;
-    ImageView myQuestion;
-    ImageView myCollect;
+    LinearLayout myTask;
+    LinearLayout myQuestion;
+    LinearLayout myCollect;
     LinearLayout TaskCenter;
     LinearLayout UserCenter;
     LinearLayout HelpCenter;
@@ -67,9 +64,9 @@ public class BasicInfoActivity extends BaseActivity {
         nickname = findViewById(R.id.id_tv_nickname);
         grade = findViewById(R.id.id_tv_grade);
         logOut = findViewById(R.id.id_tv_logout);
-        myTask = findViewById(R.id.id_mytask);
-        myQuestion = findViewById(R.id.id_myQuestion);
-        myCollect = findViewById(R.id.id_mycollect);
+        myTask = findViewById(R.id.id_ll_myTask);
+        myQuestion = findViewById(R.id.id_ll_myquestion);
+        myCollect = findViewById(R.id.id_ll_myCollect);
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
@@ -172,6 +169,13 @@ public class BasicInfoActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 toMyTaskActivity();
+            }
+        });
+
+        myCollect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toMyCollectActivity();
             }
         });
 

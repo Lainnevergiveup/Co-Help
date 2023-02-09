@@ -43,7 +43,6 @@ public class MyTaskActivity extends BaseActivity {
         setTitle("我的发布");
         initView();
         initEvent();
-        loadAll();
     }
 
     private void initEvent() {
@@ -75,50 +74,50 @@ public class MyTaskActivity extends BaseActivity {
         });
 
 
-        //todo 展示接受过和发布过的任务，需要重新写业务方法
-        taskSolved.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startLoadingProgress();
-                taskBiz.getAllMyTaskSolved(UserInfoHolder.getInstance().geteUser().getId(),new CommonCallback<List<Task>>() {
-                    @Override
-                    public void onError(Exception e) {
-                        stopLoadingProgress();
-                        T.showToast(e.getMessage());
-                    }
-
-                    @SuppressLint("NotifyDataSetChanged")
-                    @Override
-                    public void onSuccess(List<Task> response) {
-                        stopLoadingProgress();
-                        T.showToast("查询任务数据成功！");
-                        updateList(response);
-                    }
-                });
-            }
-        });
-
-        taskPosted.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startLoadingProgress();
-                taskBiz.getAllMyTaskPosted(UserInfoHolder.getInstance().geteUser().getId(),new CommonCallback<List<Task>>() {
-                    @Override
-                    public void onError(Exception e) {
-                        stopLoadingProgress();
-                        T.showToast(e.getMessage());
-                    }
-
-                    @SuppressLint("NotifyDataSetChanged")
-                    @Override
-                    public void onSuccess(List<Task> response) {
-                        stopLoadingProgress();
-                        T.showToast("查询任务数据成功！");
-                        updateList(response);
-                    }
-                });
-            }
-        });
+//        //todo 展示接受过和发布过的任务，需要重新写业务方法
+//        taskSolved.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startLoadingProgress();
+//                taskBiz.getAllMyTaskSolved(UserInfoHolder.getInstance().geteUser().getId(),new CommonCallback<List<Task>>() {
+//                    @Override
+//                    public void onError(Exception e) {
+//                        stopLoadingProgress();
+//                        T.showToast(e.getMessage());
+//                    }
+//
+//                    @SuppressLint("NotifyDataSetChanged")
+//                    @Override
+//                    public void onSuccess(List<Task> response) {
+//                        stopLoadingProgress();
+//                        T.showToast("查询任务数据成功！");
+//                        updateList(response);
+//                    }
+//                });
+//            }
+//        });
+//
+//        taskPosted.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startLoadingProgress();
+//                taskBiz.getAllMyTaskPosted(UserInfoHolder.getInstance().geteUser().getId(),new CommonCallback<List<Task>>() {
+//                    @Override
+//                    public void onError(Exception e) {
+//                        stopLoadingProgress();
+//                        T.showToast(e.getMessage());
+//                    }
+//
+//                    @SuppressLint("NotifyDataSetChanged")
+//                    @Override
+//                    public void onSuccess(List<Task> response) {
+//                        stopLoadingProgress();
+//                        T.showToast("查询任务数据成功！");
+//                        updateList(response);
+//                    }
+//                });
+//            }
+//        });
     }
 
     private void loadAll() {
@@ -151,12 +150,12 @@ public class MyTaskActivity extends BaseActivity {
     private void initView() {
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
-        TaskCenter = findViewById(R.id.id_ll_taskCenter);
+        TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
         eRecyclerView = findViewById(R.id.id_recyclerview);
-        taskBiz = new TaskBiz();
-        taskList = new ArrayList<>();
-        taskAdapter = new TaskAdapter(this,taskList);
+//        taskBiz = new TaskBiz();
+//        taskList = new ArrayList<>();
+//        taskAdapter = new TaskAdapter(this,taskList);
         eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         eRecyclerView.setAdapter(taskAdapter);
     }

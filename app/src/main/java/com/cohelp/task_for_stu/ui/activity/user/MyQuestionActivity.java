@@ -27,9 +27,7 @@ public class MyQuestionActivity extends BaseActivity {
     LinearLayout HelpCenter;
     LinearLayout TaskCenter;
     LinearLayout UserCenter;
-    TextView all;
-    TextView repeated;
-    TextView asked;
+
     RecyclerView eRecyclerView;
 
     QuestionAdapter questionAdapter;
@@ -43,7 +41,6 @@ public class MyQuestionActivity extends BaseActivity {
         setTitle("我的参与");
         initView();
         initEvent();
-        loadAll();
     }
 
     private void initEvent() {
@@ -69,76 +66,6 @@ public class MyQuestionActivity extends BaseActivity {
             }
         });
 
-        all.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadAll();
-            }
-        });
-        //todo 展示回复的问题，需要重新写业务方法
-        repeated.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startLoadingProgress();
-                questionBiz.getAllMyQuestionRepeated(UserInfoHolder.getInstance().geteUser().getId(),new CommonCallback<List<Question>>() {
-                    @Override
-                    public void onError(Exception e) {
-                        stopLoadingProgress();
-                        T.showToast(e.getMessage());
-                    }
-
-                    @SuppressLint("NotifyDataSetChanged")
-                    @Override
-                    public void onSuccess(List<Question> response) {
-                        stopLoadingProgress();
-                        T.showToast("查询任务数据成功！");
-                        updateList(response);
-                    }
-                });
-            }
-        });
-
-        asked.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startLoadingProgress();
-                questionBiz.getAllMyQuestionAsked(UserInfoHolder.getInstance().geteUser().getId(),new CommonCallback<List<Question>>() {
-                    @Override
-                    public void onError(Exception e) {
-                        stopLoadingProgress();
-                        T.showToast(e.getMessage());
-                    }
-
-                    @SuppressLint("NotifyDataSetChanged")
-                    @Override
-                    public void onSuccess(List<Question> response) {
-                        stopLoadingProgress();
-                        T.showToast("查询问答数据成功！");
-                        updateList(response);
-                    }
-                });
-            }
-        });
-    }
-
-    private void loadAll() {
-        //TODO 查询所有问题
-        startLoadingProgress();
-        questionBiz.getAllMyQuestion(UserInfoHolder.getInstance().geteUser().getId(),new CommonCallback<List<Question>>() {
-            @Override
-            public void onError(Exception e) {
-                stopLoadingProgress();
-                T.showToast(e.getMessage());
-            }
-
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onSuccess(List<Question> response) {
-                stopLoadingProgress();
-                T.showToast("更新问答数据成功！");
-                updateList(response);
-            }
-        });
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -151,12 +78,9 @@ public class MyQuestionActivity extends BaseActivity {
     private void initView() {
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
-        TaskCenter = findViewById(R.id.id_ll_taskCenter);
+        TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
         eRecyclerView = findViewById(R.id.id_recyclerview);
-        questionBiz = new QuestionBiz();
-        questionList = new ArrayList<>();
-        questionAdapter = new QuestionAdapter(this, questionList);
         eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         eRecyclerView.setAdapter(questionAdapter);
     }
