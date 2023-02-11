@@ -60,7 +60,7 @@ public class HistoryActivity extends BaseActivity {
     private void initView() {
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
         HoleCenter =findViewById(R.id.id_ll_holeCenter);
-        TaskCenter = findViewById(R.id.id_ll_taskCenter);
+        TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
 
     }

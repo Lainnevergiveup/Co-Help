@@ -34,8 +34,8 @@ public class BasicInfoActivity extends BaseActivity {
     TextView nickname;
     TextView grade;
     TextView logOut;
-    TextView Browsing_history;
-    TextView Personal_homepage;
+    LinearLayout Browsing_history;
+    LinearLayout Personal_homepage;
     LinearLayout myTask;
     LinearLayout myQuestion;
     LinearLayout myCollect;
@@ -72,8 +72,8 @@ public class BasicInfoActivity extends BaseActivity {
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
 
-        Browsing_history = findViewById(R.id.id_tv_browsing_history);
-        Personal_homepage = findViewById(R.id.id_tv_personal_homepage);
+        Browsing_history = findViewById(R.id.id_ll_browsing_history);
+        Personal_homepage = findViewById(R.id.id_ll_personal_homepage);
         userBiz = new UserBiz();
 
         getUser();
@@ -242,6 +242,11 @@ public class BasicInfoActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    private void toMyCollectActivity(){
+        Intent intent = new Intent(this,MyCollectActivity.class);
+        startActivity(intent);
+    }
+
     private void toLoginActivity() {
         Intent intent = new Intent(this,LoginActivity.class);
         startActivity(intent);
@@ -263,20 +268,8 @@ public class BasicInfoActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    private void toSettingActivity(){
-        Intent intent = new Intent(this,SettingActivity.class);
-        startActivity(intent);
-    }
 
-    private void toPublishManageActivity(){
-        Intent intent = new Intent(this,PublishManageActivity.class);
-        startActivity(intent);
-    }
 
-    private void toMyCollectActivity(){
-        Intent intent = new Intent(this,MyCollectActivity.class);
-        startActivity(intent);
-    }
 
     @Override
     protected void onDestroy() {

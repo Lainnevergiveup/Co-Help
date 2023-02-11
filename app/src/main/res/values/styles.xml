@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--BottomSheetDialog弹窗1,设置圆角有问题 -->
 
-
-
-
-
 <resources>
 
 <style name="BottomSheetDialogStyle1" parent="Theme.Design.BottomSheetDialog">
@@ -23,10 +19,11 @@
 
 </style>
     <!--BottomSheetDialog弹窗2，圆角没问题-->
-    <style name="BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/bottomSheetStyleWrapper</item>
-    </style>
-    <style name="bottomSheetStyleWrapper" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@android:color/transparent</item>
-    </style>
+<style name="BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+    <item name="bottomSheetStyle">@style/bottomSheetStyleWrapper</item>
+</style>
+<style name="bottomSheetStyleWrapper" parent="Widget.Design.BottomSheet.Modal">
+    <item name="android:background">@android:color/transparent</item>
+</style>
+
 </resources>

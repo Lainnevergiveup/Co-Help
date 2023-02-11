@@ -60,8 +60,8 @@ public class PersonalHomepageActivity extends BaseActivity {
 
     private void initView() {
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
-        HoleCenter =findViewById(R.id.id_ll_holeCenter);
-        TaskCenter = findViewById(R.id.id_ll_taskCenter);
+        HoleCenter = findViewById(R.id.id_ll_holeCenter);
+        TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
 
     }
@@ -84,6 +84,7 @@ public class PersonalHomepageActivity extends BaseActivity {
         startActivity(intent);
         finish();
     }
+
     private void toHoleCenterActivity() {
         Intent intent = new Intent(this, HoleCenterActivity.class);
         startActivity(intent);
