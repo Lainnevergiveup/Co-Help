@@ -268,6 +268,17 @@ public class OkHttpUtils {
         Result<List<String>> result = gson.fromJson(res, new TypeToken<Result<List<String>>>(){}.getType());
         return result.getData();
     }
+    public String getImageById(int id){
+        okHttp.sendGetRequest(baseURL+"/image/getimagebyid?imageId="+id,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<String> result = gson.fromJson(res, new TypeToken<Result<String>>(){}.getType());
+        return result.getCode();
+    }
 
     /*
     General

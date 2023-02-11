@@ -11,7 +11,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="130dp">
-        <ImageView
+        <com.cohelp.task_for_stu.ui.view.AvatorImageView
             android:id="@+id/id_iv_icon"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
@@ -32,7 +32,7 @@
                 android:textStyle="bold"
                 android:textSize="25sp"/>
             <TextView
-                android:id="@+id/id_tv_id"
+                android:id="@+id/id_tv_userTeam"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -61,7 +61,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content">
             <ImageView
-                android:id="@+id/id_myQuestion"
+                android:id="@+id/id_myJoin"
                 android:layout_width="wrap_content"
                 android:src="@drawable/question"
                 android:layout_height="wrap_content"/>
@@ -82,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
-                android:id="@+id/id_mytask"
+                android:id="@+id/id_mypublish"
                 android:layout_width="wrap_content"
                 android:src="@drawable/task"
                 android:layout_height="wrap_content"/>

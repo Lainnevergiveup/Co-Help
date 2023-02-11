@@ -22,6 +22,7 @@ import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.ui.CircleTransform;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
+import com.cohelp.task_for_stu.ui.view.AvatorImageView;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.squareup.picasso.Picasso;
@@ -30,9 +31,9 @@ import com.squareup.picasso.Picasso;
  * 普通用户的基本信息展示页
  */
 public class BasicInfoActivity extends BaseActivity {
-    ImageView icon;
+    AvatorImageView icon;
     TextView nickname;
-    TextView grade;
+    TextView team;
     TextView logOut;
     LinearLayout Browsing_history;
     LinearLayout Personal_homepage;
@@ -50,19 +51,25 @@ public class BasicInfoActivity extends BaseActivity {
 
     Intent intent;
     OkHttpUtils okHttpUtils;
+    String userIcon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basic_info);
         initTools();
+
         initView();
         initEvent();
         setTitle("个人中心");
     }
     private void initView() {
+        getUser();
+        getUserIcon();
+
         icon = findViewById(R.id.id_iv_icon);
         nickname = findViewById(R.id.id_tv_nickname);
-        grade = findViewById(R.id.id_tv_grade);
+        team = findViewById(R.id.id_tv_userTeam);
         logOut = findViewById(R.id.id_tv_logout);
         myTask = findViewById(R.id.id_ll_myTask);
         myQuestion = findViewById(R.id.id_ll_myquestion);
@@ -76,10 +83,11 @@ public class BasicInfoActivity extends BaseActivity {
         Personal_homepage = findViewById(R.id.id_ll_personal_homepage);
         userBiz = new UserBiz();
 
-        getUser();
 
-        nickname.setText(transferUser.getUserAccount());
-
+        System.out.println(userIcon);
+        icon.setImageURL(userIcon);
+        nickname.setText(transferUser.getUserName());
+        team.setText(transferUser.getTeamName());
         //Thread thread = new
 //        Picasso.get()
 //                .load(R.drawable.question)
@@ -120,7 +128,7 @@ public class BasicInfoActivity extends BaseActivity {
                         .transform(new CircleTransform())
                         .into(icon);
                 nickname.setText(user.getNickName());
-                grade.setText(user.getGrade() + "");
+                team.setText(user.getGrade() + "");
                 T.showToast("用户数据更新完成！");
             }
         });
@@ -294,7 +302,17 @@ public class BasicInfoActivity extends BaseActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-
+    }
+    private synchronized void getUserIcon(){
+        Thread t1 = new Thread(()->{
+            userIcon = okHttpUtils.getImageById(transferUser.getAvatar());
+            System.out.println(userIcon);
+        });
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
