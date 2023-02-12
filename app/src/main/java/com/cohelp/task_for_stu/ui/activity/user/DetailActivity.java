@@ -29,7 +29,10 @@ import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -221,5 +224,55 @@ public class DetailActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    public List<List<RemarkVO>> orderRemarkVO(List<RemarkVO> data){
+        if(data==null){
+            return null;
+        }
+        Stack<RemarkVO> stackA = new Stack<>();
+        Stack<RemarkVO> stackB = new Stack<>();
+        ArrayList<RemarkVO> topRemark = new ArrayList<>();
+        List<List<RemarkVO>> arrayLists = new ArrayList<>();
+        //筛选出一级评论
+        Iterator<RemarkVO> iter = data.iterator();
+        while(iter.hasNext()){
+            RemarkVO remarkVO = iter.next();
+            if(remarkVO.getTargetIsTopic().equals(1)){
+                topRemark.add(remarkVO);
+                iter.remove();
+            }
+        }
+        //将每条评论链的评论按逻辑顺序压入List
+        for(RemarkVO remarkTop:topRemark){
+            ArrayList<RemarkVO> remarkVOS = new ArrayList<>();
+            stackA.push(remarkTop);
+            while(!stackA.isEmpty()){
+                RemarkVO peek = stackA.peek();
+                Integer peekRemarkId = peek.getId();
+                iter = data.iterator();
+                while(iter.hasNext()){
+                    RemarkVO remark = iter.next();
+                    if(remark.getRemarkTargetId().equals(peekRemarkId)){
+                        stackA.push(remark);
+                        iter.remove();
+                    }
+                }
+                if(stackA.peek().equals(peek)){
+                    RemarkVO pop = stackA.pop();
+                    //设置当前评论的评论对象
+                    if (!stackA.isEmpty()){
+                        pop.setRemarkTargetName(stackA.peek().getRemarkOwnerName());
+                    }else {
+                        pop.setRemarkTargetName(null);
+                    }
+                    stackB.push(pop);
+                }
+            }
+            while(!stackB.isEmpty()){
+                remarkVOS.add(stackB.pop());
+            }
+            arrayLists.add(remarkVOS);
+        }
+        return arrayLists;
     }
 }

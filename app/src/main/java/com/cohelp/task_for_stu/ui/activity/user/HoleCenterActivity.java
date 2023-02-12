@@ -32,6 +32,7 @@ import com.cohelp.task_for_stu.ui.vo.Task;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.leon.lfilepickerlibrary.utils.StringUtils;
+import com.xuexiang.xui.XUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +59,12 @@ public class HoleCenterActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+//        XUI.init(this);
+//        XUI.debug(true);
         setContentView(R.layout.activity_hole_center);
+
         initTools();
         initView();
         initEvent();

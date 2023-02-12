@@ -74,7 +74,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{
-        AvatorImageView ownerAvater;
+//        AvatorImageView ownerAvater;
         TextView activityTitle;
         TextView activityAddress;
         TextView ownerName;
@@ -83,9 +83,9 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
-            ownerAvater = itemView.findViewById(R.id.act_author_pic);
-            activityTime = itemView.findViewById(R.id.act_time);
-            activityAddress = itemView.findViewById(R.id.act_address);
+//            ownerAvater = itemView.findViewById(R.id.act_author_pic);
+//            activityTime = itemView.findViewById(R.id.act_time);
+//            activityAddress = itemView.findViewById(R.id.act_address);
             activityTitle = itemView.findViewById(R.id.act_title);
             activityContext = itemView.findViewById(R.id.act_context);
 
@@ -125,10 +125,10 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         DetailResponse detailResponse = activityList.get(position);
         ActivityVO activityVO = detailResponse.getActivityVO();
         System.out.println(detailResponse.getPublisherAvatarUrl());
-        holder.ownerAvater.setImageURL(detailResponse.getPublisherAvatarUrl());
+//        holder.ownerAvater.setImageURL(detailResponse.getPublisherAvatarUrl());
         holder.activityContext.setText(activityVO.getActivityDetail());
         holder.activityTitle.setText(activityVO.getActivityTitle());
-        holder.activityTime.setText(activityVO.getActivityCreateTime().toString());
+//        holder.activityTime.setText(activityVO.getActivityCreateTime().toString());
         System.out.println(position);
 //        holder.activityAddress.setText(activityVO);
         holder.itemView.setOnClickListener(new View.OnClickListener() {

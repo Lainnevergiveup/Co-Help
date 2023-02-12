@@ -25,5 +25,96 @@
 <style name="bottomSheetStyleWrapper" parent="Widget.Design.BottomSheet.Modal">
     <item name="android:background">@android:color/transparent</item>
 </style>
+<!--    <style name="TextStyle">-->
+<!--        <item name="android:layout_width">wrap_content</item>-->
+<!--        <item name="android:layout_height">wrap_content</item>-->
+<!--        <item name="android:singleLine">true</item>-->
+<!--        <item name="android:gravity">center</item>-->
+<!--        <item name="fontPath">@string/default_app_font_path</item>-->
+<!--    </style>-->
+<!--    <style name="Button.Style" parent="@style/Button">-->
+<!--        <item name="android:layout_width">?attr/xui_btn_view_width</item>-->
+<!--        <item name="android:layout_height">?attr/xui_btn_view_height</item>-->
+<!--        <item name="android:textSize">?attr/xui_btn_view_text_size</item>-->
+<!--        <item name="android:textColor">@color/xui_config_color_white</item>-->
+<!--        <item name="android:gravity">center</item>-->
+<!--    </style>-->
+<!--    <style name="ButtonStyle">-->
+<!--        <item name="android:layout_width">?attr/xui_btn_view_width</item>-->
+<!--        <item name="android:layout_height">?attr/xui_btn_view_height</item>-->
+<!--        <item name="android:textSize">?attr/xui_btn_view_text_size</item>-->
+<!--        <item name="android:textColor">@color/xui_config_color_white</item>-->
+<!--        <item name="android:gravity">center</item>-->
+<!--    </style>-->
 
+<!--    <style name="ButtonView" parent="ButtonStyle">-->
+<!--        <item name="textRadius">?attr/xui_btn_view_radius</item>-->
+<!--    </style>-->
+<!--    <style name="SuperButton" parent="ButtonStyle">-->
+<!--        <item name="sCornersRadius">?attr/xui_btn_view_radius</item>-->
+<!--        <item name="sSelectorDisableColor">@color/xui_btn_disable_color</item>-->
+<!--        <item name="sUseSelector">true</item>-->
+<!--    </style>-->
+<!--    <style name="RoundButton" parent="@style/Button">-->
+<!--        <item name="android:layout_width">?attr/xui_btn_view_width</item>-->
+<!--        <item name="android:layout_height">?attr/xui_btn_view_height</item>-->
+<!--        <item name="android:textSize">?attr/xui_btn_view_text_size</item>-->
+<!--        <item name="android:gravity">center</item>-->
+
+<!--        <item name="android:ellipsize">end</item>-->
+<!--        <item name="rb_isRadiusAdjustBounds">false</item>-->
+<!--        <item name="rb_radius">?attr/xui_btn_view_radius</item>-->
+<!--        <item name="rb_borderWidth">?attr/xui_btn_view_border_width</item>-->
+
+<!--        <item name="rb_backgroundColor">?attr/xui_round_btn_bg_color</item>-->
+<!--        <item name="rb_borderColor">?attr/xui_round_btn_border_color</item>-->
+<!--        <item name="android:textColor">?attr/xui_round_btn_text_color</item>-->
+<!--    </style>-->
+<!--    <style name="EditText" parent="EditTextBase">-->
+<!--        <item name="android:layout_height">?attr/xui_config_size_edittext_height</item>-->
+<!--        <item name="android:textSize">?attr/xui_config_size_edittext_input_text</item>-->
+<!--        <item name="android:paddingLeft">?attr/xui_config_size_edittext_left_padding</item>-->
+<!--        <item name="android:paddingRight">?attr/xui_config_size_edittext_left_padding</item>-->
+<!--        <item name="android:textColor">@color/xui_config_color_edittext_textcolor</item>-->
+<!--        <item name="android:textColorHint">@color/xui_config_color_edittext_hint_text</item>-->
+<!--        <item name="android:singleLine">true</item>-->
+<!--    </style>-->
+<!--    <style name="XUIDialog" parent="@android:style/Theme.Dialog">-->
+<!--        &lt;!&ndash; Dialog的windowFrame框为无 &ndash;&gt;-->
+<!--        <item name="android:windowFrame">@null</item>-->
+<!--        <item name="android:windowNoTitle">true</item>-->
+<!--        &lt;!&ndash; 是否漂现在activity上 &ndash;&gt;-->
+<!--        <item name="android:windowIsFloating">true</item>-->
+<!--        &lt;!&ndash; 是否半透明 &ndash;&gt;-->
+<!--        <item name="android:windowIsTranslucent">false</item>-->
+<!--        <item name="android:windowContentOverlay">@null</item>-->
+<!--        <item name="android:windowAnimationStyle">@null</item>-->
+<!--        <item name="android:windowSoftInputMode">adjustPan</item>-->
+<!--        <item name="android:windowBackground">@color/xui_config_color_transparent</item>-->
+<!--    </style>-->
+<!--    &lt;!&ndash; 拓展主题 theme. &ndash;&gt;-->
+<!--    <style name="XUITheme" parent="XUIBaseTheme">-->
+<!--        &lt;!&ndash;设置默认窗口的动画样式&ndash;&gt;-->
+<!--        <item name="android:windowAnimationStyle">@style/WindowAnimStyle</item>-->
+
+<!--        &lt;!&ndash;自定义标题栏样式方法1,通过自定义通用属性&ndash;&gt;-->
+<!--        <item name="xui_actionbar_color">@color/app_color_theme_1</item>-->
+<!--        <item name="xui_actionbar_text_color">@color/xui_config_color_primary_text</item>-->
+<!--        <item name="xui_actionbar_immersive">true</item>-->
+
+<!--        &lt;!&ndash;自定义标题栏样式方法2,通过自定义组件默认样式&ndash;&gt;-->
+<!--        <item name="TitleBarStyle">@style/TitleBar.Custom</item>-->
+<!--    </style>-->
+
+<!--    <style name="TitleBar.Custom">-->
+<!--        <item name="tb_titleTextColor">@color/xui_config_color_primary_text</item>-->
+<!--        <item name="tb_immersive">true</item>-->
+<!--    </style>-->
+
+<!--    <style name="WindowAnimStyle" parent="@android:style/Animation">-->
+<!--        <item name="android:activityOpenEnterAnimation">@anim/xpage_slide_in_right</item>-->
+<!--        <item name="android:activityOpenExitAnimation">@anim/xpage_slide_out_left</item>-->
+<!--        <item name="android:activityCloseEnterAnimation">@anim/xpage_slide_in_left</item>-->
+<!--        <item name="android:activityCloseExitAnimation">@anim/xpage_slide_out_right</item>-->
+<!--    </style>-->
 </resources>

@@ -57,6 +57,18 @@ public class RemarkVO {
      * 是否已点赞
      */
     private Integer isLiked;
+    /*
+
+     */
+    private String remarkTargetName;
+
+    public String getRemarkTargetName() {
+        return remarkTargetName;
+    }
+
+    public void setRemarkTargetName(String remarkTargetName) {
+        this.remarkTargetName = remarkTargetName;
+    }
 
     public Integer getId() {
         return id;
@@ -146,6 +158,20 @@ public class RemarkVO {
         this.isLiked = isLiked;
     }
 
+    public RemarkVO(Integer id, Integer topicId, Integer remarkTargetId, Integer topId, Integer targetIsTopic, String remarkOwnerName, String remarkOwnerAvatar, String remarkContent, Integer remarkLike, Date remarkTime, Integer isLiked) {
+        this.id = id;
+        this.topicId = topicId;
+        this.remarkTargetId = remarkTargetId;
+        this.topId = topId;
+        this.targetIsTopic = targetIsTopic;
+        this.remarkOwnerName = remarkOwnerName;
+        this.remarkOwnerAvatar = remarkOwnerAvatar;
+        this.remarkContent = remarkContent;
+        this.remarkLike = remarkLike;
+        this.remarkTime = remarkTime;
+        this.isLiked = isLiked;
+    }
+
     @Override
     public String toString() {
         return "RemarkVO{" +
@@ -160,21 +186,8 @@ public class RemarkVO {
                 ", remarkLike=" + remarkLike +
                 ", remarkTime=" + remarkTime +
                 ", isLiked=" + isLiked +
+                ", remarkTargetName='" + remarkTargetName + '\'' +
                 '}';
-    }
-
-    public RemarkVO(Integer id, Integer topicId, Integer remarkTargetId, Integer topId, Integer targetIsTopic, String remarkOwnerName, String remarkOwnerAvatar, String remarkContent, Integer remarkLike, Date remarkTime, Integer isLiked) {
-        this.id = id;
-        this.topicId = topicId;
-        this.remarkTargetId = remarkTargetId;
-        this.topId = topId;
-        this.targetIsTopic = targetIsTopic;
-        this.remarkOwnerName = remarkOwnerName;
-        this.remarkOwnerAvatar = remarkOwnerAvatar;
-        this.remarkContent = remarkContent;
-        this.remarkLike = remarkLike;
-        this.remarkTime = remarkTime;
-        this.isLiked = isLiked;
     }
 
     public RemarkVO() {
