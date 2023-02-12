@@ -174,52 +174,30 @@
             android:background="@color/lfile_lightgray"/>
 
 
-
-
-        <RelativeLayout
-            android:layout_gravity="bottom"
+        <com.xuexiang.xui.widget.button.roundbutton.RoundButton
+            android:id="@+id/id_btn_switch"
+            style="@style/RoundButton.Blue"
             android:layout_width="match_parent"
-            android:layout_marginTop="150dp"
-            android:background="@color/lfile_lightgray"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:layout_centerHorizontal="true"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/id_tv_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="切换"
-                    android:textSize="26sp"
-                    android:textStyle="bold"
-                    android:textColor="#F15454"
-                    />
-            </LinearLayout>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_gravity="bottom"
+            android:layout_height="40sp"
+            android:layout_marginTop="60dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="切换"
+            android:textSize="20sp"
+            android:textColor="@color/xui_config_color_red"
+            />
+        <com.xuexiang.xui.widget.button.roundbutton.RoundButton
+            android:id="@+id/id_btn_logout"
+            style="@style/RoundButton.Blue"
             android:layout_width="match_parent"
-            android:layout_marginTop="10dp"
-            android:background="@color/lfile_lightgray"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:layout_centerHorizontal="true"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/id_tv_logout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="退出登录"
-                    android:textSize="26sp"
-                    android:textStyle="bold"
-                    android:textColor="#F15454"
-                    />
-            </LinearLayout>
-        </RelativeLayout>
+            android:layout_height="40sp"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="20sp"
+            android:textColor="@color/xui_config_color_red"
+            android:text="退出登录"
+            />
     </LinearLayout>
     <View
         android:layout_width="match_parent"

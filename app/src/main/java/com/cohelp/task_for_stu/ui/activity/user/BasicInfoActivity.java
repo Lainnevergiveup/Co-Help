@@ -26,6 +26,7 @@ import com.cohelp.task_for_stu.ui.view.AvatorImageView;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.squareup.picasso.Picasso;
+import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
 
 /**
  * 普通用户的基本信息展示页
@@ -34,7 +35,7 @@ public class BasicInfoActivity extends BaseActivity {
     AvatorImageView icon;
     TextView nickname;
     TextView team;
-    TextView logOut;
+    RoundButton bt_logOut,bt_switch;
     LinearLayout Browsing_history;
     LinearLayout Personal_homepage;
     LinearLayout myTask;
@@ -70,7 +71,8 @@ public class BasicInfoActivity extends BaseActivity {
         icon = findViewById(R.id.id_iv_icon);
         nickname = findViewById(R.id.id_tv_nickname);
         team = findViewById(R.id.id_tv_userTeam);
-        logOut = findViewById(R.id.id_tv_logout);
+        bt_logOut = findViewById(R.id.id_btn_logout);
+        bt_switch = findViewById(R.id.id_btn_switch);
         myTask = findViewById(R.id.id_ll_myTask);
         myQuestion = findViewById(R.id.id_ll_myquestion);
         myCollect = findViewById(R.id.id_ll_myCollect);
@@ -166,7 +168,7 @@ public class BasicInfoActivity extends BaseActivity {
                 toUserCenterActivity();
             }
         });
-        logOut.setOnClickListener(new View.OnClickListener() {
+        bt_logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toLoginActivity();

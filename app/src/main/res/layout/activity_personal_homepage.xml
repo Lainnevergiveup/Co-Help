@@ -13,7 +13,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:gravity="center"
-        android:layout_height="130dp">
+        android:layout_height="100dp">
         <ImageView
             android:id="@+id/id_iv_icon"
             android:layout_width="120dp"
@@ -23,207 +23,234 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
+
             <TextView
-                android:layout_marginLeft="20dp"
-                android:layout_gravity="bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="20dp"
                 android:text="用户名:"
-                android:textSize="20sp"
-                >
+                android:textSize="20sp">
 
             </TextView>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="60dp"
-                android:textSize="20sp"
-                android:text="用户名"
-                >
+                android:text="默认"
+                android:textColor="@color/black"
+                android:textSize="20sp">
 
             </TextView>
 
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="10dp"
-            android:background="@color/lfile_lightgray"/>
+            android:background="@color/lfile_lightgray" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
+
             <TextView
-                android:layout_marginLeft="20dp"
-                android:layout_gravity="bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="20dp"
                 android:text="昵称:"
-                android:textSize="20sp"
-                >
+                android:textSize="20sp">
 
             </TextView>
+
             <EditText
+                android:id="@+id/id_et_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="70dp"
-                android:textSize="20sp"
                 android:text="用户名"
-                >
+                android:textSize="20sp">
 
             </EditText>
 
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="10dp"
-            android:background="@color/lfile_lightgray"/>
+            android:background="@color/lfile_lightgray" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
+
             <TextView
-                android:layout_marginLeft="20dp"
-                android:layout_gravity="bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="20dp"
                 android:text="性别:"
-                android:textSize="20sp"
-                >
+                android:textSize="20sp">
 
             </TextView>
+
             <TextView
+                android:id="@+id/id_tv_sex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="80dp"
-                android:textSize="20sp"
-                android:text="用户名"
-                >
+                android:text="默认"
+                android:textColor="@color/black"
+                android:textSize="20sp">
 
             </TextView>
 
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="10dp"
-            android:background="@color/lfile_lightgray"/>
+            android:background="@color/lfile_lightgray" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
+
             <TextView
-                android:layout_marginLeft="20dp"
-                android:layout_gravity="bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="20dp"
                 android:text="年龄:"
-                android:textSize="20sp"
-                >
+                android:textSize="20sp">
 
             </TextView>
-            <TextView
+
+            <EditText
+                android:id="@+id/id_et_age"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="80dp"
-                android:textSize="20sp"
-                android:text="用户名"
-                >
+                android:text="默认"
+                android:textColor="@color/black"
+                android:textSize="20sp">
 
-            </TextView>
+            </EditText>
 
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="10dp"
-            android:background="@color/lfile_lightgray"/>
+            android:background="@color/lfile_lightgray" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
+
             <TextView
-                android:layout_marginLeft="20dp"
-                android:layout_gravity="bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="20dp"
                 android:text="电话号码:"
-                android:textSize="20sp"
-                >
+                android:textSize="20sp">
 
             </TextView>
-            <TextView
+
+            <EditText
+                android:id="@+id/id_et_tel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="40dp"
-                android:textSize="20sp"
-                android:text="用户名"
-                >
+                android:text="默认"
+                android:textColor="@color/black"
+                android:textSize="20sp">
 
-            </TextView>
+            </EditText>
 
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="10dp"
-            android:background="@color/lfile_lightgray"/>
+            android:background="@color/lfile_lightgray" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
+
             <TextView
-                android:layout_marginLeft="20dp"
-                android:layout_gravity="bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="20dp"
                 android:text="组织:"
-                android:textSize="20sp"
-                >
+                android:textSize="20sp">
 
             </TextView>
+
             <TextView
+                android:id="@+id/id_tv_team"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="80dp"
-                android:textSize="20sp"
-                android:text="用户名"
-                >
+                android:text="默认"
+                android:textColor="@color/black"
+                android:textSize="20sp">
 
             </TextView>
 
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="10dp"
-            android:background="@color/lfile_lightgray"/>
+            android:background="@color/lfile_lightgray" />
     </LinearLayout>
+    <com.xuexiang.xui.widget.button.roundbutton.RoundButton
+        android:id="@+id/id_btn_save"
+        style="@style/RoundButton.Auto"
+        android:layout_width="match_parent"
+        android:layout_height="40sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="30dp"
+        android:text="保存"
+        />
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -323,5 +350,7 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
+
+
 
 </LinearLayout>

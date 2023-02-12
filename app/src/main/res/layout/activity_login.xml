@@ -38,14 +38,14 @@
         android:hint="请输入您的密码"
         android:textColorHint="#9A9696"/>
 
-    <Button
+    <com.xuexiang.xui.widget.button.roundbutton.RoundButton
         android:id="@+id/id_btn_login"
+        style="@style/RoundButton.Auto"
         android:layout_width="match_parent"
         android:layout_height="40sp"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        style="@style/Button_Large_Pink"
         android:text="登录"
         />
 

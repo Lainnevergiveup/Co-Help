@@ -183,6 +183,12 @@
                 android:textColorHighlight="@color/black"
                 android:textSize="15sp" />
 
+
+            <com.xuexiang.xui.widget.flowlayout.FlowTagLayout
+                android:id="@+id/flowlayout_single_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
             <Button
                 android:id="@+id/id_btn_submit"
                 style="@style/Button_Large_Pink"
