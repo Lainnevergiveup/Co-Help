@@ -79,7 +79,7 @@ app:contentPaddingTop="5dp">
             <TextView
                 android:id="@+id/act_context"
                 style="@style/TextStyle.Explain"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="5dp"
                 android:ellipsize="end"
                 android:gravity="start|center_vertical"
                 android:maxLines="2"
@@ -91,8 +91,8 @@ app:contentPaddingTop="5dp">
 
         <com.xuexiang.xui.widget.imageview.RadiusImageView
             android:id="@+id/iv_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_marginStart="8dp"
             android:scaleType="centerCrop"
             app:riv_border_width="0dp"
@@ -103,7 +103,7 @@ app:contentPaddingTop="5dp">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp">
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -115,13 +115,15 @@ app:contentPaddingTop="5dp">
                 android:id="@+id/act_like"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@drawable/ic_photo_add_"/>
+                android:src="@drawable/ic_dianzan"
+                />
 
             <TextView
                 android:id="@+id/tv_praise"
                 style="@style/TextStyle.Explain"
                 android:layout_marginStart="5dp"
-                android:text="点赞" />
+                android:text="点赞"
+                />
 
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -129,14 +131,25 @@ app:contentPaddingTop="5dp">
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginStart="30dp"
-                android:src="@drawable/ic_photo_add_"/>
+                android:src="@drawable/ic_comment"/>
 
             <TextView
                 android:id="@+id/tv_comment"
                 style="@style/TextStyle.Explain"
                 android:layout_marginStart="5dp"
                 android:text="评论" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/act_collect"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="30dp"
+                android:src="@drawable/ic_collect"/>
 
+            <TextView
+                android:id="@+id/tv_collect"
+                style="@style/TextStyle.Explain"
+                android:layout_marginStart="5dp"
+                android:text="收藏" />
 
         </LinearLayout>
 
