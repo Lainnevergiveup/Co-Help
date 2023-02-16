@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.xuexiang.xui.widget.actionbar.TitleBar
+    android:id="@+id/actionBar_top"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:background="@color/xui_config_color_titlebar"
+    app:tb_barHeight="65dp"
+    app:tb_dividerColor="@color/xui_config_color_red"
+    app:tb_leftImageResource="@drawable/ic_dianzan"
+    app:tb_leftText="回退"
+    app:tb_sideTextPadding="20dp"
+    app:tb_actionPadding="20dp"
+    app:tb_subTitleText="这是副标题"
+    app:tb_titleText="这是一个Title"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

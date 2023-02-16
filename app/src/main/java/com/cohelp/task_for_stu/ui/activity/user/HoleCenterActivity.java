@@ -25,6 +25,7 @@ import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.ActivityAdapter;
+import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.HoleAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
@@ -55,8 +56,8 @@ public class HoleCenterActivity extends BaseActivity {
     List<DetailResponse> holeList = new ArrayList<>();
     Integer conditionType = 0;
 
-    HoleAdapter holeAdapter;
-
+//    HoleAdapter holeAdapter;
+    CardViewListAdapter cardViewListAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -154,9 +155,10 @@ public class HoleCenterActivity extends BaseActivity {
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
 
         getHoleList();
-        holeAdapter = new HoleAdapter(holeList);
+//        holeAdapter = new HoleAdapter(holeList);
+        cardViewListAdapter = new CardViewListAdapter(holeList);
 //        holeList.add(new Hole("强奸","wow", 0,0,0,"friend"));
-        holeAdapter.setOnItemClickListener(new HoleAdapter.OnItemListenter(){
+        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
             @Override
             public void onItemClick(View view, int postion) {
                 Intent intent = new Intent(HoleCenterActivity.this,DetailActivity.class);
@@ -169,7 +171,7 @@ public class HoleCenterActivity extends BaseActivity {
 
         eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        eRecyclerView.setAdapter(holeAdapter);
+        eRecyclerView.setAdapter(cardViewListAdapter);
     }
 
     private void toUserCenterActivity() {
@@ -212,8 +214,8 @@ public class HoleCenterActivity extends BaseActivity {
     }
     private synchronized void refreshHoleList(){
         getHoleList();
-        holeAdapter.setHoleList(holeList);
-        eRecyclerView.setAdapter(holeAdapter);
+        cardViewListAdapter.setDetailResponseListList(holeList);
+        eRecyclerView.setAdapter(cardViewListAdapter);
         eSwipeRefreshLayout.postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -1,19 +1,11 @@
 package com.cohelp.task_for_stu.ui.adpter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,15 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
-import com.cohelp.task_for_stu.ui.activity.user.BasicInfoActivity;
-import com.cohelp.task_for_stu.ui.activity.user.DetailActivity;
-import com.cohelp.task_for_stu.ui.view.AvatorImageView;
-import com.cohelp.task_for_stu.ui.vo.Task;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
 public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHolder> {
@@ -104,7 +88,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
     }
     @Override
     public ActivityAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_activity_card,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_cardlist_card,parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
 //        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
 //            @Override

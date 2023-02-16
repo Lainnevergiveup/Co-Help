@@ -26,6 +26,7 @@ import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 
+import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.HelpAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
@@ -55,7 +56,8 @@ public class HelpCenterActivity extends BaseActivity {
     RecyclerView eRecyclerView;
     Integer conditionState = 0;
     List<DetailResponse> helpList = new ArrayList<>();
-    HelpAdapter helpAdapter;
+//    HelpAdapter helpAdapter;
+    CardViewListAdapter cardViewListAdapter;
     OkHttpUtils okHttpUtils;
     int conditionType = 0;
     String labelType = "全部";
@@ -155,8 +157,9 @@ public class HelpCenterActivity extends BaseActivity {
 
     private synchronized void refreshHelpListData(){
         getHelpList();
-        helpAdapter.setHelpList(helpList);
-        eRecyclerView.setAdapter(helpAdapter);
+//        helpAdapter.setHelpList(helpList);
+        cardViewListAdapter.setDetailResponseListList(helpList);
+        eRecyclerView.setAdapter(cardViewListAdapter);
         eSwipeRefreshLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -193,8 +196,8 @@ public class HelpCenterActivity extends BaseActivity {
         eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
         getHelpList();
-        helpAdapter = new HelpAdapter(helpList);
-        helpAdapter.setOnItemClickListener(new HelpAdapter.OnItemListenter(){
+        cardViewListAdapter = new CardViewListAdapter(helpList);
+        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
             @Override
             public void onItemClick(View view, int postion) {
                 Intent intent = new Intent(HelpCenterActivity.this,DetailActivity.class);
@@ -205,7 +208,7 @@ public class HelpCenterActivity extends BaseActivity {
             }
         });
         eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        eRecyclerView.setAdapter(helpAdapter);
+        eRecyclerView.setAdapter(cardViewListAdapter);
 
     }
 

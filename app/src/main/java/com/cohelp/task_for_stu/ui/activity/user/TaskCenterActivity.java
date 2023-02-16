@@ -26,6 +26,7 @@ import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.ActivityAdapter;
+import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
@@ -57,7 +58,7 @@ public class TaskCenterActivity extends BaseActivity {
     Intent intent;
 
     ActivityAdapter activityAdapter;
-
+    CardViewListAdapter cardViewListAdapter;
     Integer conditionState = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,8 +130,10 @@ public class TaskCenterActivity extends BaseActivity {
                 else {
                     startLoadingProgress();
                     searchActivity(s);
-                    activityAdapter.setActivityList(activityVOList);
-                    eRecyclerView.setAdapter(activityAdapter);
+//                    activityAdapter.setActivityList(activityVOList);
+                    cardViewListAdapter.setDetailResponseListList(activityVOList);
+//                    eRecyclerView.setAdapter(activityAdapter);
+                    eRecyclerView.setAdapter(cardViewListAdapter);
                     eSwipeRefreshLayout.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -205,9 +208,10 @@ public class TaskCenterActivity extends BaseActivity {
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
 
         getActivityList(conditionState);
-        activityAdapter = new ActivityAdapter(this,activityVOList);
+//        activityAdapter = new ActivityAdapter(this,activityVOList);
+        cardViewListAdapter = new CardViewListAdapter(activityVOList);
 //        holeList.add(new Hole("强奸","wow", 0,0,0,"friend"));
-        activityAdapter.setOnItemClickListener(new ActivityAdapter.OnItemListenter(){
+        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
             @Override
             public void onItemClick(View view, int postion) {
                 System.out.println("lisetn in act");
@@ -225,7 +229,7 @@ public class TaskCenterActivity extends BaseActivity {
 
         eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        eRecyclerView.setAdapter(activityAdapter);
+        eRecyclerView.setAdapter(cardViewListAdapter);
     }
 
 
@@ -278,8 +282,8 @@ public class TaskCenterActivity extends BaseActivity {
     }
     private synchronized void refreshActivityListData(){
         getActivityList(conditionState);
-        activityAdapter.setActivityList(activityVOList);
-        eRecyclerView.setAdapter(activityAdapter);
+        cardViewListAdapter.setDetailResponseListList(activityVOList);
+        eRecyclerView.setAdapter(cardViewListAdapter);
         eSwipeRefreshLayout.postDelayed(new Runnable() {
             @Override
             public void run() {

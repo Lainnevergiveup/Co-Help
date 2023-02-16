@@ -92,7 +92,7 @@ public class ActivityTest {
 //        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 //        LocalDateTime time = LocalDateTime.now();
 //        String localDateTime = df.format(time);
-        activity = new Activity(null,null,"nice","wow", LocalDateTime.now(),0,0,"",0,0,null);
+        activity = new Activity(null,null,"测试图片渲染","wow", LocalDateTime.now(),0,0,"",0,0,null);
 //        String act = gson.toJson(activity);
         String act = gson.toJson(activity);
         Activity a2 = gson.fromJson(act,Activity.class);
@@ -162,7 +162,7 @@ public class ActivityTest {
         System.out.println(result.getData().getActivityVO());
     }
     @Test
-    public List<DetailResponse> activityList2(){
+    public void activityList2(){
         loginRequest.setUserAccount("1234567890");//debug
         loginRequest.setUserPassword( "1234567890");//debug
         String loginMessage = ToJsonString.toJson(loginRequest);
@@ -186,7 +186,6 @@ public class ActivityTest {
 //            activityVOList.add(d.getActivityVO());
 //        }
         System.out.println(result.getData());
-        return result.getData();
     }
 
 }

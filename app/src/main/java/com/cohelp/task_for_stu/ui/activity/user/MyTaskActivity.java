@@ -2,6 +2,7 @@ package com.cohelp.task_for_stu.ui.activity.user;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,9 +15,14 @@ import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.UserInfoHolder;
 import com.cohelp.task_for_stu.biz.TaskBiz;
 import com.cohelp.task_for_stu.net.CommonCallback;
+import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
+import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
+import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.TaskAdapter;
 import com.cohelp.task_for_stu.ui.vo.Task;
+import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 
 import java.util.ArrayList;
@@ -33,7 +39,10 @@ public class MyTaskActivity extends BaseActivity {
     RecyclerView eRecyclerView;
 
     TaskAdapter taskAdapter;
-    List<Task> taskList;
+    CardViewListAdapter cardViewListAdapter;
+    List<DetailResponse> taskList;
+    OkHttpUtils okHttpUtils;
+    Intent intent;
     TaskBiz taskBiz;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +50,18 @@ public class MyTaskActivity extends BaseActivity {
         setContentView(R.layout.activity_my_task);
         setUpToolBar();
         setTitle("我的发布");
+        initTools();
         initView();
         initEvent();
     }
-
+    private void initTools(){
+//        intent = getIntent();
+//        user = (User) intent.getSerializableExtra("user");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            okHttpUtils = new OkHttpUtils();
+        }
+        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+    }
     private void initEvent() {
 
 
@@ -73,7 +90,21 @@ public class MyTaskActivity extends BaseActivity {
             }
         });
 
-
+        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
+            @Override
+            public void onItemClick(View view, int postion) {
+                System.out.println("lisetn in act");
+                Intent intent = new Intent(MyTaskActivity.this,DetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("detailResponse",taskList.get(postion));
+                intent.putExtras(bundle);
+                IdAndType idAndType = new IdAndType(taskList.get(postion).getActivityVO().getId(),1);
+                new Thread(()->{
+                    System.out.println(okHttpUtils.getDetail(idAndType));
+                }).start();
+                startActivity(intent);
+            }
+        });
 //        //todo 展示接受过和发布过的任务，需要重新写业务方法
 //        taskSolved.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -135,13 +166,13 @@ public class MyTaskActivity extends BaseActivity {
             public void onSuccess(List<Task> response) {
                 stopLoadingProgress();
                 T.showToast("更新任务数据成功！");
-                updateList(response);
+//                updateList(response);
             }
         });
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void updateList(List<Task> response) {
+    private void updateList(List<DetailResponse> response) {
         taskList.clear();
         taskList.addAll(response);
         taskAdapter.notifyDataSetChanged();
@@ -152,12 +183,13 @@ public class MyTaskActivity extends BaseActivity {
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
+        cardViewListAdapter = new CardViewListAdapter(taskList);
         eRecyclerView = findViewById(R.id.id_recyclerview);
 //        taskBiz = new TaskBiz();
 //        taskList = new ArrayList<>();
 //        taskAdapter = new TaskAdapter(this,taskList);
         eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        eRecyclerView.setAdapter(taskAdapter);
+        eRecyclerView.setAdapter(cardViewListAdapter);
     }
 
     private void toUserCenterActivity() {
@@ -182,5 +214,20 @@ public class MyTaskActivity extends BaseActivity {
         Intent intent = new Intent(this,HoleCenterActivity.class);
         startActivity(intent);
         finish();
+    }
+    private synchronized void getTaskList(){
+        Thread t1 = new Thread(()->{
+
+
+
+
+        });
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }

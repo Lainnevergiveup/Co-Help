@@ -365,4 +365,17 @@ public class OkHttpUtils {
         }
         System.out.println(res);
     }
+    public List<DetailResponse> getCollectList(){
+        okHttp.sendGetRequest(baseURL+"/collect/getcollectlist",cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        Gson gson = new Gson();
+//        //这个类型写啥？list有1,2,3这里知识查了activity的
+        Result<List<DetailResponse>> userResult = gson.fromJson(res,new TypeToken<Result<List<DetailResponse>>>(){}.getType());
+        return userResult.getData();
+    }
 }
