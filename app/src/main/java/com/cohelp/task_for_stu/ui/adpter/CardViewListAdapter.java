@@ -80,7 +80,8 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
             System.out.println(1);
             holder.firstImage.setImageURL(imageList.get(0));
         }
-
+//        System.out.println(detailResponse.getReadNum());
+        holder.readNumber.setText("阅读量 "+detailResponse.getReadNum().toString());
         if (activityVO!=null){
             System.out.println("id="+activityVO.getId());
             System.out.println(activityVO.getActivityComment());
@@ -126,7 +127,9 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
 
     @Override
     public int getItemCount() {
+        if (detailResponseListList!=null)
         return detailResponseListList.size();
+        else return 0;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{

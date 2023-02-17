@@ -47,8 +47,36 @@ public class DetailResponse implements Serializable {
      *是否收藏
      */
     private Integer isCollected;
+
+    /**
+     *访问量
+     */
+    private Integer readNum;
+
+    public Integer getReadNum() {
+        return readNum;
+    }
+
+    public void setReadNum(Integer readNum) {
+        this.readNum = readNum;
+    }
+
     public ActivityVO getActivityVO() {
         return activityVO;
+    }
+
+    @Override
+    public String toString() {
+        return "DetailResponse{" +
+                "activityVO=" + activityVO +
+                ", helpVO=" + helpVO +
+                ", holeVO=" + holeVO +
+                ", publisherAvatarUrl='" + publisherAvatarUrl + '\'' +
+                ", imagesUrl=" + imagesUrl +
+                ", isLiked=" + isLiked +
+                ", isCollected=" + isCollected +
+                ", readNum=" + readNum +
+                '}';
     }
 
     public void setActivityVO(ActivityVO activityVO) {

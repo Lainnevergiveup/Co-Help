@@ -33,4 +33,28 @@ public class SearchPublishResponse {
      * 树洞list
      */
     private ArrayList<Hole> holeList;
+
+    public ArrayList<Activity> getActivityList() {
+        return activityList;
+    }
+
+    public void setActivityList(ArrayList<Activity> activityList) {
+        this.activityList = activityList;
+    }
+
+    public ArrayList<Help> getHelpList() {
+        return helpList;
+    }
+
+    public void setHelpList(ArrayList<Help> helpList) {
+        this.helpList = helpList;
+    }
+
+    public ArrayList<Hole> getHoleList() {
+        return holeList;
+    }
+
+    public void setHoleList(ArrayList<Hole> holeList) {
+        this.holeList = holeList;
+    }
 }

@@ -68,7 +68,7 @@ app:contentPaddingTop="5dp">
 
             <TextView
                 android:id="@+id/cardView_title"
-                style="@style/TextStyle.Content"
+                style="@style/TextStyle.Title"
                 android:ellipsize="end"
                 android:gravity="start|center_vertical"
                 android:maxLines="2"
@@ -78,7 +78,7 @@ app:contentPaddingTop="5dp">
 
             <TextView
                 android:id="@+id/cardView_summary"
-                style="@style/TextStyle.Explain"
+                style="@style/TextStyle.Content"
                 android:layout_marginTop="5dp"
                 android:ellipsize="end"
                 android:gravity="start|center_vertical"

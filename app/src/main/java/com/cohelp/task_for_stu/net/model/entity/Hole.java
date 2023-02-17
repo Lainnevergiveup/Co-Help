@@ -108,6 +108,18 @@ public class Hole implements Serializable {
      *组织id
      */
     private Integer teamId;
+    /**
+     * 访问量
+     */
+    private Integer readNum;
+
+    public Integer getReadNum() {
+        return readNum;
+    }
+
+    public void setReadNum(Integer readNum) {
+        this.readNum = readNum;
+    }
 
     public Integer getTeamId() {
         return teamId;

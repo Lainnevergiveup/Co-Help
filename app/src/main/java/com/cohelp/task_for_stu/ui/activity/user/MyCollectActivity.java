@@ -1,16 +1,23 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
+import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
+import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 
 import java.util.List;
@@ -21,6 +28,9 @@ public class MyCollectActivity extends BasicInfoActivity {
     LinearLayout HelpCenter;
     LinearLayout TaskCenter;
     LinearLayout UserCenter;
+
+    SwipeRefreshLayout eSwipeRefreshLayout;
+    RecyclerView eRecyclerView;
 
     CardViewListAdapter cardViewListAdapter;
     List<DetailResponse> collectList;
@@ -46,6 +56,18 @@ public class MyCollectActivity extends BasicInfoActivity {
         okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
     }
     private void initEvent(){
+
+        eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //判断是否在刷新
+                System.out.println("isrefreshing");
+                Toast.makeText(MyCollectActivity.this,eSwipeRefreshLayout.isRefreshing()?"正在刷新":"刷新完成"
+                        ,Toast.LENGTH_SHORT).show();
+                refreshCollectListData();
+
+            }
+        });
 
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,8 +120,15 @@ public class MyCollectActivity extends BasicInfoActivity {
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
         getCollectList();
-        System.out.println(collectList);
         cardViewListAdapter = new CardViewListAdapter(collectList);
+
+        eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
+        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
+        eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
+
+        eRecyclerView = findViewById(R.id.id_recyclerview);
+        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        eRecyclerView.setAdapter(cardViewListAdapter);
     }
 
 
@@ -135,6 +164,17 @@ public class MyCollectActivity extends BasicInfoActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+    }
+    private synchronized void refreshCollectListData(){
+        getCollectList();
+        cardViewListAdapter.setDetailResponseListList(collectList);
+        eRecyclerView.setAdapter(cardViewListAdapter);
+        eSwipeRefreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //关闭刷新
+                eSwipeRefreshLayout.setRefreshing(false);
+            }
+        },1000);
     }
 }

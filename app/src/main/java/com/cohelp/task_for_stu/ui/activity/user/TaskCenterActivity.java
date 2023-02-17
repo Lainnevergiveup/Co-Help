@@ -177,6 +177,21 @@ public class TaskCenterActivity extends BaseActivity {
                 stopLoadingProgress();
             }
         });
+        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
+            @Override
+            public void onItemClick(View view, int postion) {
+                System.out.println("lisetn in act");
+                Intent intent = new Intent(TaskCenterActivity.this,DetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("detailResponse",activityVOList.get(postion));
+                intent.putExtras(bundle);
+                IdAndType idAndType = new IdAndType(activityVOList.get(postion).getActivityVO().getId(),1);
+                new Thread(()->{
+                    System.out.println(okHttpUtils.getDetail(idAndType));
+                }).start();
+                startActivity(intent);
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -211,24 +226,7 @@ public class TaskCenterActivity extends BaseActivity {
 //        activityAdapter = new ActivityAdapter(this,activityVOList);
         cardViewListAdapter = new CardViewListAdapter(activityVOList);
 //        holeList.add(new Hole("强奸","wow", 0,0,0,"friend"));
-        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
-            @Override
-            public void onItemClick(View view, int postion) {
-                System.out.println("lisetn in act");
-                Intent intent = new Intent(TaskCenterActivity.this,DetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("detailResponse",activityVOList.get(postion));
-                intent.putExtras(bundle);
-                IdAndType idAndType = new IdAndType(activityVOList.get(postion).getActivityVO().getId(),1);
-                new Thread(()->{
-                    System.out.println(okHttpUtils.getDetail(idAndType));
-                }).start();
-                startActivity(intent);
-            }
-        });
-
         eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         eRecyclerView.setAdapter(cardViewListAdapter);
     }
 

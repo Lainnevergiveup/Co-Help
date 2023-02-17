@@ -14,6 +14,7 @@ import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.domain.IdAndTypeList;
 import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
+import com.cohelp.task_for_stu.net.model.domain.SearchPublishResponse;
 import com.cohelp.task_for_stu.net.model.domain.SearchRequest;
 import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.net.model.entity.Collect;
@@ -340,6 +341,7 @@ public class OkHttpUtils {
     /*
     Remark
      */
+    //点赞评论
     public void remark(int type,int id){
         okHttp.sendRequest(baseURL+"/topic/like/"+type+"/"+id,"",cookie);
         String res = null;
@@ -378,4 +380,41 @@ public class OkHttpUtils {
         Result<List<DetailResponse>> userResult = gson.fromJson(res,new TypeToken<Result<List<DetailResponse>>>(){}.getType());
         return userResult.getData();
     }
+
+
+    /*
+    Publish
+     */
+    public List<DetailResponse> searchPublic(){
+        okHttp.sendGetRequest(baseURL+"/user/searchpub",cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        Gson gson = new Gson();
+//        //这个类型写啥？list有1,2,3这里知识查了activity的
+        Result<List<DetailResponse>> userResult = gson.fromJson(res,new TypeToken<Result<List<DetailResponse>>>(){}.getType());
+        return userResult.getData();
+    }
+
+
+    /*
+    History
+     */
+    public List<DetailResponse> getInvolvedList(){
+        okHttp.sendRequest(baseURL+"/history/getinvolvedlist","",cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        Gson gson = new Gson();
+//        //这个类型写啥？list有1,2,3这里知识查了activity的
+        Result<List<DetailResponse>> userResult = gson.fromJson(res,new TypeToken<Result<List<DetailResponse>>>(){}.getType());
+        return userResult.getData();
+    }
+
 }
