@@ -80,5 +80,24 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.8.0'
 
     implementation 'com.github.xuexiangjys.PictureSelector:picture-core:1.0.5'
+
+//    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+//    implementation 'io.reactivex:rxandroid:1.2.1'
+//    implementation 'io.reactivex.rxjava3:rxjava:3.0.4'
+//    implementation 'lib.gorden.rxbus2:rxbus:2.0.1'
+//
+//    implementation 'com.github.smuyyh:ImageSelector:3.0'
+//
+//    // PictureSelector 基础 (必须)
+//    implementation 'io.github.lucksiege:pictureselector:v3.10.7'
+//
+//    // 图片压缩 (按需引入)
+//    implementation 'io.github.lucksiege:compress:v3.10.7'
+//
+//    // 图片裁剪 (按需引入)
+//    implementation 'io.github.lucksiege:ucrop:v3.10.7'
+//
+//    // 自定义相机 (按需引入)
+//    implementation 'io.github.lucksiege:camerax:v3.10.7'
 }
 

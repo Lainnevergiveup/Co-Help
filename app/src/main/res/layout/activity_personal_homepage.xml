@@ -243,6 +243,38 @@
             android:layout_height="1dp"
             android:layout_marginTop="10dp"
             android:background="@color/lfile_lightgray" />
+
+        <LinearLayout
+            android:id="@+id/id_ll_teamChangeTerminal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:text="组织变更:"
+                android:textSize="20sp">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/id_tv_teamTerminal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="40dp"
+                android:text="默认"
+                android:textColor="@color/default_guide_case_view_background_color"
+                android:textSize="20sp">
+
+            </TextView>
+
+        </LinearLayout>
+
     </LinearLayout>
     <com.xuexiang.xui.widget.button.roundbutton.RoundButton
         android:id="@+id/id_btn_save"
@@ -252,7 +284,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="10dp"
         android:text="保存"
         />
     <View

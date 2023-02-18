@@ -438,12 +438,7 @@ public class OkHttpUtils {
 
         teamUpdateRequest.setTeamId(teamID);
 
-        if (teamID==1){
-            teamUpdateRequest.setConditionType(1);
-        }
-        else {
-            teamUpdateRequest.setConditionType(0);
-        }
+        teamUpdateRequest.setConditionType(0);
 
         String json = gson.toJson(teamUpdateRequest);
 
