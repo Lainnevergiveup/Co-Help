@@ -16,11 +16,14 @@ import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.domain.SearchPublishResponse;
 import com.cohelp.task_for_stu.net.model.domain.SearchRequest;
+import com.cohelp.task_for_stu.net.model.domain.TeamUpdateRequest;
 import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.net.model.entity.Collect;
 import com.cohelp.task_for_stu.net.model.entity.Help;
 import com.cohelp.task_for_stu.net.model.entity.Hole;
+import com.cohelp.task_for_stu.net.model.entity.Team;
 import com.cohelp.task_for_stu.net.model.entity.User;
+import com.cohelp.task_for_stu.net.model.entity.UserTeam;
 import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
 import com.cohelp.task_for_stu.net.model.vo.HoleVO;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
@@ -58,8 +61,8 @@ public class OkHttpUtils {
     }
 
     /*
-        构造方法
-         */
+      构造方法
+    */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public OkHttpUtils() {
         okHttp = new OKHttp();
@@ -416,5 +419,52 @@ public class OkHttpUtils {
         Result<List<DetailResponse>> userResult = gson.fromJson(res,new TypeToken<Result<List<DetailResponse>>>(){}.getType());
         return userResult.getData();
     }
+    /*
+    Team相关接口
+     */
+    public List<Team> searchTeam(String teamName){
+        okHttp.sendGetRequest(baseURL+"/team/query?teamName="+teamName,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<List<Team>> result = gson.fromJson(res,new TypeToken<Result<List<Team>>>(){}.getType());
+        return  result.getData();
+    }
+    public void changeTeam(Integer teamID){
+        TeamUpdateRequest teamUpdateRequest = new TeamUpdateRequest();
 
+        teamUpdateRequest.setTeamId(teamID);
+
+        if (teamID==1){
+            teamUpdateRequest.setConditionType(1);
+        }
+        else {
+            teamUpdateRequest.setConditionType(0);
+        }
+
+        String json = gson.toJson(teamUpdateRequest);
+
+        okHttp.sendRequest(baseURL+"/team/change",json,cookie);
+
+        return;
+    }
+    /*
+    UserTeam
+     */
+    public String getTeamChangeState(){
+
+        okHttp.sendGetRequest(baseURL+"/userteam/getchangeteam",cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<String> result = gson.fromJson(res,new TypeToken<Result<String>>(){}.getType());
+        return  result.getMessage();
+
+    }
 }

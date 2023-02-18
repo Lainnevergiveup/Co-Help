@@ -208,6 +208,7 @@
             android:background="@color/lfile_lightgray" />
 
         <LinearLayout
+            android:id="@+id/test_hideLayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
