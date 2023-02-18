@@ -14,16 +14,19 @@ import androidx.annotation.RequiresApi;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.model.entity.Team;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.view.AvatorImageView;
 import com.cohelp.task_for_stu.utils.SessionUtils;
+import com.cohelp.task_for_stu.utils.T;
 import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
 import com.xuexiang.xui.widget.picker.widget.OptionsPickerView;
 import com.xuexiang.xui.widget.picker.widget.builder.OptionsPickerBuilder;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class PersonalHomepageActivity extends BaseActivity {
@@ -38,6 +41,7 @@ public class PersonalHomepageActivity extends BaseActivity {
     AvatorImageView iv_icon;
     String[] s_sex = new String[2];
     String[] s_team = new String[20];
+    List<Team> teamList;
     User user;
     Intent intent;
     String userIcon;
@@ -48,6 +52,7 @@ public class PersonalHomepageActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_homepage);
+
         setUpToolBar();
         initTools();
         initView();
@@ -155,6 +160,7 @@ public class PersonalHomepageActivity extends BaseActivity {
 
         getUser();
         getUserIcon();
+        getTeamList();
 
         btn_save = findViewById(R.id.id_btn_save);
         iv_icon = findViewById(R.id.id_iv_icon);
@@ -168,7 +174,9 @@ public class PersonalHomepageActivity extends BaseActivity {
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
-
+//
+//        LinearLayout linearLayout = findViewById(R.id.test_hideLayout);
+//        linearLayout.setVisibility(View.GONE);
 
         refreshUser();
 
@@ -178,6 +186,8 @@ public class PersonalHomepageActivity extends BaseActivity {
         OptionsPickerView pvOptions = new OptionsPickerBuilder(this, (v, options1, options2, options3) -> {
             tv_sex.setText(s_sex[options1]);
             sexSelectOption = options1;
+//            tv_sex.setText(teamList.get(options1).getTeamName());
+//            sexSelectOption = teamList.get(options1).getId();
             return false;
         })
                 .setTitleText("性别选择")
@@ -189,14 +199,18 @@ public class PersonalHomepageActivity extends BaseActivity {
 
     private void showTeamPickerView() {
         OptionsPickerView pvOptions = new OptionsPickerBuilder(this, (v, options1, options2, options3) -> {
-            tv_team.setText(s_team[options1]);
-            teamSelectOption = options1;
+//            tv_team.setText(s_team[options1]);
+//            teamSelectOption = options1;
+            tv_team.setText(teamList.get(options1).getTeamName());
+            teamSelectOption = teamList.get(options1).getId();
+//            System.out.println(teamList.get(options1).getTeamName());
+//            System.out.println(teamList.get(options1).getId());
             return false;
         })
                 .setTitleText("组织选择")
                 .setSelectOptions(teamSelectOption)
                 .build();
-        pvOptions.setPicker(s_team);
+        pvOptions.setPicker(teamList);
         pvOptions.show();
     }
 
@@ -279,4 +293,16 @@ public class PersonalHomepageActivity extends BaseActivity {
         System.out.println(user.getTeamName());
     }
 
+    private synchronized void getTeamList(){
+        Thread t1 = new Thread(()->{
+            teamList = okHttpUtils.searchTeam("");
+            System.out.println(teamList);
+        });
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -210,6 +210,8 @@ public class MyTaskActivity extends BaseActivity {
         eRecyclerView = findViewById(R.id.id_recyclerview);
         eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         eRecyclerView.setAdapter(cardViewListAdapter);
+
+
     }
 
     private void toUserCenterActivity() {

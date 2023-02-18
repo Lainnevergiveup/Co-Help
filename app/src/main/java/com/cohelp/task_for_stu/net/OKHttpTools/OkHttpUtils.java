@@ -61,8 +61,8 @@ public class OkHttpUtils {
     }
 
     /*
-        构造方法
-         */
+      构造方法
+    */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public OkHttpUtils() {
         okHttp = new OKHttp();
@@ -450,5 +450,21 @@ public class OkHttpUtils {
         okHttp.sendRequest(baseURL+"/team/change",json,cookie);
 
         return;
+    }
+    /*
+    UserTeam
+     */
+    public String getTeamChangeState(){
+
+        okHttp.sendGetRequest(baseURL+"/userteam/getchangeteam",cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<String> result = gson.fromJson(res,new TypeToken<Result<String>>(){}.getType());
+        return  result.getMessage();
+
     }
 }
