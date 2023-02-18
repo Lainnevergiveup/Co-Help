@@ -37,6 +37,8 @@ import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.ui.vo.Task;
 import com.cohelp.task_for_stu.utils.ImageTool;
 import com.cohelp.task_for_stu.utils.SessionUtils;
+import com.cohelp.task_for_stu.utils.T;
+import com.cohelp.task_for_stu.utils.ToastUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
@@ -96,18 +98,28 @@ public class CreateNewHoleActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 String te = title.getText().toString();
+                System.out.println("te"+te);
                 String ct = content.getText().toString();
-                hole = new Hole(te,ct,1,1,0,"1");
 
-                HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
-                for (int i =0;i<list.size()-1;i++){
-                    stringStringHashMap.put(i+"",list.get(i));
+                if(te.isEmpty() || ct.isEmpty()) {
+                    Toast.makeText(CreateNewHoleActivity.this, "您输入的信息不完整\n请再次检查!", Toast.LENGTH_LONG).show();
+//                    T.init(CreateNewHoleActivity.this);
+//                    T.showToast("您输入的信息不完整\n请再次检查!");
+//                    ToastUtils.showToast(this, "这是最基本的Toast");
+                    System.out.println("ssss");
+                }else {
+                    hole = new Hole(te,ct,1,1,0,"1");
+                    HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
+                    for (int i =0;i<list.size()-1;i++){
+                        stringStringHashMap.put(i+"",list.get(i));
+                    }
+                    new Thread(()->{
+                        okHttpUtils.holePublish(hole,stringStringHashMap);
+                    }).start();
+                    upload();
+                    toHoleCenterActivity();
                 }
-                new Thread(()->{
-                    okHttpUtils.holePublish(hole,stringStringHashMap);
-                }).start();
-                upload();
-                toHoleCenterActivity();
+
             }
         });
         initData();

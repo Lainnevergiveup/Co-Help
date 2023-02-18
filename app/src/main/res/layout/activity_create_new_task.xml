@@ -20,6 +20,7 @@
         android:paddingTop="5dp"
         android:paddingLeft="5dp"
         android:hint="输入您的标题"
+        android:textSize="15sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textLongMessage"/>
@@ -37,6 +38,7 @@
             android:background="@drawable/search_solid"
             android:paddingTop="5dp"
             android:paddingLeft="5dp"
+            android:textSize="15sp"
             android:hint="输入开始时间"
             android:layout_width="150sp"
             android:layout_height="wrap_content"
@@ -50,6 +52,7 @@
 
         android:id="@+id/id_et_content"
         android:gravity="top"
+        android:textSize="15sp"
         android:hint="活动详情描述..."
         android:maxLines="5" />
 
@@ -79,14 +82,22 @@
 <!--        android:layout_height="240sp"-->
 <!--        android:inputType="textMultiLine"/>-->
 
-    <Button
+
+
+    <com.xuexiang.xui.widget.button.shadowbutton.ShadowButton
         android:id="@+id/id_btn_submit"
-        android:text="发布"
-        android:layout_marginTop="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="18sp"
         android:layout_marginLeft="20sp"
         android:layout_marginRight="20sp"
-        android:layout_width="match_parent"
-        android:background="@drawable/btn_bg_pink"
-        style="@style/Button_Large_Pink"
-        android:layout_height="wrap_content"/>
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:text="发布"
+        android:textSize="20sp"
+        app:sb_radius="5dp"
+        android:textStyle="bold"
+        app:sb_alpha_pressed="40"
+        app:sb_color_pressed="#0303ff"
+        app:sb_color_unpressed="#8aacee" />
 </LinearLayout>

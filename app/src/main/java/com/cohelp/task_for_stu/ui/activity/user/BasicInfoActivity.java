@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.UserInfoHolder;
@@ -202,6 +203,7 @@ public class BasicInfoActivity extends BaseActivity {
             }
         });
         Personal_homepage.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) { toPersonalHomepageActivity();}
         });
@@ -273,6 +275,7 @@ public class BasicInfoActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void toPersonalHomepageActivity(){
         Intent intent = new Intent(this,PersonalHomepageActivity.class);
         startActivity(intent);

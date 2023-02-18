@@ -148,7 +148,7 @@ public class HoleCenterActivity extends BaseActivity {
         SearchHot = findViewById(R.id.id_ll_search_hot);
         SearchTime = findViewById(R.id.id_ll_search_time);
         searchBtn = findViewById(R.id.id_iv_search);
-        aSwitch = findViewById(R.id.id_sw_check);
+        aSwitch = findViewById(R.id.id_sb_check);
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
         eRecyclerView = findViewById(R.id.id_recyclerview);
         eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);

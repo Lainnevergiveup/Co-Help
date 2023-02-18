@@ -33,6 +33,7 @@ import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.leon.lfilepickerlibrary.utils.StringUtils;
+import com.xuexiang.xui.widget.button.switchbutton.SwitchButton;
 
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class HelpCenterActivity extends BaseActivity {
     LinearLayout UserCenter;
     TextView lb1,lb2,lb3,lb4,lb5;
     RelativeLayout SearchBox;
-    Switch aSwitch;
+    SwitchButton aSwitch;
     TextView all;
 
     EditText searchedContent;
@@ -56,10 +57,10 @@ public class HelpCenterActivity extends BaseActivity {
     RecyclerView eRecyclerView;
     Integer conditionState = 0;
     List<DetailResponse> helpList = new ArrayList<>();
+
 //    HelpAdapter helpAdapter;
     CardViewListAdapter cardViewListAdapter;
     OkHttpUtils okHttpUtils;
-    int conditionType = 0;
     String labelType = "全部";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +117,61 @@ public class HelpCenterActivity extends BaseActivity {
                 toUserCenterActivity();
             }
         });
+
+        lb1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startLoadingProgress();
+                conditionState = 0;
+                refreshHelpListData();
+                stopLoadingProgress();
+            }
+        });
+
+        lb2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startLoadingProgress();
+                conditionState = 1;
+                refreshHelpListData();
+                stopLoadingProgress();
+            }
+        });
+
+        lb3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startLoadingProgress();
+                conditionState = 2;
+                refreshHelpListData();
+                stopLoadingProgress();
+            }
+        });
+
+        lb4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startLoadingProgress();
+                conditionState = 3;
+                refreshHelpListData();
+                stopLoadingProgress();
+            }
+        });
+
+        lb5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startLoadingProgress();
+                conditionState = 4;
+                refreshHelpListData();
+                stopLoadingProgress();
+            }
+        });
+
+
+
+
+
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -156,7 +212,7 @@ public class HelpCenterActivity extends BaseActivity {
     }
 
     private synchronized void refreshHelpListData(){
-        getHelpList();
+        getHelpList(conditionState);
 //        helpAdapter.setHelpList(helpList);
         cardViewListAdapter.setDetailResponseListList(helpList);
         eRecyclerView.setAdapter(cardViewListAdapter);
@@ -189,13 +245,13 @@ public class HelpCenterActivity extends BaseActivity {
         searchedContent = findViewById(R.id.id_et_search);
         searchBtn = findViewById(R.id.id_iv_search);
         SearchBox = findViewById(R.id.id_rl_search);
-        aSwitch = findViewById(R.id.id_sw_check);
+        aSwitch = findViewById(R.id.id_sb_check);
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
         eRecyclerView = findViewById(R.id.id_recyclerview);
 
         eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-        getHelpList();
+        getHelpList(conditionState);
         cardViewListAdapter = new CardViewListAdapter(helpList);
         cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
             @Override
@@ -243,9 +299,9 @@ public class HelpCenterActivity extends BaseActivity {
         startActivity(intent);
         finish();
     }
-    private synchronized void getHelpList(){
+    private synchronized void getHelpList(Integer CconditionType){
         Thread t1 = new Thread(()->{
-            helpList = okHttpUtils.helpList(conditionType);
+            helpList = okHttpUtils.helpList(CconditionType);
         });
         t1.start();
         try {

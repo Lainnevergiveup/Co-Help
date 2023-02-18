@@ -27,6 +27,7 @@
                 android:layout_marginLeft="20sp"
                 android:layout_marginTop="20sp"
                 android:layout_marginRight="20sp"
+                android:textSize="15sp"
                 android:background="@drawable/search_solid"
                 android:hint="输入您的标题"
                 android:inputType="textLongMessage"
@@ -39,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20sp"
                 android:layout_marginTop="10dp"
+
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -47,7 +49,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="有偿"
-                    android:textSize="20dp"></RadioButton>
+                    android:textSize="15sp"
+                    ></RadioButton>
 
                 <RadioButton
                     android:id="@+id/id_rb_nopaid"
@@ -55,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:text="无偿"
-                    android:textSize="20dp">
+                    android:textSize="15sp">
 
                 </RadioButton>
 
@@ -67,22 +70,9 @@
                 android:layout_height="150dp"
                 android:layout_margin="16dp"
                 android:gravity="top"
+                android:textSize="15sp"
                 android:hint="互助详情描述..."
                 android:maxLines="5" />
-
-            <!--    <EditText-->
-            <!--        android:id="@+id/id_et_content"-->
-            <!--        android:layout_marginTop="20sp"-->
-            <!--        android:layout_marginLeft="20sp"-->
-            <!--        android:layout_marginRight="20sp"-->
-            <!--        android:background="@drawable/search_solid"-->
-            <!--        android:gravity="top"-->
-            <!--        android:paddingTop="5dp"-->
-            <!--        android:paddingLeft="5dp"-->
-            <!--        android:hint="输入您的任务描述"-->
-            <!--        android:layout_width="match_parent"-->
-            <!--        android:layout_height="240sp"-->
-            <!--        android:inputType="textMultiLine"/>-->
 
 
             <LinearLayout
@@ -111,7 +101,7 @@
                 android:layout_marginLeft="20sp"
                 android:text="标签:"
                 android:textColor="@color/black"
-                android:textSize="20sp">
+                android:textSize="18sp">
 
             </TextView>
 
@@ -189,16 +179,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <Button
+            <com.xuexiang.xui.widget.button.shadowbutton.ShadowButton
                 android:id="@+id/id_btn_submit"
-                style="@style/Button_Large_Pink"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="18sp"
                 android:layout_marginLeft="20sp"
-                android:layout_marginTop="10sp"
                 android:layout_marginRight="20sp"
-                android:background="@drawable/btn_bg_pink"
-                android:text="发布" />
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:text="发布"
+                android:textSize="20sp"
+                app:sb_radius="5dp"
+                android:textStyle="bold"
+                app:sb_alpha_pressed="40"
+                app:sb_color_pressed="#0303ff"
+                app:sb_color_unpressed="#8aacee" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

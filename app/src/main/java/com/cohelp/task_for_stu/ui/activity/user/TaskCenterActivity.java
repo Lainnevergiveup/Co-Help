@@ -14,6 +14,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +33,7 @@ import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.leon.lfilepickerlibrary.utils.StringUtils;
+import com.xuexiang.xui.widget.button.switchbutton.SwitchButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +53,8 @@ public class TaskCenterActivity extends BaseActivity {
     SwipeRefreshLayout eSwipeRefreshLayout;
     RecyclerView eRecyclerView;
     RelativeLayout SearchBox;
-    Switch aSwitch;
+
+    SwitchButton switchButton;
     List<DetailResponse> activityVOList = new ArrayList<>();
     User user;
     OkHttpUtils okHttpUtils;
@@ -67,7 +70,7 @@ public class TaskCenterActivity extends BaseActivity {
         initTools();
         initView();
         initEvent();
-        setTitle("首页");
+        setTitle("活动");
     }
     private void initTools(){
         intent = getIntent();
@@ -77,6 +80,8 @@ public class TaskCenterActivity extends BaseActivity {
         }
         okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
     }
+
+
     private void initEvent() {
         setToolbar(R.drawable.common_add, new ClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -104,10 +109,10 @@ public class TaskCenterActivity extends BaseActivity {
             public void onClick(View v) {toHoleCenterActivity();}
         });
 
-        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(aSwitch.isChecked()){
+                if(switchButton.isChecked()){
 //
                     SearchBox.setVisibility(buttonView.VISIBLE);
                 }else {
@@ -198,7 +203,6 @@ public class TaskCenterActivity extends BaseActivity {
     private void toCreateNewTaskActivity() {
         //TODO 创建新任务
         Intent intent = new Intent(this,CreateNewTaskActivity.class);
-//        startActivityForResult(intent,1001);
         startActivity(intent);
     }
 
@@ -218,7 +222,7 @@ public class TaskCenterActivity extends BaseActivity {
         SearchBox = findViewById(R.id.id_rl_search);
         SearchHot = findViewById(R.id.id_ll_search_hot);
         SearchTime = findViewById(R.id.id_ll_search_time);
-        aSwitch = findViewById(R.id.id_sw_check);
+        switchButton = findViewById(R.id.id_sb_check);
         eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
 

@@ -41,6 +41,8 @@ import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.ui.vo.Task;
 import com.cohelp.task_for_stu.utils.ImageTool;
 import com.cohelp.task_for_stu.utils.SessionUtils;
+import com.cohelp.task_for_stu.utils.T;
+import com.xuexiang.xui.widget.shadow.ShadowButton;
 
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
@@ -49,6 +51,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import lombok.ToString;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class CreateNewHelpActivity extends BaseActivity{
@@ -60,7 +64,7 @@ public class CreateNewHelpActivity extends BaseActivity{
     RadioButton lb_money;
     RadioButton lb_nomoney;
     RadioGroup paid,label;
-    int Paid;
+    int Paid=-1;
     String Label;
     RadioButton lb1,lb2,lb3,lb4,lb5;
     EditText lb_diy;
@@ -92,18 +96,7 @@ public class CreateNewHelpActivity extends BaseActivity{
         initEvent();
     }
     private void initEvent() {
-//        endTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                pickerView.show(endTime);
-//            }
-//        });
-//        startTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                pickerView.show(startTime);
-//            }
-//        });
+
         paid.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -140,37 +133,33 @@ public class CreateNewHelpActivity extends BaseActivity{
                 }
             }
         });
-//        lb_diy.setOnKeyListener(new View.OnKeyListener() {
-//          @Override
-//          public boolean onKey(View v, int keyCode, KeyEvent event) {
-//              //del key is disabled ,resolved by this way
-//              if (event != null&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-//
-//                  InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//                  in.hideSoftInputFromWindow(lb_diy.getApplicationWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
-//              }
-//              return true;
-//          }
-//
-//      });
+
 
         publish.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
+
+
                 String te = title.getText().toString();
                 String ct = content.getText().toString();
-                help = new Help(te,ct,Paid,1,1,1,Label);
-
-                HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
-                for (int i =0;i<list.size()-1;i++){
-                    stringStringHashMap.put(i+"",list.get(i));
+                if(te.isEmpty() || Paid==-1 || Label.isEmpty()){
+                    Toast.makeText(CreateNewHelpActivity.this,"您输入的信息不完整\n请再次检查!",Toast.LENGTH_LONG).show();
+                    System.out.println("ssss");
+                }else {
+                    help = new Help(te,ct,Paid,1,1,1,Label);
+                    HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
+                    for (int i =0;i<list.size()-1;i++){
+                        stringStringHashMap.put(i+"",list.get(i));
+                    }
+                    new Thread(()->{
+                        okHttpUtils.helpPublish(help,stringStringHashMap);
+                    }).start();
+                    upload();
+                    toHelpCenterActivity();
                 }
-                new Thread(()->{
-                    okHttpUtils.helpPublish(help,stringStringHashMap);
-                }).start();
-                upload();
-                toHelpCenterActivity();
+
+
             }
         });
         lb_diy.setOnClickListener(new View.OnClickListener() {

@@ -14,7 +14,7 @@
         android:orientation="horizontal"
         >
         <LinearLayout
-            android:layout_width="320dp"
+            android:layout_width="300dp"
             android:layout_height="70dp"
             android:orientation="horizontal"
             >
@@ -43,7 +43,7 @@
             </RelativeLayout>
             <LinearLayout
                 android:background="@drawable/search_solid"
-                android:layout_marginTop="15sp"
+                android:layout_marginTop="25sp"
                 android:layout_marginLeft="15sp"
                 android:layout_marginRight="100sp"
                 android:id="@+id/id_ll_search1"
@@ -89,17 +89,21 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="50dp"
+            android:layout_width="80dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="0dp"
             android:layout_height="50dp">
 
-            <Switch
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/id_sw_check"
+
+            <com.xuexiang.xui.widget.button.switchbutton.SwitchButton
+                android:id="@+id/id_sb_check"
+                style="@style/SwitchButtonStyle"
+                android:layout_marginTop="5dp"
+                android:layout_width="70dp"
+                android:layout_height="45dp"
+                app:swb_animationDuration="300"
                 android:checked="true"
-                />
+                app:swb_thumbRangeRatio="1.4" />
 
         </LinearLayout>
     </LinearLayout>

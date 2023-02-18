@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:gravity="center"
         android:layout_height="100dp">
-        <ImageView
+        <com.cohelp.task_for_stu.ui.view.AvatorImageView
             android:id="@+id/id_iv_icon"
             android:layout_width="120dp"
             android:layout_height="120dp"
@@ -45,10 +45,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/id_tv_account"
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="60dp"
                 android:text="默认"
-                android:textColor="@color/black"
+                android:textColor="@color/default_guide_case_view_background_color"
                 android:textSize="20sp">
 
             </TextView>
@@ -83,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="70dp"
-                android:text="用户名"
+                android:hint="用户名"
                 android:textSize="20sp">
 
             </EditText>
@@ -105,7 +106,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
+                android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:text="性别:"
                 android:textSize="20sp">
@@ -116,10 +117,10 @@
                 android:id="@+id/id_tv_sex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
+                android:layout_gravity="center"
                 android:layout_marginLeft="80dp"
-                android:text="默认"
-                android:textColor="@color/black"
+                android:text="男"
+                android:textColor="@color/default_guide_case_view_background_color"
                 android:textSize="20sp">
 
             </TextView>
@@ -154,7 +155,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="80dp"
-                android:text="默认"
+                android:hint="年龄"
+                android:inputType="number"
                 android:textColor="@color/black"
                 android:textSize="20sp">
 
@@ -190,8 +192,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="40dp"
-                android:text="默认"
-                android:textColor="@color/black"
+                android:hint="电话"
+                android:inputType="phone"
+                android:textColor="@color/default_guide_case_view_background_color"
                 android:textSize="20sp">
 
             </EditText>
@@ -213,7 +216,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
+                android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:text="组织:"
                 android:textSize="20sp">
@@ -224,10 +227,10 @@
                 android:id="@+id/id_tv_team"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
+                android:layout_gravity="center"
                 android:layout_marginLeft="80dp"
                 android:text="默认"
-                android:textColor="@color/black"
+                android:textColor="@color/default_guide_case_view_background_color"
                 android:textSize="20sp">
 
             </TextView>
@@ -248,7 +251,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="70dp"
         android:text="保存"
         />
     <View

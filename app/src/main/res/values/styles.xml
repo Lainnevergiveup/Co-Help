@@ -25,6 +25,15 @@
 <style name="bottomSheetStyleWrapper" parent="Widget.Design.BottomSheet.Modal">
     <item name="android:background">@android:color/transparent</item>
 </style>
+
+
+    <style name="SwitchButtonStyle">
+        <item name="android:paddingStart">?attr/xui_config_content_spacing_horizontal</item>
+        <item name="android:paddingEnd">?attr/xui_config_content_spacing_horizontal</item>
+        <item name="android:paddingTop">?attr/xui_config_content_spacing_vertical</item>
+        <item name="android:paddingBottom">?attr/xui_config_content_spacing_vertical</item>
+    </style>
+
 <!--    <style name="TextStyle">-->
 <!--        <item name="android:layout_width">wrap_content</item>-->
 <!--        <item name="android:layout_height">wrap_content</item>-->

@@ -41,6 +41,7 @@ import com.cohelp.task_for_stu.utils.BasicUtils;
 import com.cohelp.task_for_stu.utils.ImageTool;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
+import com.xuexiang.xui.widget.shadow.ShadowButton;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -60,7 +61,7 @@ public class CreateNewTaskActivity extends BaseActivity {
     EditText reward;
     EditText startTime;
     EditText endTime;
-    Button button;
+    Button publish;
     TaskBiz taskBiz;
     Task task;
     Activity activity;
@@ -87,46 +88,54 @@ public class CreateNewTaskActivity extends BaseActivity {
         initEvent();
     }
     private void initEvent() {
-        endTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pickerView.show(endTime);
-            }
-        });
+//        endTime.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                pickerView.show(endTime);
+//            }
+//        });
         startTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 pickerView.show(startTime);
             }
         });
-        button.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
+        publish.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 String te = title.getText().toString();
                 String ct = content.getText().toString();
                 String pt = startTime.getText().toString();
-                LocalDateTime dateTime=LocalDateTime.parse(pt, DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm"));
 //                String lb = label.getText().toString();
-                activity = new Activity(null,null,te,ct,dateTime,0,0,"",0,0,null);
-                HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
-                for (int i =0;i<list.size()-1;i++){
-                    stringStringHashMap.put(i+"",list.get(i));
+                System.out.println("te"+te);
+                System.out.println("ct"+ct);
+                if(te.isEmpty() || ct.isEmpty() || pt.isEmpty()) {
+                    Toast.makeText(CreateNewTaskActivity.this, "您输入的信息不完整\n请再次检查!", Toast.LENGTH_LONG).show();
+                    System.out.println("ssss");
+                }else {
+                    LocalDateTime dateTime=LocalDateTime.parse(pt, DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm"));
+                    activity = new Activity(null,null,te,ct,dateTime,0,0,"",0,0,null);
+                    HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
+                    for (int i =0;i<list.size()-1;i++){
+                        stringStringHashMap.put(i+"",list.get(i));
+                    }
+                    new Thread(()->{
+                        okHttpUtils.activityPublish(activity,stringStringHashMap);
+                    }).start();
+                    upload();
+                    toTaskCenterActivity();
                 }
-                new Thread(()->{
-                    okHttpUtils.activityPublish(activity,stringStringHashMap);
-                }).start();
-                upload();
-                toTaskCenterActivity();
+
             }
         });
+
         initData();
     }
 
     private void initView() {
         title = findViewById(R.id.id_et_title);
         content = findViewById(R.id.id_et_content);
-        button = findViewById(R.id.id_btn_submit);
+        publish = findViewById(R.id.id_btn_submit);
         startTime = findViewById(R.id.id_et_startDate);
 //        endTime = findViewById(R.id.id_et_endDate);
         gridView = findViewById(R.id.gridview);

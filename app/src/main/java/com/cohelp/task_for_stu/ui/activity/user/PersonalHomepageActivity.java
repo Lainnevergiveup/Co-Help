@@ -1,31 +1,47 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.cohelp.task_for_stu.R;
+import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
+import com.cohelp.task_for_stu.ui.view.AvatorImageView;
+import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
 import com.xuexiang.xui.widget.picker.widget.OptionsPickerView;
 import com.xuexiang.xui.widget.picker.widget.builder.OptionsPickerBuilder;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class PersonalHomepageActivity extends BaseActivity {
 
     LinearLayout HoleCenter;
     LinearLayout HelpCenter;
     LinearLayout TaskCenter;
     LinearLayout UserCenter;
-    TextView tv_sex,tv_team;
+    TextView tv_sex,tv_team,tv_account;
     EditText et_nick,et_age,et_tel;
     RoundButton btn_save;
+    AvatorImageView iv_icon;
     String[] s_sex = new String[2];
     String[] s_team = new String[20];
     User user;
+    Intent intent;
+    String userIcon;
+    OkHttpUtils okHttpUtils = new OkHttpUtils();
     int sexSelectOption = 0;
     int teamSelectOption = 0;
     @Override
@@ -33,6 +49,7 @@ public class PersonalHomepageActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_homepage);
         setUpToolBar();
+        initTools();
         initView();
         initEvent();
         setTitle("个人主页");
@@ -59,12 +76,45 @@ public class PersonalHomepageActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 String nick = et_nick.getText().toString();
-                String age = et_age.getText().toString();
+                String age_st = et_age.getText().toString();
+
                 String tel = et_tel.getText().toString();
-                String sex = tv_sex.getText().toString();
+                String sex_st = tv_sex.getText().toString();
+                Integer sex;
+                Integer age=0;
                 String team = tv_team.getText().toString();
-//                user = new User("","",nick,)
+                System.out.println(age_st + tel + team);
+
+                if(age_st.length()>2){
+                    Toast.makeText(PersonalHomepageActivity.this,"您输入的年龄有误！",Toast.LENGTH_LONG).show();
+                }else {
+                     age = Integer.parseInt(age_st);
+                }
+                if(tel.length() != 11 ){
+                    Toast.makeText(PersonalHomepageActivity.this,"您输入的电话有误！",Toast.LENGTH_LONG).show();
+                }
+                if(sex_st=="男"){
+                    sex = 0;
+                }else{
+                    sex = 1;
+                }
+                user.setUserName(nick);
+                user.setSex(sex);
+                user.setAge(age);
+                user.setPhoneNumber(tel);
+                user.setTeamName(team);
+                new Thread(()->{
+                    try {
+                        okHttpUtils.changeUserInfo(user);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+                toUserCenterActivity();
+
+
             }
+
         });
 
         HelpCenter.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +153,12 @@ public class PersonalHomepageActivity extends BaseActivity {
         s_team[0] = "上理";
         s_team[1] = "华理";
 
+        getUser();
+        getUserIcon();
+
         btn_save = findViewById(R.id.id_btn_save);
+        iv_icon = findViewById(R.id.id_iv_icon);
+        tv_account = findViewById(R.id.id_tv_account);
         tv_sex = findViewById(R.id.id_tv_sex);
         tv_team = findViewById(R.id.id_tv_team);
         et_age = findViewById(R.id.id_et_age);
@@ -113,6 +168,9 @@ public class PersonalHomepageActivity extends BaseActivity {
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
+
+
+        refreshUser();
 
     }
 
@@ -167,6 +225,58 @@ public class PersonalHomepageActivity extends BaseActivity {
         finish();
     }
 
+    private void initTools(){
+        intent = getIntent();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            okHttpUtils = new OkHttpUtils();
+        }
+        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+    }
+
+    private synchronized void getUser(){
+        Thread t1 = new Thread(()->{
+            user=okHttpUtils.getUser();
+            System.out.println(user);
+        });
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private synchronized void getUserIcon(){
+        Thread t1 = new Thread(()->{
+            userIcon = okHttpUtils.getImageById(user.getAvatar());
+            System.out.println(userIcon);
+        });
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void  refreshUser(){
+
+        tv_account.setText(user.getUserAccount());
+        et_nick.setText(user.getUserName());
+        if(user.getSex()==0){
+            tv_sex.setText("男");
+        }else
+        {
+            tv_sex.setText("女");
+        }
+//        tv_sex.setText(user.getSex());
+        System.out.println(user.getAge());
+        et_age.setText(user.getAge().toString());
+        et_tel.setText(user.getPhoneNumber());
+        tv_team.setText(user.getTeamName());
+        iv_icon.setImageURL(userIcon);
+        System.out.println(user.getTeamName());
+    }
 
 }
