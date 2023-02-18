@@ -144,9 +144,6 @@ public class PersonalHomepageActivity extends BaseActivity {
         });
     }
 
-
-
-
     private void initView() {
         s_sex[0] = "男";
         s_sex[1] = "女";
@@ -199,7 +196,6 @@ public class PersonalHomepageActivity extends BaseActivity {
         pvOptions.setPicker(s_team);
         pvOptions.show();
     }
-
 
     private void toUserCenterActivity() {
         Intent intent = new Intent(this,BasicInfoActivity.class);

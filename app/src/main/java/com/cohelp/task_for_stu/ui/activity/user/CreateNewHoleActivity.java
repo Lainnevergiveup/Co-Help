@@ -1,14 +1,12 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,26 +20,20 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bigkoo.pickerview.TimePickerView;
 import com.cohelp.task_for_stu.bean.BaseTask;
 import com.cohelp.task_for_stu.biz.TaskBiz;
-import com.cohelp.task_for_stu.config.Config;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.entity.Hole;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.R;
-import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.ui.vo.Task;
 import com.cohelp.task_for_stu.utils.ImageTool;
 import com.cohelp.task_for_stu.utils.SessionUtils;
-import com.cohelp.task_for_stu.utils.T;
-import com.cohelp.task_for_stu.utils.ToastUtils;
 
 import java.io.ByteArrayOutputStream;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -108,7 +100,7 @@ public class CreateNewHoleActivity extends BaseActivity {
 //                    ToastUtils.showToast(this, "这是最基本的Toast");
                     System.out.println("ssss");
                 }else {
-                    hole = new Hole(te,ct,1,1,0,"1");
+                    hole = new Hole(te,ct,null,null,null,null);
                     HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
                     for (int i =0;i<list.size()-1;i++){
                         stringStringHashMap.put(i+"",list.get(i));

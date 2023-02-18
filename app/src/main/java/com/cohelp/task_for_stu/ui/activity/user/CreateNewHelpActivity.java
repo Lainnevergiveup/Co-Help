@@ -147,7 +147,8 @@ public class CreateNewHelpActivity extends BaseActivity{
                     Toast.makeText(CreateNewHelpActivity.this,"您输入的信息不完整\n请再次检查!",Toast.LENGTH_LONG).show();
                     System.out.println("ssss");
                 }else {
-                    help = new Help(te,ct,Paid,1,1,1,Label);
+                    help = new Help(te,ct,Paid,null,null,null,Label);
+
                     HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
                     for (int i =0;i<list.size()-1;i++){
                         stringStringHashMap.put(i+"",list.get(i));
