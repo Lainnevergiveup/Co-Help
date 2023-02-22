@@ -38,7 +38,7 @@
 
     <color name="tint">#f44336</color>
     <color name="tint_background">#42f44336</color>
-
+    <color name="color_f6">#f6f6f6</color>
     <color name="cyan_500">#00bcd4</color>
 
     <!-- Components 组件 -->

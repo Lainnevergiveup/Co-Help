@@ -20,6 +20,6 @@
 
     <item android:color="?attr/colorAccent" android:state_selected="true" />
     <item android:color="?attr/colorAccent" android:state_checked="true" />
-    <item android:color="@color/picture_tab_color_false" />
+<!--    <item android:color="@color/picture_tab_color_false" />-->
 
 </selector>
