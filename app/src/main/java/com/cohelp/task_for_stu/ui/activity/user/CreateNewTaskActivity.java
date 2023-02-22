@@ -82,7 +82,7 @@ public class CreateNewTaskActivity extends BaseActivity  {
     //    private GridAdapter adapterr;
 //    private GVAdapter adapter;
     private ImageView img;
-    private List<String> list;
+    private List<String> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +125,8 @@ public class CreateNewTaskActivity extends BaseActivity  {
                     Toast.makeText(CreateNewTaskActivity.this, "您输入的信息不完整\n请再次检查!", Toast.LENGTH_LONG).show();
                     System.out.println("ssss");
                 }else {
-                    LocalDateTime dateTime=LocalDateTime.parse(pt, DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm"));
+                    getPath();
+                    LocalDateTime dateTime=LocalDateTime.parse(pt, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
                     activity = new Activity(null,null,te,ct,dateTime,null,null,null,null,null,null);
                     HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
                     for (int i =0;i<list.size()-1;i++){
@@ -134,7 +135,7 @@ public class CreateNewTaskActivity extends BaseActivity  {
                     new Thread(()->{
                         okHttpUtils.activityPublish(activity,stringStringHashMap);
                     }).start();
-//                    upload();
+
                     toTaskCenterActivity();
                 }
 
@@ -348,7 +349,12 @@ public class CreateNewTaskActivity extends BaseActivity  {
         }
     }
 
-
+    private void getPath(){
+        for (int i = 0;i < selectList.size()-1;i++){
+            list.add(selectList.get(i).getPath());
+            System.out.println(list.get(i));
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -361,9 +367,6 @@ public class CreateNewTaskActivity extends BaseActivity  {
             if (requestCode == PictureConfig.CHOOSE_REQUEST) {// 图片选择结果回调
                 System.out.println("p1111");
                 System.out.println(data);
-//                final Uri uri = data.getData();
-//                String path = ImageTool.getImageAbsolutePath(this,uri);
-//                System.out.println(path);
                 images = PictureSelector.obtainMultipleResult(data);
                 System.out.println(images);
                 selectList.addAll(images);
@@ -383,35 +386,7 @@ public class CreateNewTaskActivity extends BaseActivity  {
     }
 
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == android.app.Activity.RESULT_OK) {
-//            switch (requestCode) {
-//                case PictureConfig.CHOOSE_REQUEST:
-//                    // 图片选择
-//                    mSelectList = PictureSelector.obtainMultipleResult(data);
-//                    mAdapter.setSelectList(mSelectList);
-//                    mAdapter.notifyDataSetChanged();
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-//    }
 
-//    @Override
-//    public void onAddPicClick() {
-//        PictureUtils.getPictureSelector(this)
-//                .selectionMedia(mSelectList)
-//                .forResult(PictureConfig.CHOOSE_REQUEST);
-//    }
-
-
-//    @Override
-//    public void onPointerCaptureChanged(boolean hasCapture) {
-//        super.onPointerCaptureChanged(hasCapture);
-//    }
 
 
     private void toTaskCenterActivity() {
@@ -420,143 +395,7 @@ public class CreateNewTaskActivity extends BaseActivity  {
         finish();
     }
 
-//    private void upload()  {
-//        Bitmap bitmap;
-//        Bitmap bmpCompressed;
-//        for (int i = 0; i < list.size() - 1; i++) {
-//            System.out.println("i-----" + i);
-//            bitmap = BitmapFactory.decodeFile(list.get(i));
-//            bmpCompressed = Bitmap.createScaledBitmap(bitmap, 800, 800, false);
-//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//            bmpCompressed.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-//            byte[] data = bos.toByteArray();
-//            System.out.println("data" + data);
-//        }
-//    }
-//
-//    private void initData() {
-//        if (list == null) {
-//            list = new ArrayList<>();
-//            list.add(IMG_ADD_TAG);
-//        }
-//        adapter = new GVAdapter();
-//        gridView.setAdapter(adapter);
-//        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                if (list.get(position).equals(IMG_ADD_TAG)) {
-//                    if (list.size() < IMG_COUNT) {
-//                        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                        startActivityForResult(intent, 0);
-//                    } else {
-//                        Toast.makeText(CreateNewTaskActivity.this, "最多只能放7张照片", Toast.LENGTH_LONG).show();
-//                    }
-//                }
-//            }
-//        });
-//    }
-//
-//    private void refreshAdapter() {
-//        if (list == null) {
-//            list = new ArrayList<>();
-//        }
-//        if (adapter == null) {
-//            adapter = new GVAdapter();
-//        }
-//        adapter.notifyDataSetChanged();
-//    }
 
-//    private class GVAdapter extends BaseAdapter {
-//        @Override
-//        public int getCount() {
-//            return list.size();
-//        }
-//
-//        @Override
-//        public Object getItem(int position) {
-//            return list.get(position);
-//        }
-//
-//        @Override
-//        public long getItemId(int position) {
-//            return position;
-//        }
-//
-//        @Override
-//        public View getView(final int position, View convertView, ViewGroup parent) {
-//            final ViewHolder holder;
-//            if (convertView == null) {
-//                convertView = LayoutInflater.from(getApplication()).inflate(R.layout.activity_add_photo, parent, false);
-//                holder = new ViewHolder();
-//                holder.imageView = (ImageView) convertView.findViewById(R.id.main_gridView_item_photo);
-//                holder.checkBox = (CheckBox) convertView.findViewById(R.id.main_gridView_item_cb);
-//                convertView.setTag(holder);
-//            } else {
-//                holder = (ViewHolder) convertView.getTag();
-//            }
-//            String s = list.get(position);
-//            if (!s.equals(IMG_ADD_TAG)) {
-//                holder.checkBox.setVisibility(View.VISIBLE);
-//                holder.imageView.setImageBitmap(ImageTool.createImageThumbnail(s));
-//            } else {
-//                holder.checkBox.setVisibility(View.GONE);
-//                holder.imageView.setImageResource(R.drawable.add);
-//            }
-//            holder.checkBox.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    list.remove(position);
-//                    refreshAdapter();
-//                }
-//            });
-//            return convertView;
-//        }
-//
-//        private class ViewHolder {
-//            ImageView imageView;
-//            CheckBox checkBox;
-//        }
-//
-//    }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (data == null) {
-//            System.out.println("data null");
-//            return;
-//        }
-//        if (requestCode == 0) {
-//            final Uri uri = data.getData();
-//            String path = ImageTool.getImageAbsolutePath(this,uri);
-////            Bitmap bitmap = BitmapFactory.decodeFile(path);
-////            System.out.println(bitmap);
-//            System.out.println("path:" + path);
-//            if (list.size() == IMG_COUNT) {
-//                removeItem();
-//                refreshAdapter();
-//                return;
-//            }
-//            list.remove(IMG_ADD_TAG);
-//            list.add(path);
-//            list.add(IMG_ADD_TAG);
-//
-//            refreshAdapter();
-//        }
-//    }
-
-//    private void removeItem() {
-//        if (list.size() != IMG_COUNT) {
-//            if (list.size() != 0) {
-//                list.remove(list.size() - 1);
-//            }
-//        }
-//
-//
-//    }
-//
     private void askPermissions() {//动态申请权限！
         if (Build.VERSION.SDK_INT >= 23) {
             int REQUEST_CODE_CONTACT = 101;
@@ -572,19 +411,6 @@ public class CreateNewTaskActivity extends BaseActivity  {
         }
 
     }
-//    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
-//    protected void takePhoto() {
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            String filename = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.CHINA).format(new Date()) + ".png";
-//            File file = new File(Environment.getExternalStorageDirectory(), filename);
-//            String mCurrentPhotoPath = file.getAbsolutePath();
-//            // 仅需改变这一行
-//            Uri fileUri = FileProvider7.getUriForFile(this, file);
-//            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-//            startActivityForResult(takePictureIntent, PictureConfig.CAMERA);
-//        }
-//    }
 
 
 
