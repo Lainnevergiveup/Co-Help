@@ -27,6 +27,8 @@
 </style>
 
 
+
+
     <style name="SwitchButtonStyle">
         <item name="android:paddingStart">?attr/xui_config_content_spacing_horizontal</item>
         <item name="android:paddingEnd">?attr/xui_config_content_spacing_horizontal</item>

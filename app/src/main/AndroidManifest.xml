@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.cohelp.task_for_stu">
 
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<!--    <uses-permission android:name="android.permission.CAMERA"/>-->
+
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- SD卡读写权限 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -43,7 +48,18 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <queries package="${applicationId}">
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE">
 
+            </action>
+        </intent>
+        <intent>
+            <action android:name="android.media.action.ACTION_VIDEO_CAPTURE">
+
+            </action>
+        </intent>
+    </queries>
     <application
         android:name=".MyCoHelp"
         android:allowBackup="true"
@@ -52,8 +68,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Task_for_stu"
+        tools:replace="android:theme"
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize"
+        android:requestLegacyExternalStorage="true"
         android:fitsSystemWindows="true"
         tools:ignore="ExtraText">
         <activity
@@ -168,6 +186,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+<!--            <provider-->
+<!--                android:name="androidx.core.content.FileProvider"-->
+<!--                android:authorities="com.cohelp.task_for_stu.provider"-->
+<!--                android:exported="false"-->
+
+<!--                android:grantUriPermissions="true">-->
+<!--                <meta-data-->
+
+<!--                    android:name="android.support.FILE_PROVIDER_PATHS"-->
+
+<!--                    android:resource="@xml/file_paths" />-->
+<!--            </provider>-->
     </application>
 
 </manifest>
