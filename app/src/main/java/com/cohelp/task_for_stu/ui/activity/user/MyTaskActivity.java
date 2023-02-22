@@ -240,6 +240,7 @@ public class MyTaskActivity extends BaseActivity {
     private synchronized void getTaskList(){
         Thread t1 = new Thread(()->{
             taskList = okHttpUtils.searchPublic();
+//            System.out.println(taskList);
         });
         t1.start();
         try {
