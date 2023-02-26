@@ -23,46 +23,58 @@
             <EditText
                 android:id="@+id/id_et_title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginLeft="20sp"
                 android:layout_marginTop="20sp"
                 android:layout_marginRight="20sp"
                 android:textSize="15sp"
-                android:background="@drawable/search_solid"
+                android:background="@drawable/publish_solid"
                 android:hint="输入您的标题"
                 android:inputType="textLongMessage"
                 android:paddingLeft="5dp"
                 android:paddingTop="5dp" />
 
-            <RadioGroup
-                android:id="@+id/id_rg_paid"
-                android:layout_width="wrap_content"
+<!--            <RadioGroup-->
+<!--                android:id="@+id/id_rg_paid"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="20sp"-->
+<!--                android:layout_marginTop="10dp"-->
+
+<!--                android:gravity="center"-->
+<!--                android:orientation="horizontal">-->
+
+<!--                <RadioButton-->
+<!--                    android:id="@+id/id_rb_paid"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="有偿"-->
+<!--                    android:textSize="15sp"-->
+<!--                    ></RadioButton>-->
+
+<!--                <RadioButton-->
+<!--                    android:id="@+id/id_rb_nopaid"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginLeft="20dp"-->
+<!--                    android:text="无偿"-->
+<!--                    android:textSize="15sp">-->
+
+<!--                </RadioButton>-->
+
+<!--            </RadioGroup>-->
+
+<!--            <com.xuexiang.xui.widget.flowlayout.FlowTagLayout-->
+<!--                android:id="@+id/flowlayout_single_select_pad"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content" />-->
+
+            <com.xuexiang.xui.widget.flowlayout.FlowTagLayout
+                android:id="@+id/flowlayout_single_select_paid"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20sp"
-                android:layout_marginTop="10dp"
-
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/id_rb_paid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="有偿"
-                    android:textSize="15sp"
-                    ></RadioButton>
-
-                <RadioButton
-                    android:id="@+id/id_rb_nopaid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="无偿"
-                    android:textSize="15sp">
-
-                </RadioButton>
-
-            </RadioGroup>
+                android:layout_marginLeft="10dp"
+                />
 
             <EditText
                 android:id="@+id/id_et_content"
@@ -70,14 +82,14 @@
                 android:layout_height="150dp"
                 android:layout_margin="16dp"
                 android:gravity="top"
-                android:textSize="15sp"
                 android:hint="互助详情描述..."
+
                 android:maxLines="5" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="170dp"
                 android:layout_margin="16dp">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -92,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20sp"
-                android:layout_marginTop="20sp"
+                android:layout_marginTop="30sp"
                 android:layout_marginRight="20sp"
                 android:orientation="vertical" />
 
@@ -106,87 +118,88 @@
 
             </TextView>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:orientation="horizontal">-->
 
-                <RadioGroup
-                    android:id="@+id/id_rg_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+<!--                <RadioGroup-->
+<!--                    android:id="@+id/id_rg_label"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal">-->
 
-                    <RadioButton
-                        android:id="@+id/id_rb_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="组团招人">
+<!--                    <RadioButton-->
+<!--                        android:id="@+id/id_rb_1"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="组团招人">-->
 
-                    </RadioButton>
+<!--                    </RadioButton>-->
 
-                    <RadioButton
-                        android:id="@+id/id_rb_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="寻物启事">
+<!--                    <RadioButton-->
+<!--                        android:id="@+id/id_rb_2"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="寻物启事">-->
 
-                    </RadioButton>
+<!--                    </RadioButton>-->
 
-                    <RadioButton
-                        android:id="@+id/id_rb_3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="跑腿代取">
+<!--                    <RadioButton-->
+<!--                        android:id="@+id/id_rb_3"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="跑腿代取">-->
 
-                    </RadioButton>
+<!--                    </RadioButton>-->
 
-                    <RadioButton
-                        android:id="@+id/id_rb_4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="问题求助">
+<!--                    <RadioButton-->
+<!--                        android:id="@+id/id_rb_4"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="问题求助">-->
 
-                    </RadioButton>
+<!--                    </RadioButton>-->
 
-                    <RadioButton
-                        android:id="@+id/id_rb_5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+<!--                    <RadioButton-->
+<!--                        android:id="@+id/id_rb_5"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content">-->
 
-                    </RadioButton>
+<!--                    </RadioButton>-->
 
-                </RadioGroup>
+<!--                </RadioGroup>-->
 
-            </RelativeLayout>
-
-            <EditText
-                android:id="@+id/id_et_diy"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="16dp"
-                android:gravity="center"
-                android:hint="自定义"
-                android:maxLength="7"
-                android:textColorHighlight="@color/black"
-                android:textSize="15sp" />
-
-
+<!--            </RelativeLayout>-->
             <com.xuexiang.xui.widget.flowlayout.FlowTagLayout
                 android:id="@+id/flowlayout_single_select"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"/>
+
+<!--            <EditText-->
+<!--                android:id="@+id/id_et_diy"-->
+<!--                android:layout_width="100dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="16dp"-->
+<!--                android:layout_marginTop="6dp"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:gravity="center"-->
+<!--                android:hint="自定义"-->
+<!--                android:maxLength="7"-->
+<!--                android:textColorHighlight="@color/black"-->
+<!--                android:textSize="15sp" />-->
+
+
 
             <com.xuexiang.xui.widget.button.shadowbutton.ShadowButton
                 android:id="@+id/id_btn_submit"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="18sp"
-                android:layout_marginLeft="20sp"
-                android:layout_marginRight="20sp"
+                android:layout_marginTop="40sp"
+                android:layout_marginLeft="10sp"
+                android:layout_marginRight="10sp"
                 android:background="@android:color/transparent"
                 android:gravity="center"
                 android:text="发布"

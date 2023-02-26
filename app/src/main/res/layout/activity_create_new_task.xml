@@ -11,19 +11,20 @@
 <!--        String title;-->
     <!--    String desc;-->
 
+
     <EditText
         android:id="@+id/id_et_title"
-        android:layout_marginTop="20sp"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20sp"
-        android:background="@drawable/search_solid"
-        android:paddingTop="5dp"
-        android:paddingLeft="5dp"
-        android:hint="输入您的标题"
-        android:textSize="15sp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textLongMessage"/>
+        android:layout_height="40dp"
+        android:layout_marginLeft="20sp"
+        android:layout_marginTop="20sp"
+        android:layout_marginRight="20sp"
+        android:textSize="15sp"
+        android:background="@drawable/publish_solid"
+        android:hint="输入您的标题"
+        android:inputType="textLongMessage"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp" />
 
     <LinearLayout
         android:layout_marginTop="20sp"
@@ -35,7 +36,7 @@
         <EditText
             android:focusable="false"
             android:id="@+id/id_et_startDate"
-            android:background="@drawable/search_solid"
+            android:background="@drawable/publish_solid"
             android:paddingTop="5dp"
             android:paddingLeft="5dp"
             android:textSize="15sp"
@@ -55,42 +56,20 @@
         android:textSize="15sp"
         android:hint="活动详情描述..."
         android:maxLines="5" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_margin="16dp">
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/id_recycler_view"
+            android:layout_marginTop="?attr/xui_config_content_spacing_horizontal"
+            android:overScrollMode="never"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="match_parent" />
 
-            android:padding="5dp">
+    </LinearLayout>
 
-<!--            <GridView-->
-<!--                android:id="@+id/gridview"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:numColumns="4" />-->
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/id_recycler_view"
-                android:layout_marginTop="?attr/xui_config_content_spacing_horizontal"
-                android:overScrollMode="never"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-
-        </LinearLayout>
-
-<!--    <EditText-->
-<!--        android:id="@+id/id_et_content"-->
-<!--        android:layout_marginTop="20sp"-->
-<!--        android:layout_marginLeft="20sp"-->
-<!--        android:layout_marginRight="20sp"-->
-<!--        android:background="@drawable/search_solid"-->
-<!--        android:gravity="top"-->
-<!--        android:paddingTop="5dp"-->
-<!--        android:paddingLeft="5dp"-->
-<!--        android:hint="输入您的任务描述"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="240sp"-->
-<!--        android:inputType="textMultiLine"/>-->
 
 
 
@@ -98,7 +77,7 @@
         android:id="@+id/id_btn_submit"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="18sp"
+        android:layout_marginTop="40sp"
         android:layout_marginLeft="20sp"
         android:layout_marginRight="20sp"
         android:background="@android:color/transparent"
