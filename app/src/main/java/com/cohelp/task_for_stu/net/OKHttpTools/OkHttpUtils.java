@@ -4,17 +4,14 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import com.alibaba.fastjson.JSON;
 import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.ActivityListRequest;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.HelpListRequest;
 import com.cohelp.task_for_stu.net.model.domain.HoleListRequest;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
-import com.cohelp.task_for_stu.net.model.domain.IdAndTypeList;
 import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
-import com.cohelp.task_for_stu.net.model.domain.SearchPublishResponse;
 import com.cohelp.task_for_stu.net.model.domain.SearchRequest;
 import com.cohelp.task_for_stu.net.model.domain.TeamUpdateRequest;
 import com.cohelp.task_for_stu.net.model.entity.Activity;
@@ -23,27 +20,15 @@ import com.cohelp.task_for_stu.net.model.entity.Help;
 import com.cohelp.task_for_stu.net.model.entity.Hole;
 import com.cohelp.task_for_stu.net.model.entity.Team;
 import com.cohelp.task_for_stu.net.model.entity.User;
-import com.cohelp.task_for_stu.net.model.entity.UserTeam;
-import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
-import com.cohelp.task_for_stu.net.model.vo.HoleVO;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
-import com.cohelp.task_for_stu.utils.GsonUtil;
-import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class OkHttpUtils {
@@ -51,6 +36,10 @@ public class OkHttpUtils {
     Gson gson;
     private String baseURL = "http://43.143.90.226:9090";
     private String cookie;
+
+    public Gson getGson() {
+        return gson;
+    }
 
     public String getCookie() {
         return cookie;

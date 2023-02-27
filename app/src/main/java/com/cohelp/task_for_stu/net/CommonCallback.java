@@ -1,6 +1,6 @@
 package com.cohelp.task_for_stu.net;
 
-import com.cohelp.task_for_stu.utils.GsonUtil;
+import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
@@ -34,7 +34,7 @@ public abstract class CommonCallback<T> extends StringCallback {
             int resultCode = resp.getInt("resultCode");
             if(resultCode == 1){
                 String data = resp.getString("data");
-                onSuccess((T) GsonUtil.getGson().fromJson(data,eType));
+                onSuccess((T) new GSON().gsonSetter().fromJson(data,eType));
             }else{
                 onError(new RuntimeException(resp.getString("resultMessage")));
             }

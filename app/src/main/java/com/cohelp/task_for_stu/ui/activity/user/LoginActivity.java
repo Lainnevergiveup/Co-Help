@@ -112,6 +112,7 @@ public class LoginActivity extends BaseActivity {
 //               // toBasicInfoActivity();
 //            }
 //        }).start();
+        SessionUtils.deleteActivityPreference(this);
         initView();
         initEvent();
 
