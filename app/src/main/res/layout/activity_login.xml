@@ -8,64 +8,149 @@
     tools:context=".ui.activity.user.LoginActivity">
     <include layout="@layout/common_toolbar"/>
 
-    <EditText
-        android:id="@+id/id_et_username"
-        android:layout_width="match_parent"
-        android:layout_height="40sp"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:paddingTop="5dp"
-        android:paddingLeft="10dp"
-        android:paddingBottom="5dp"
-        android:inputType="text"
-        android:background="#E3DFDF"
-        android:hint="请输入您的账号"
-        android:textColorHint="#9A9696"/>
 
-    <EditText
-        android:id="@+id/id_et_password"
-        android:layout_width="match_parent"
-        android:layout_height="40sp"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:paddingTop="5dp"
-        android:paddingLeft="10dp"
-        android:paddingBottom="5dp"
-        android:inputType="textWebPassword"
-        android:background="#E3DFDF"
-        android:hint="请输入您的密码"
-        android:textColorHint="#9A9696"/>
 
-    <com.xuexiang.xui.widget.button.roundbutton.RoundButton
-        android:id="@+id/id_btn_login"
-        style="@style/RoundButton.Auto"
-        android:layout_width="match_parent"
-        android:layout_height="40sp"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="登录"
-        />
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp">
-        <TextView
-            android:id="@+id/id_tv_register"
-            android:layout_width="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="24dp"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:tint="?attr/colorAccent"
+                app:srcCompat="@drawable/ic_phone" />
+
+            <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
+                android:id="@+id/et_account_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="36dp"
+                android:hint="@string/tip_please_input_account_number"
+                android:inputType="number"
+                app:met_helperTextColor="@color/dark_orange"
+                app:met_clearButton="true"
+                app:met_errorMessage="@string/tip_phone_account_error"
+                app:met_floatingLabel="normal"
+                app:met_floatingLabelText="@string/title_account_number"
+                app:met_regexp="@string/regex_phone_number" />
+
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:id="@+id/fl_password"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="立即注册"/>
-        <TextView
-            android:id="@+id/id_tv_found"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="找回密码"/>
-    </RelativeLayout>
+            android:layout_marginTop="12dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:tint="?attr/colorAccent"
+                app:srcCompat="@drawable/ic_password" />
+
+            <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="36dp"
+                android:hint="@string/hint_please_input_password"
+                android:inputType="number"
+                app:met_isAsteriskStyle="true"
+                app:met_clearButton="false"
+                app:met_errorMessage="@string/tip_verify_code_error"
+                app:met_floatingLabel="normal"
+                app:met_floatingLabelText="@string/lab_verify_code"
+
+                app:met_regexp="@string/regex_verify_code" />
+
+<!--            <com.xuexiang.xui.widget.button.roundbutton.RoundButton-->
+<!--                android:id="@+id/btn_get_verify_code"-->
+<!--                style="@style/RoundButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="end"-->
+<!--                android:paddingStart="10dp"-->
+<!--                android:paddingTop="3dp"-->
+<!--                android:paddingEnd="10dp"-->
+<!--                android:paddingBottom="3dp"-->
+<!--                android:text="@string/action_get_verify_code"-->
+<!--                android:textColor="@color/selector_round_button_main_theme_color"-->
+<!--                android:textSize="13sp"-->
+<!--                app:rb_borderColor="@color/selector_round_button_main_theme_color"-->
+<!--                app:rb_borderWidth="1.5dp"-->
+<!--                app:rb_radius="15dp" />-->
+
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.xuexiang.xui.widget.alpha.XUIAlphaTextView
+                android:id="@+id/id_tv_register"
+                style="@style/TextStyle.Explain"
+                android:layout_gravity="start"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="立即注册"
+                android:textColor="@color/xui_config_color_primary_text" />
+
+            <com.xuexiang.xui.widget.alpha.XUIAlphaTextView
+                android:id="@+id/id_tv_found"
+                style="@style/TextStyle.Explain"
+                android:layout_gravity="end"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="忘记密码"
+                android:textColor="@color/xui_config_color_primary_text" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+        android:id="@+id/id_btn_login"
+        style="@style/SuperButton.Primary.Login"
+        android:layout_marginTop="40dp"
+        android:text="@string/title_login_register" />
+
+
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_marginLeft="20dp"-->
+<!--        android:layout_marginRight="20dp"-->
+<!--        android:layout_marginTop="5dp">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/id_tv_register"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="立即注册" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/id_tv_found"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentRight="true"-->
+<!--            android:text="找回密码"/>-->
+<!--    </RelativeLayout>-->
 </LinearLayout>

@@ -3,56 +3,40 @@ package com.cohelp.task_for_stu.ui.activity.user;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
 import com.cohelp.task_for_stu.R;
-import com.cohelp.task_for_stu.net.gsonTools.GSON;
-import com.cohelp.task_for_stu.net.model.domain.Result;
-import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.biz.UserBiz;
 import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.ToJsonString;
+import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
+import com.cohelp.task_for_stu.net.model.domain.Result;
+import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.leon.lfilepickerlibrary.utils.StringUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.xuexiang.xui.widget.alpha.XUIAlphaTextView;
+import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
+import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 
 /**
  * 登陆页控制类
  */
 public class LoginActivity extends BaseActivity {
-    EditText password;
-    EditText username;
-    Button login;
-    TextView toRegister;
-    TextView toUserFound;
+    MaterialEditText password;
+    MaterialEditText username;
+    SuperButton login;
+    XUIAlphaTextView toRegister;
+    XUIAlphaTextView toUserFound;
     UserBiz userBiz;
     LoginRequest loginRequest;
     User user;
@@ -222,8 +206,8 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initView() {
-        password = findViewById(R.id.id_et_password);
-        username = findViewById(R.id.id_et_username);
+        password = findViewById(R.id.et_password);
+        username = findViewById(R.id.et_account_number);
         login = findViewById(R.id.id_btn_login);
         toRegister = findViewById(R.id.id_tv_register);
         toUserFound = findViewById(R.id.id_tv_found);

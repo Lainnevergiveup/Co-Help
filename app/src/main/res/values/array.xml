@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="tags_values">
+        <item>组团招人</item>
+        <item>寻物启事</item>
+        <item>跑腿代取</item>
+        <item>问题求助</item>
+        <item>其 \t\t他</item>
+<!--        <item>C++</item>-->
+<!--        <item>Javascript</item>-->
+<!--        <item>React Native</item>-->
+<!--        <item>Kotlin</item>-->
+<!--        <item>C++</item>-->
+
+
+    </string-array>
+    <string-array name="tags_values_paid">
+        <item>有偿</item>
+        <item>无偿</item>
+
+        <!--        <item>C++</item>-->
+        <!--        <item>Javascript</item>-->
+        <!--        <item>React Native</item>-->
+        <!--        <item>Kotlin</item>-->
+        <!--        <item>C++</item>-->
+
+
+    </string-array>
+
+</resources>
+
