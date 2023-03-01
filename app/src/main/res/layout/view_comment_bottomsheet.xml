@@ -29,11 +29,11 @@
 
     </RelativeLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/dialog_bottomsheet_rv_lists"
+    <ExpandableListView
+        android:id="@+id/comment_item_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/dialog_bottomsheet_rl_title"
-        android:background="#fff" />
+        android:background="#fff"/>
 
 </RelativeLayout>

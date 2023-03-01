@@ -13,6 +13,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ import com.cohelp.task_for_stu.net.model.entity.Collect;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.ui.adpter.CommentAdapter;
+import com.cohelp.task_for_stu.ui.adpter.CommentExpandableListAdapter;
 import com.cohelp.task_for_stu.ui.view.AvatorImageView;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -52,6 +54,7 @@ public class DetailActivity extends AppCompatActivity {
     View view;
     View view2;
     RecyclerView commentRecycleView;
+    ExpandableListView commentListView;
 
     BottomSheetDialog bottomSheetDialog;
     BottomSheetDialog bottomSheetDialog2;
@@ -60,7 +63,7 @@ public class DetailActivity extends AppCompatActivity {
     BottomSheetBehavior bottomSheetBehavior2;
 
     CommentAdapter commentAdapter;
-
+    CommentExpandableListAdapter commentExpandableListAdapter;
     OkHttpUtils okHttpUtils;
     Intent intent;
 
@@ -97,7 +100,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initView(){
-//        view = LayoutInflater.from(this).inflate(R.layout.view_comment_bottomsheet, null, false);
+        view = LayoutInflater.from(this).inflate(R.layout.view_comment_bottomsheet, null, false);
 //        view2 = LayoutInflater.from(this).inflate(R.layout.view_comment_bottomsheet, null, false);
 //
 //        reportButton = (Button)findViewById(R.id.button_MutRelease);
@@ -107,7 +110,7 @@ public class DetailActivity extends AppCompatActivity {
 //
 //        likeButton = (ImageButton) findViewById(R.id.imageButton_Like);
 //        collectButton = (ImageButton) findViewById(R.id.imageButton_Collect);
-//        commentButton = (ImageButton) findViewById(R.id.imageButton_Comment);
+        commentButton =  findViewById(R.id.imageButton_Comment);
 //
 //        topicTitle = (TextView) findViewById(R.id.text_MessageTitle);
 //        topicTime = (TextView) findViewById(R.id.text_TopicCreateTime);
@@ -115,11 +118,12 @@ public class DetailActivity extends AppCompatActivity {
 //        avatorName = (TextView) findViewById(R.id.text_UserId);
 //
 //        commentRecycleView = (RecyclerView) view.findViewById(R.id.dialog_bottomsheet_rv_lists);
-//        bottomSheetDialog = new BottomSheetDialog(this,R.style.BottomSheetDialogStyle1);
+        commentListView = (ExpandableListView) view.findViewById(R.id.comment_item_list);
+        bottomSheetDialog = new BottomSheetDialog(this,R.style.BottomSheetDialogStyle1);
 //
 //        bottomSheetDialog2 = new BottomSheetDialog(this,R.style.BottomSheetDialog);
 //
-//        setBottomSheet();
+        setBottomSheet();
 //        initCommentRecycleView();
 //        ExpandableTextView mExpandableTextView = findViewById(R.id.expand_text_view);
 //        mExpandableTextView.setText("getString(R.string.etv_content_demo1daawsdd\n\n\nnu\n\nde\n\nre");
@@ -156,16 +160,18 @@ public class DetailActivity extends AppCompatActivity {
 //                }).start();
 //            }
 //        });
-//        commentButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (bottomSheetDialog!=null){
-//                    System.out.println(remarkList);
-//                    bottomSheetDialog.show();
+        commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println(2);
+                if (bottomSheetDialog!=null){
+                    initCommentListView();
+                    System.out.println("1"+remarkList);
+                    bottomSheetDialog.show();
 //                    bottomSheetDialog2.show();
-//                }
-//            }
-//        });
+                }
+            }
+        });
 //        collectButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -180,21 +186,21 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setBottomSheet(){
-        bottomSheetDialog.setCanceledOnTouchOutside(true);
+//        bottomSheetDialog.setCanceledOnTouchOutside(true);
         bottomSheetDialog.getWindow().setDimAmount(0f);
         bottomSheetDialog.setContentView(view);
         //用户行为
         bottomSheetBehavior = BottomSheetBehavior.from((View) view.getParent());
         //dialog的高度
-        bottomSheetBehavior.setPeekHeight(getWindowHeight());
+        bottomSheetBehavior.setPeekHeight(getWindowHeight()/4);
 
-        bottomSheetDialog2.setCanceledOnTouchOutside(true);
-        bottomSheetDialog2.getWindow().setDimAmount(0f);
-        bottomSheetDialog2.setContentView(view2);
-        //用户行为
-        bottomSheetBehavior2 = BottomSheetBehavior.from((View) view2.getParent());
-        //dialog的高度
-        bottomSheetBehavior2.setPeekHeight(getWindowHeight()/2);
+//        bottomSheetDialog2.setCanceledOnTouchOutside(true);
+//        bottomSheetDialog2.getWindow().setDimAmount(0f);
+//        bottomSheetDialog2.setContentView(view2);
+//        用户行为
+//        bottomSheetBehavior2 = BottomSheetBehavior.from((View) view2.getParent());
+//        dialog的高度
+//        bottomSheetBehavior2.setPeekHeight(getWindowHeight()/2);
     }
     private void initCommentRecycleView(){
 
@@ -208,6 +214,12 @@ public class DetailActivity extends AppCompatActivity {
             commentAdapter.setCommentList(remarkList);
         }
         commentRecycleView.setAdapter(commentAdapter);
+    }
+    private void initCommentListView(){
+
+        commentExpandableListAdapter = new CommentExpandableListAdapter(orderRemarkVO(remarkList),this);
+        commentListView.setAdapter(commentExpandableListAdapter);
+
     }
     /**
      * 计算高度(初始化可以设置默认高度)

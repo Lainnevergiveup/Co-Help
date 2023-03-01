@@ -19,7 +19,7 @@ import androidx.core.view.ViewCompat;
  * called before the animation is actually complete and support shadows on older
  * platforms.
  */
-class CircleImageView extends androidx.appcompat.widget.AppCompatImageView {
+public class CircleImageView extends androidx.appcompat.widget.AppCompatImageView {
 
     private static final int KEY_SHADOW_COLOR = 0x1E000000;
     private static final int FILL_SHADOW_COLOR = 0x3D000000;

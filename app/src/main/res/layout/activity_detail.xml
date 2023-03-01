@@ -13,20 +13,17 @@
         android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="parent"
         android:background="@color/xui_config_color_titlebar"
-        app:tb_barHeight="65dp"
+        app:tb_barHeight="50dp"
         app:tb_dividerColor="@color/xui_config_color_red"
-        app:tb_leftText="回退"
         app:tb_sideTextPadding="20dp"
         app:tb_actionPadding="20dp"
-        app:tb_subTitleText="这是副标题"
         app:tb_titleText="这是一个Title"
-
         />
 
     <ScrollView
             android:id="@+id/content"
             android:layout_width="match_parent"
-            android:layout_height="601dp"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/title"
             >
 
@@ -98,10 +95,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="35dp"
             android:layout_weight="1"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/content">
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
 
             <Space
                 android:layout_width="wrap_content"
@@ -110,10 +108,11 @@
 
             <ImageButton
                 android:id="@+id/imageButton_Like"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                app:srcCompat="@android:drawable/btn_star" />
+                android:src="@drawable/icon_dianzan_undo"
+                android:scaleType="fitCenter"/>
 
             <Space
                 android:layout_width="wrap_content"
@@ -122,10 +121,11 @@
 
             <ImageButton
                 android:id="@+id/imageButton_Collect"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                app:srcCompat="@android:drawable/ic_menu_crop" />
+                android:src="@drawable/ic_comment"
+                android:scaleType="fitCenter"/>
 
             <Space
                 android:layout_width="wrap_content"
@@ -134,15 +134,16 @@
 
             <ImageButton
                 android:id="@+id/imageButton_Comment"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                app:srcCompat="@android:drawable/ic_dialog_email" />
+                android:src="@drawable/icon_collect_undo"
+                android:scaleType="fitCenter"/>
 
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
         </LinearLayout>
-
+<!--        <include layout="@layout/view_comment_bottomsheet"></include>-->
 </androidx.constraintlayout.widget.ConstraintLayout>
