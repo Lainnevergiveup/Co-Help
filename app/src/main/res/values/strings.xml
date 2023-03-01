@@ -36,5 +36,7 @@
     <string name="lab_verify_code">验证码</string>
     <string name="regex_verify_code">^\\d{4}$</string>
     <string name="action_get_verify_code">获取验证码</string>
-    <string name="title_login_register">登录</string>
+    <string name="title_login_register"><登录></登录></string>
+    <string name="lab_select_all">全选</string>
+    <string name="lab_submit">确定</string>
 </resources>

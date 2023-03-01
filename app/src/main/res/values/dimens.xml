@@ -3,4 +3,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="common_icon_size">24dp</dimen>
+    <dimen name="config_margin_24dp">24dp</dimen>
+    <dimen name="config_padding_8dp">8dp</dimen>
+    <dimen name="config_margin_8dp">8dp</dimen>
 </resources>

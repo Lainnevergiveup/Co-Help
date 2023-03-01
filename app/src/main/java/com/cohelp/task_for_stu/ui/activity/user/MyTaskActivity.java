@@ -28,8 +28,8 @@ import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.ui.vo.Task;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyTaskActivity extends BaseActivity {
@@ -42,6 +42,10 @@ public class MyTaskActivity extends BaseActivity {
     TextView taskPosted;
     RecyclerView eRecyclerView;
     SwipeRefreshLayout eSwipeRefreshLayout;
+
+    SmartRefreshLayout refreshLayout;
+    RecyclerView recyclerView;
+//    private NewsListEditAdapter mAdapter;
 
     TaskAdapter taskAdapter;
     CardViewListAdapter cardViewListAdapter;
