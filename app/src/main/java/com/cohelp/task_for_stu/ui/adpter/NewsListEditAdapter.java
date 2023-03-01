@@ -19,6 +19,7 @@ package com.cohelp.task_for_stu.ui.adpter;
 
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -46,6 +47,9 @@ import me.samlss.broccoli.Broccoli;
 public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse> {
 
     private static final String KEY_SELECT_STATUS = "key_select_status";
+    public static final int GET_DATA_SUCCESS = 1;
+    public static final int NETWORK_ERROR = 2;
+    public static final int SERVER_ERROR = 3;
 
     /**
      * 是否是管理模式，默认是false
@@ -70,18 +74,14 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
 
 
 
-    public NewsListEditAdapter(OnAllSelectStatusChangedListener listener){
-        super(getEmptyNewInfo());
+    public NewsListEditAdapter(OnAllSelectStatusChangedListener listener,List<DetailResponse> detailResponseList){
+        super(detailResponseList);
         mListener = listener;
 
+
     }
-    public static List<DetailResponse> getEmptyNewInfo() {
-        List<DetailResponse> list = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            list.add(new DetailResponse());
-        }
-        return list;
-    }
+
+
     @Override
     protected int getItemLayoutId(int viewType) {
         return R.layout.view_cardlist_card;
@@ -99,7 +99,11 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
             holder.text(R.id.cardView_praiseNumber, h.getHoleLike());
             holder.text(R.id.cardView_commentNumber, h.getHoleComment());
             holder.text(R.id.cardView_readNumber, "阅读量 " +h.getReadNum());
+
+
+
         }
+        else {holder.visible(R.id.card_view,  View.GONE);}
 
 //        RadiusImageView imageView = holder.findViewById(R.id.iv_image);
 //        ImageLoader.get().loadImage(imageView, model.getImageUrl());

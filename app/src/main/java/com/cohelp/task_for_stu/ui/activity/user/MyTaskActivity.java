@@ -166,6 +166,7 @@ public class MyTaskActivity extends BaseActivity {
         btn_submit = findViewById(R.id.btn_submit);
 
         getTaskList();
+        System.out.println("list"+taskList);
         cardViewListAdapter = new CardViewListAdapter(taskList);
 
 //        eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
@@ -177,12 +178,13 @@ public class MyTaskActivity extends BaseActivity {
 //        eRecyclerView.setAdapter(cardViewListAdapter);
 
 
+
         WidgetUtils.initRecyclerView(recyclerView, 0);
         recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
             if (scbSelectAll != null) {
                 scbSelectAll.setCheckedSilent(isSelectAll);
             }
-        }));
+        },taskList));
         scbSelectAll.setOnCheckedChangeListener((checkBox, isChecked) -> mAdapter.setSelectAll(isChecked));
 
 
