@@ -1,14 +1,17 @@
 package com.cohelp.task_for_stu.net.model.domain;
 
+import androidx.annotation.NonNull;
+
 import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
 import com.cohelp.task_for_stu.net.model.vo.HelpVO;
 import com.cohelp.task_for_stu.net.model.vo.HoleVO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author zgy
@@ -17,7 +20,7 @@ import java.util.ArrayList;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DetailResponse implements Serializable {
+public class DetailResponse implements Serializable,Cloneable {
     /**
      * 活动视图体，封装活动基本信息(不包括发布者头像及话题相关图片)
      */
@@ -77,6 +80,22 @@ public class DetailResponse implements Serializable {
                 ", isCollected=" + isCollected +
                 ", readNum=" + readNum +
                 '}';
+    }
+
+//    @NonNull
+//    @Override
+//    protected Object clone() throws CloneNotSupportedException {
+//        return super.clone();
+//    }
+    @NonNull
+    @Override
+    public HoleVO clone() {
+        try {
+            return (HoleVO) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return new HoleVO();
     }
 
     public void setActivityVO(ActivityVO activityVO) {

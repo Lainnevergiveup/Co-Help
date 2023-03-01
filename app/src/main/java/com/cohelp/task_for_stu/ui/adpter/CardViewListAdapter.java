@@ -1,7 +1,9 @@
 package com.cohelp.task_for_stu.ui.adpter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +19,6 @@ import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
 import com.cohelp.task_for_stu.net.model.vo.HelpVO;
 import com.cohelp.task_for_stu.net.model.vo.HoleVO;
 import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
-import com.xuexiang.xui.widget.imageview.RadiusImageView;
 
 import java.util.List;
 
@@ -29,6 +30,23 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
     public static final int SERVER_ERROR = 3;
     Bitmap bitmap;
     Context context;
+    /**
+     * 是否是管理模式，默认是false
+     */
+    private boolean mIsManageMode;
+
+    /**
+     * 记录选中的信息
+     */
+    private SparseBooleanArray mSparseArray = new SparseBooleanArray();
+
+    private boolean mIsSelectAll;
+
+//    private OnAllSelectStatusChangedListener mListener;
+
+
+
+
 
     private LayoutInflater eInflater;
     public OnItemListenter mItemClickListener;
@@ -66,7 +84,7 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CardViewListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CardViewListAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         DetailResponse detailResponse = detailResponseListList.get(position);
 
         ActivityVO activityVO = detailResponse.getActivityVO();
@@ -164,4 +182,119 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
             readNumber = itemView.findViewById(R.id.cardView_readNumber);
         }
     }
+
+//    /**
+//     * 切换管理模式
+//     */
+//    public void switchManageMode() {
+//        setManageMode(!mIsManageMode);
+//    }
+//
+//    /**
+//     * 设置管理模式
+//     *
+//     * @param isManageMode 是否是管理模式
+//     */
+//    public void setManageMode(boolean isManageMode) {
+//        if (mIsManageMode != isManageMode) {
+//            mIsManageMode = isManageMode;
+//            notifyDataSetChanged();
+//            if (!mIsManageMode) {
+//                // 退出管理模式时清除选中状态
+//                mSparseArray.clear();
+//                onAllSelectStatusChanged(false);
+//            }
+//        }
+//    }
+//
+//    /**
+//     * 进入管理模式
+//     */
+//    public void enterManageMode(int position) {
+//        mSparseArray.append(position, true);
+//        setManageMode(true);
+//    }
+//
+//    /**
+//     * 更新选中状态
+//     *
+//     * @param position 位置
+//     */
+//    public void updateSelectStatus(int position) {
+//        mSparseArray.append(position, !mSparseArray.get(position));
+//        refreshAllSelectStatus();
+//        // 这里进行增量刷新
+//        refreshPartly(position, KEY_SELECT_STATUS, mSparseArray.get(position));
+//    }
+//
+//    private void refreshAllSelectStatus() {
+//        for (int i = 0; i < getItemCount(); i++) {
+//            if (!mSparseArray.get(i)) {
+//                onAllSelectStatusChanged(false);
+//                return;
+//            }
+//        }
+//        onAllSelectStatusChanged(true);
+//    }
+//
+//    /**
+//     * 设置是否全选
+//     *
+//     * @param isSelectAll 是否全选
+//     */
+//    public void setSelectAll(boolean isSelectAll) {
+//        mIsSelectAll = isSelectAll;
+//        if (isSelectAll) {
+//            for (int i = 0; i < getItemCount(); i++) {
+//                mSparseArray.append(i, true);
+//            }
+//        } else {
+//            mSparseArray.clear();
+//        }
+//        notifyDataSetChanged();
+//    }
+//
+//    public boolean isManageMode() {
+//        return mIsManageMode;
+//    }
+//
+//    public void onAllSelectStatusChanged(boolean isSelectAll) {
+//        if (mIsSelectAll != isSelectAll) {
+//            mIsSelectAll = isSelectAll;
+//            if (mListener != null) {
+//                mListener.onAllSelectStatusChanged(isSelectAll);
+//            }
+//        }
+//    }
+//
+//    public List<Integer> getSelectedIndexList() {
+//        List<Integer> list = new ArrayList<>();
+//        for (int i = 0; i < getItemCount(); i++) {
+//            if (mSparseArray.get(i)) {
+//                list.add(i);
+//            }
+//        }
+//        return list;
+//    }
+//
+//    public List<DetailResponse> getSelectedNewInfoList() {
+//        List<DetailResponse> list = new ArrayList<>();
+//        for (int i = 0; i < getItemCount(); i++) {
+//            if (mSparseArray.get(i)){
+//                list.add(getItem(i));
+//            }
+//        }
+//        return list;
+//    }
+//
+//    public interface OnAllSelectStatusChangedListener {
+//
+//        /**
+//         * 全选状态发生变化
+//         *
+//         * @param isSelectAll 是否全选
+//         */
+//        void onAllSelectStatusChanged(boolean isSelectAll);
+//    }
+
 }

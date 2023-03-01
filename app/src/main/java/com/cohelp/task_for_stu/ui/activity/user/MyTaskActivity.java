@@ -2,33 +2,30 @@ package com.cohelp.task_for_stu.ui.activity.user;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cohelp.task_for_stu.R;
-import com.cohelp.task_for_stu.UserInfoHolder;
 import com.cohelp.task_for_stu.biz.TaskBiz;
-import com.cohelp.task_for_stu.net.CommonCallback;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
+import com.cohelp.task_for_stu.ui.adpter.NewsListEditAdapter;
 import com.cohelp.task_for_stu.ui.adpter.TaskAdapter;
-import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
-import com.cohelp.task_for_stu.ui.vo.Task;
 import com.cohelp.task_for_stu.utils.SessionUtils;
-import com.cohelp.task_for_stu.utils.T;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.xuexiang.xui.utils.WidgetUtils;
+import com.xuexiang.xui.widget.button.SmoothCheckBox;
 
 import java.util.List;
 
@@ -45,11 +42,12 @@ public class MyTaskActivity extends BaseActivity {
 
     SmartRefreshLayout refreshLayout;
     RecyclerView recyclerView;
-//    private NewsListEditAdapter mAdapter;
-
+    private NewsListEditAdapter mAdapter;
+    FrameLayout flEdit;
+    SmoothCheckBox scbSelectAll;
     TaskAdapter taskAdapter;
     CardViewListAdapter cardViewListAdapter;
-
+    Button btn_submit;
     List<DetailResponse> taskList;
     OkHttpUtils okHttpUtils;
     Intent intent;
@@ -75,17 +73,17 @@ public class MyTaskActivity extends BaseActivity {
     private void initEvent() {
 
 
-        eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //判断是否在刷新
-                System.out.println("isrefreshing");
-                Toast.makeText(MyTaskActivity.this,eSwipeRefreshLayout.isRefreshing()?"正在刷新":"刷新完成"
-                        ,Toast.LENGTH_SHORT).show();
-                refreshCollectListData();
-
-            }
-        });
+//        eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                //判断是否在刷新
+//                System.out.println("isrefreshing");
+//                Toast.makeText(MyTaskActivity.this,eSwipeRefreshLayout.isRefreshing()?"正在刷新":"刷新完成"
+//                        ,Toast.LENGTH_SHORT).show();
+//                refreshCollectListData();
+//
+//            }
+//        });
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,71 +124,28 @@ public class MyTaskActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-//        //todo 展示接受过和发布过的任务，需要重新写业务方法
-//        taskSolved.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startLoadingProgress();
-//                taskBiz.getAllMyTaskSolved(UserInfoHolder.getInstance().geteUser().getId(),new CommonCallback<List<Task>>() {
-//                    @Override
-//                    public void onError(Exception e) {
-//                        stopLoadingProgress();
-//                        T.showToast(e.getMessage());
-//                    }
-//
-//                    @SuppressLint("NotifyDataSetChanged")
-//                    @Override
-//                    public void onSuccess(List<Task> response) {
-//                        stopLoadingProgress();
-//                        T.showToast("查询任务数据成功！");
-//                        updateList(response);
-//                    }
-//                });
-//            }
-//        });
-//
-//        taskPosted.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startLoadingProgress();
-//                taskBiz.getAllMyTaskPosted(UserInfoHolder.getInstance().geteUser().getId(),new CommonCallback<List<Task>>() {
-//                    @Override
-//                    public void onError(Exception e) {
-//                        stopLoadingProgress();
-//                        T.showToast(e.getMessage());
-//                    }
-//
-//                    @SuppressLint("NotifyDataSetChanged")
-//                    @Override
-//                    public void onSuccess(List<Task> response) {
-//                        stopLoadingProgress();
-//                        T.showToast("查询任务数据成功！");
-//                        updateList(response);
-//                    }
-//                });
-//            }
-//        });
+
     }
 
-    private void loadAll() {
-        //TODO 查询所有问题
-        startLoadingProgress();
-        taskBiz.getAllMyTask(UserInfoHolder.getInstance().geteUser().getId(),new CommonCallback<List<Task>>() {
-            @Override
-            public void onError(Exception e) {
-                stopLoadingProgress();
-                T.showToast(e.getMessage());
-            }
-
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onSuccess(List<Task> response) {
-                stopLoadingProgress();
-                T.showToast("更新任务数据成功！");
-//                updateList(response);
-            }
-        });
-    }
+//    private void loadAll() {
+//        //TODO 查询所有问题
+//        startLoadingProgress();
+//        taskBiz.getAllMyTask(UserInfoHolder.getInstance().geteUser().getId(),new CommonCallback<List<Task>>() {
+//            @Override
+//            public void onError(Exception e) {
+//                stopLoadingProgress();
+//                T.showToast(e.getMessage());
+//            }
+//
+//            @SuppressLint("NotifyDataSetChanged")
+//            @Override
+//            public void onSuccess(List<Task> response) {
+//                stopLoadingProgress();
+//                T.showToast("更新任务数据成功！");
+////                updateList(response);
+//            }
+//        });
+//    }
 
     @SuppressLint("NotifyDataSetChanged")
     private void updateList(List<DetailResponse> response) {
@@ -204,19 +159,69 @@ public class MyTaskActivity extends BaseActivity {
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
+        flEdit = findViewById(R.id.fl_edit);
+        scbSelectAll = findViewById(R.id.scb_select_all);
+        recyclerView = findViewById(R.id.recyclerView);
+        refreshLayout = findViewById(R.id.refreshLayout);
+        btn_submit = findViewById(R.id.btn_submit);
+
         getTaskList();
         cardViewListAdapter = new CardViewListAdapter(taskList);
 
-        eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
-        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
-        eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
+//        eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
+//        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
+//        eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
 
-        eRecyclerView = findViewById(R.id.id_recyclerview);
-        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        eRecyclerView.setAdapter(cardViewListAdapter);
+//        eRecyclerView = findViewById(R.id.id_recyclerview);
+//        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        eRecyclerView.setAdapter(cardViewListAdapter);
 
+
+        WidgetUtils.initRecyclerView(recyclerView, 0);
+        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
+            if (scbSelectAll != null) {
+                scbSelectAll.setCheckedSilent(isSelectAll);
+            }
+        }));
+        scbSelectAll.setOnCheckedChangeListener((checkBox, isChecked) -> mAdapter.setSelectAll(isChecked));
+
+
+
+
+        //下拉刷新
+        refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
+            mAdapter.refresh(taskList);
+            refreshLayout.finishRefresh();
+        }, 1000));
+        //上拉加载
+        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
+            mAdapter.loadMore(taskList);
+            refreshLayout.finishLoadMore();
+        }, 1000));
+        refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
+
+        mAdapter.setOnItemClickListener((itemView, item, position) -> {
+            if (mAdapter.isManageMode()) {
+                mAdapter.updateSelectStatus(position);
+            } else {
+//                Utils.goWeb(getContext(), item.getDetailUrl());
+            }
+        });
+        mAdapter.setOnItemLongClickListener((itemView, item, position) -> {
+            if (!mAdapter.isManageMode()) {
+                mAdapter.enterManageMode(position);
+//                refreshManageMode();
+            }
+        });
 
     }
+//    private void refreshManageMode() {
+//        if (mTvSwitch != null) {
+//            mTvSwitch.setText(mAdapter.isManageMode() ? R.string.title_exit_manage_mode : R.string.title_enter_manage_mode);
+//        }
+//        ViewUtils.setVisibility(flEdit, mAdapter.isManageMode());
+//    }
+
 
     private void toUserCenterActivity() {
         Intent intent = new Intent(this,BasicInfoActivity.class);
@@ -264,4 +269,8 @@ public class MyTaskActivity extends BaseActivity {
             }
         },1000);
     }
+
+
+
+
 }

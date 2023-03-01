@@ -8,4 +8,5 @@
     <dimen name="config_margin_24dp">24dp</dimen>
     <dimen name="config_padding_8dp">8dp</dimen>
     <dimen name="config_margin_8dp">8dp</dimen>
+    <dimen name="config_margin_16dp">16dp</dimen>
 </resources>
