@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -12,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -62,6 +65,31 @@ public class HelpCenterActivity extends BaseActivity {
     CardViewListAdapter cardViewListAdapter;
     OkHttpUtils okHttpUtils;
     String labelType = "全部";
+
+    public static final int GET_DATA_SUCCESS = 1;
+    public static final int NETWORK_ERROR = 2;
+    public static final int SERVER_ERROR = 3;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case GET_DATA_SUCCESS:
+                    helpList = (List<DetailResponse>) msg.obj;
+                    cardViewListAdapter.setDetailResponseListList(helpList);
+                    eRecyclerView.setLayoutManager(new LinearLayoutManager(HelpCenterActivity.this));
+                    eRecyclerView.setAdapter(cardViewListAdapter);
+                    break;
+                case NETWORK_ERROR:
+                    Toast.makeText(HelpCenterActivity.this,"网络连接失败",Toast.LENGTH_SHORT).show();
+                    break;
+                case SERVER_ERROR:
+                    Toast.makeText(HelpCenterActivity.this,"服务器发生错误",Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -301,16 +329,13 @@ public class HelpCenterActivity extends BaseActivity {
     }
     private synchronized void getHelpList(Integer CconditionType){
         Thread t1 = new Thread(()->{
-            helpList = okHttpUtils.helpList(CconditionType);
+            helpList = okHttpUtils.activityList(conditionState);
+            Message msg = Message.obtain();
+            msg.obj = helpList;
+            msg.what = GET_DATA_SUCCESS;
+            handler.sendMessage(msg);
         });
         t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
     }
 
 

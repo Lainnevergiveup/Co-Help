@@ -1,9 +1,12 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -55,7 +58,7 @@ public class TaskCenterActivity extends BaseActivity {
     RelativeLayout SearchBox;
 
     SwitchButton switchButton;
-    List<DetailResponse> activityVOList = new ArrayList<>();
+    List<DetailResponse> activityVOList;
     User user;
     OkHttpUtils okHttpUtils;
     Intent intent;
@@ -63,10 +66,36 @@ public class TaskCenterActivity extends BaseActivity {
     ActivityAdapter activityAdapter;
     CardViewListAdapter cardViewListAdapter;
     Integer conditionState = 0;
+
+    public static final int GET_DATA_SUCCESS = 1;
+    public static final int NETWORK_ERROR = 2;
+    public static final int SERVER_ERROR = 3;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case GET_DATA_SUCCESS:
+                    activityVOList = (List<DetailResponse>) msg.obj;
+                    cardViewListAdapter.setDetailResponseListList(activityVOList);
+                    eRecyclerView.setLayoutManager(new LinearLayoutManager(TaskCenterActivity.this));
+                    eRecyclerView.setAdapter(cardViewListAdapter);
+                    break;
+                case NETWORK_ERROR:
+                    Toast.makeText(TaskCenterActivity.this,"网络连接失败",Toast.LENGTH_SHORT).show();
+                    break;
+                case SERVER_ERROR:
+                    Toast.makeText(TaskCenterActivity.this,"服务器发生错误",Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_center);
+        activityVOList = SessionUtils.getActivityPreference(TaskCenterActivity.this);
         initTools();
         initView();
         initEvent();
@@ -225,16 +254,29 @@ public class TaskCenterActivity extends BaseActivity {
         switchButton = findViewById(R.id.id_sb_check);
         eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-
+        cardViewListAdapter = new CardViewListAdapter();
         getActivityList(conditionState);
 //        activityAdapter = new ActivityAdapter(this,activityVOList);
-        cardViewListAdapter = new CardViewListAdapter(activityVOList);
-//        holeList.add(new Hole("强奸","wow", 0,0,0,"friend"));
-        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        cardViewListAdapter = new CardViewListAdapter(activityVOList);
+        cardViewListAdapter.setDetailResponseListList(activityVOList);
+        eRecyclerView.setLayoutManager(new LinearLayoutManager(TaskCenterActivity.this));
         eRecyclerView.setAdapter(cardViewListAdapter);
     }
 
+    @Override
+    protected void onPause() {
+        SessionUtils.saveActivityPreference(TaskCenterActivity.this,okHttpUtils.getGson().toJson(activityVOList));
+        super.onPause();
+//        System.out.println("\n\n\n\n\n\nonPause!!!!!\n\n\n\n\n\n\n");
+    }
 
+
+    @Override
+    protected void onDestroy() {
+//        SessionUtils.deleteActivityPreference(TaskCenterActivity.this);
+        super.onDestroy();
+//        System.out.println("\n\n\n\n\n\nonDestroy!!!!!");
+    }
 
     private void toUserCenterActivity() {
         Intent intent = new Intent(this,BasicInfoActivity.class);
@@ -258,29 +300,32 @@ public class TaskCenterActivity extends BaseActivity {
         startActivity(intent);
         finish();
     }
-    private synchronized void getActivityList(Integer CconditionType){
-
+    private  void getActivityList(Integer CconditionType){
+        if (activityVOList!=null){
+            System.out.println("is not empty");
+            return;
+        }
         Thread t1 = new Thread(()->{
             activityVOList = okHttpUtils.activityList(conditionState);
+            Message msg = Message.obtain();
+            msg.obj = activityVOList;
+            msg.what = GET_DATA_SUCCESS;
+            handler.sendMessage(msg);
         });
         t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
 
     }
-    private synchronized void  searchActivity(String key){
+    private  void  searchActivity(String key){
         Thread t1 = new Thread(()->{
             activityVOList = okHttpUtils.search(key,1);
+            Message msg = Message.obtain();
+            msg.obj = activityVOList;
+            msg.what = GET_DATA_SUCCESS;
+            handler.sendMessage(msg);
         });
         t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
     }
     private synchronized void refreshActivityListData(){
         getActivityList(conditionState);

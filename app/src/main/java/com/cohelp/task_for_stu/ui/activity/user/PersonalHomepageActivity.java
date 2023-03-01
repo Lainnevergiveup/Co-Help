@@ -35,6 +35,8 @@ public class PersonalHomepageActivity extends BaseActivity {
     LinearLayout HelpCenter;
     LinearLayout TaskCenter;
     LinearLayout UserCenter;
+    LinearLayout teamChangeTerminalLayout;
+    TextView teamChangeTerminal;
     TextView tv_sex,tv_team,tv_account;
     EditText et_nick,et_age,et_tel;
     RoundButton btn_save;
@@ -45,6 +47,7 @@ public class PersonalHomepageActivity extends BaseActivity {
     User user;
     Intent intent;
     String userIcon;
+    String teamChangeState;
     OkHttpUtils okHttpUtils = new OkHttpUtils();
     int sexSelectOption = 0;
     int teamSelectOption = 0;
@@ -107,7 +110,7 @@ public class PersonalHomepageActivity extends BaseActivity {
                 user.setSex(sex);
                 user.setAge(age);
                 user.setPhoneNumber(tel);
-                user.setTeamName(team);
+//                user.setTeamName(team);
                 new Thread(()->{
                     try {
                         okHttpUtils.changeUserInfo(user);
@@ -115,6 +118,15 @@ public class PersonalHomepageActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                 }).start();
+                if (teamSelectOption!=user.getTeamId()){
+                    new  Thread(()->{
+                        okHttpUtils.changeTeam(teamSelectOption);
+                    }).start();
+                    //显示确认框
+
+
+                }
+
                 toUserCenterActivity();
 
 
@@ -158,7 +170,7 @@ public class PersonalHomepageActivity extends BaseActivity {
         getUser();
         getUserIcon();
         getTeamList();
-
+        getTeamChangeState();
         btn_save = findViewById(R.id.id_btn_save);
         iv_icon = findViewById(R.id.id_iv_icon);
         tv_account = findViewById(R.id.id_tv_account);
@@ -174,6 +186,9 @@ public class PersonalHomepageActivity extends BaseActivity {
 //
 //        LinearLayout linearLayout = findViewById(R.id.test_hideLayout);
 //        linearLayout.setVisibility(View.GONE);
+        teamChangeTerminalLayout = findViewById(R.id.id_ll_teamChangeTerminal);
+        teamChangeTerminal = findViewById(R.id.id_tv_teamTerminal);
+        System.out.println("1="+teamChangeState);
 
         refreshUser();
 
@@ -286,6 +301,13 @@ public class PersonalHomepageActivity extends BaseActivity {
         et_tel.setText(user.getPhoneNumber());
         tv_team.setText(user.getTeamName());
         iv_icon.setImageURL(userIcon);
+
+        if (teamChangeState==null||teamChangeState.isEmpty()||teamChangeState.equals(user.getTeamName())){
+            teamChangeTerminalLayout.setVisibility(View.GONE);
+        }
+        else {
+            teamChangeTerminal.setText(user.getTeamName()+"->"+teamChangeState+"(审核中)");
+        }
         System.out.println(user.getTeamName());
     }
 
@@ -300,5 +322,17 @@ public class PersonalHomepageActivity extends BaseActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    private synchronized void getTeamChangeState(){
+        Thread t1 = new Thread(()->{
+            teamChangeState = okHttpUtils.getTeamChangeState();
+        });
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }
