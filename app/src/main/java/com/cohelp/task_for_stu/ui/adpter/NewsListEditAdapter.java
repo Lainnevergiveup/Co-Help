@@ -29,14 +29,12 @@ import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
 import com.cohelp.task_for_stu.net.model.vo.HelpVO;
 import com.cohelp.task_for_stu.net.model.vo.HoleVO;
 import com.cohelp.task_for_stu.ui.adpter.base.broccoli.BroccoliRecyclerAdapter;
-import com.cohelp.task_for_stu.ui.view.AvatorImageView;
 import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
 import com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder;
 import com.xuexiang.xui.adapter.recyclerview.XRecyclerAdapter;
 import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
 import com.xuexiang.xui.widget.imageview.ImageLoader;
-import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xutil.common.CollectionUtils;
 import com.xuexiang.xutil.common.logger.Logger;
 
@@ -165,7 +163,7 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
 
 
 
-//        holder.visible(R.id.scb_select, mIsManageMode ? View.VISIBLE : View.GONE);
+        holder.visible(R.id.scb_select, mIsManageMode ? View.VISIBLE : View.GONE);
         if (mIsManageMode) {
             SmoothCheckBox checkBox = holder.findViewById(R.id.scb_select);
             System.out.println(checkBox);

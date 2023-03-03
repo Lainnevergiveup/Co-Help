@@ -16,7 +16,6 @@ import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.biz.TaskBiz;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
-import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.NewsListEditAdapter;
@@ -24,6 +23,7 @@ import com.cohelp.task_for_stu.ui.adpter.TaskAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.xuexiang.xui.utils.ViewUtils;
 import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
 
@@ -40,6 +40,8 @@ public class MyTaskActivity extends BaseActivity {
     RecyclerView eRecyclerView;
     SwipeRefreshLayout eSwipeRefreshLayout;
 
+
+    private TextView mTvSwitch;
     SmartRefreshLayout refreshLayout;
     RecyclerView recyclerView;
     private NewsListEditAdapter mAdapter;
@@ -84,6 +86,18 @@ public class MyTaskActivity extends BaseActivity {
 //
 //            }
 //        });
+        mTvSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mAdapter == null) {
+                    return;
+                }
+                mAdapter.switchManageMode();
+                refreshManageMode();
+            }
+        });
+
+
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,21 +123,42 @@ public class MyTaskActivity extends BaseActivity {
             }
         });
 
-        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
-            @Override
-            public void onItemClick(View view, int postion) {
-                System.out.println("lisetn in act");
-                Intent intent = new Intent(MyTaskActivity.this,DetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("detailResponse",taskList.get(postion));
-                intent.putExtras(bundle);
-                IdAndType idAndType = new IdAndType(taskList.get(postion).getActivityVO().getId(),1);
-                new Thread(()->{
-                    System.out.println(okHttpUtils.getDetail(idAndType));
-                }).start();
-                startActivity(intent);
+
+
+        WidgetUtils.initRecyclerView(recyclerView, 0);
+        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
+            if (scbSelectAll != null) {
+                scbSelectAll.setCheckedSilent(isSelectAll);
+            }
+        },taskList));
+        scbSelectAll.setOnCheckedChangeListener((checkBox, isChecked) -> mAdapter.setSelectAll(isChecked));
+
+        //下拉刷新
+        refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
+            mAdapter.refresh(taskList);
+            refreshLayout.finishRefresh();
+        }, 1000));
+        //上拉加载
+        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
+            mAdapter.loadMore(taskList);
+            refreshLayout.finishLoadMore();
+        }, 1000));
+        refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
+
+        mAdapter.setOnItemClickListener((itemView, item, position) -> {
+            if (mAdapter.isManageMode()) {
+                mAdapter.updateSelectStatus(position);
+            } else {
+//                Utils.goWeb(getContext(), item.getDetailUrl());
             }
         });
+        mAdapter.setOnItemLongClickListener((itemView, item, position) -> {
+            if (!mAdapter.isManageMode()) {
+                mAdapter.enterManageMode(position);
+                refreshManageMode();
+            }
+        });
+
 
     }
 
@@ -164,7 +199,7 @@ public class MyTaskActivity extends BaseActivity {
         recyclerView = findViewById(R.id.recyclerView);
         refreshLayout = findViewById(R.id.refreshLayout);
         btn_submit = findViewById(R.id.btn_submit);
-
+        mTvSwitch = findViewById(R.id.id_tv_manager);
         getTaskList();
         System.out.println("list"+taskList);
         cardViewListAdapter = new CardViewListAdapter(taskList);
@@ -179,42 +214,7 @@ public class MyTaskActivity extends BaseActivity {
 
 
 
-        WidgetUtils.initRecyclerView(recyclerView, 0);
-        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
-            if (scbSelectAll != null) {
-                scbSelectAll.setCheckedSilent(isSelectAll);
-            }
-        },taskList));
-        scbSelectAll.setOnCheckedChangeListener((checkBox, isChecked) -> mAdapter.setSelectAll(isChecked));
 
-
-
-
-        //下拉刷新
-        refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-            mAdapter.refresh(taskList);
-            refreshLayout.finishRefresh();
-        }, 1000));
-        //上拉加载
-        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-            mAdapter.loadMore(taskList);
-            refreshLayout.finishLoadMore();
-        }, 1000));
-        refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
-
-        mAdapter.setOnItemClickListener((itemView, item, position) -> {
-            if (mAdapter.isManageMode()) {
-                mAdapter.updateSelectStatus(position);
-            } else {
-//                Utils.goWeb(getContext(), item.getDetailUrl());
-            }
-        });
-        mAdapter.setOnItemLongClickListener((itemView, item, position) -> {
-            if (!mAdapter.isManageMode()) {
-                mAdapter.enterManageMode(position);
-//                refreshManageMode();
-            }
-        });
 
     }
 //    private void refreshManageMode() {
@@ -224,6 +224,12 @@ public class MyTaskActivity extends BaseActivity {
 //        ViewUtils.setVisibility(flEdit, mAdapter.isManageMode());
 //    }
 
+    private void refreshManageMode() {
+        if (mTvSwitch != null) {
+            mTvSwitch.setText(mAdapter.isManageMode() ? "退出" : "管理");
+        }
+        ViewUtils.setVisibility(flEdit, mAdapter.isManageMode());
+    }
 
     private void toUserCenterActivity() {
         Intent intent = new Intent(this,BasicInfoActivity.class);

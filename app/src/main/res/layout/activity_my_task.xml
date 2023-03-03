@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".ui.activity.user.MyTaskActivity">
 
-    <include layout="@layout/common_toolbar" />
+    <include layout="@layout/common_toolbar_publish" />
 
 <!--    <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout-->
 <!--        android:id="@+id/id_swiperefresh"-->

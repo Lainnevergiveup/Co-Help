@@ -43,8 +43,8 @@
             android:layout_gravity="center_vertical|start"
             android:layout_marginEnd="@dimen/config_margin_16dp"
             android:visibility="gone" />
-
         <include layout="@layout/view_cardlist_card" />
+
 
     </LinearLayout>
 
