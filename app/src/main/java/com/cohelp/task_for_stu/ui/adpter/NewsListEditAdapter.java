@@ -76,9 +76,15 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
 //        mListener = listener;
 //    }
 
-    private List<DetailResponse> detailResponseListList;
+    public OnItemListenter mItemClickListener;
 
+    public interface OnItemListenter{
+        void onItemClick(View view, int postion);
+    }
 
+    public void setOnItemClickListener(OnItemListenter mItemClickListener){
+        this.mItemClickListener = mItemClickListener;
+    }
 
     public NewsListEditAdapter(OnAllSelectStatusChangedListener listener,List<DetailResponse> detailResponseList){
         super(detailResponseList);
@@ -210,10 +216,17 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
                 holder.findView(R.id.cardView_collectNumber),
                 holder.findView(R.id.cardView_author_pic)
         );
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position, @NonNull List<Object> payloads) {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mItemClickListener.onItemClick(view,position);
+            }
+        });
         if (CollectionUtils.isEmpty(payloads)) {
             Logger.e("正在进行全量刷新:" + position);
             onBindViewHolder(holder, position);
