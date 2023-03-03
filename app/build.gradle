@@ -30,7 +30,31 @@ android {
     }
     buildToolsVersion '30.0.2'
 }
+//buildscript {
+//
+//    repositories {
+//        //    google()
+//        //    jcenter()
+//        maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
+//        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
+//    }
+//    dependencies {
+//        classpath 'com.android.tools.build:gradle:3.0.1'
+//
+//
+//        // NOTE: Do not place your application dependencies here; they belong
+//        // in the individual module build.gradle files
+//    }
+//}
 
+//allprojects {
+//    repositories {
+//        //    google()
+//        //    jcenter()
+//        maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
+//        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
+//    }
+//}
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'com.google.android.material:material:1.4.0'

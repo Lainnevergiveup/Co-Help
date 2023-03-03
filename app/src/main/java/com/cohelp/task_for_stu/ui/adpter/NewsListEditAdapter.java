@@ -25,12 +25,18 @@ import androidx.annotation.NonNull;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
+import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
+import com.cohelp.task_for_stu.net.model.vo.HelpVO;
 import com.cohelp.task_for_stu.net.model.vo.HoleVO;
 import com.cohelp.task_for_stu.ui.adpter.base.broccoli.BroccoliRecyclerAdapter;
+import com.cohelp.task_for_stu.ui.view.AvatorImageView;
+import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
 import com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder;
 import com.xuexiang.xui.adapter.recyclerview.XRecyclerAdapter;
 import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
+import com.xuexiang.xui.widget.imageview.ImageLoader;
+import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xutil.common.CollectionUtils;
 import com.xuexiang.xutil.common.logger.Logger;
 
@@ -77,36 +83,87 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
     public NewsListEditAdapter(OnAllSelectStatusChangedListener listener,List<DetailResponse> detailResponseList){
         super(detailResponseList);
         mListener = listener;
-
-
+//        this.detailResponseListList = detailResponseList;
     }
 
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.view_cardlist_card;
+            return R.layout.adapter_news_edit_list_item;
     }
 
     @Override
     protected void onBindData(RecyclerViewHolder holder, DetailResponse model, int position) {
-        HoleVO h = model.getHoleVO();
-        System.out.println(h);
-        if (null != h){
-            holder.text(R.id.cardView_author_name, h.getUserName());
-            holder.text(R.id.cardView_tag, h.getHoleLabel());
-            holder.text(R.id.cardView_title, h.getHoleTitle());
-            holder.text(R.id.cardView_summary, h.getHoleDetail());
-            holder.text(R.id.cardView_praiseNumber, h.getHoleLike());
-            holder.text(R.id.cardView_commentNumber, h.getHoleComment());
-            holder.text(R.id.cardView_readNumber, "阅读量 " +h.getReadNum());
 
+        ActivityVO activityVO = model.getActivityVO();
+        HelpVO helpVO = model.getHelpVO();
+        HoleVO holeVO = model.getHoleVO();
+
+        NetRadiusImageView imageView = holder.findViewById(R.id.cardView_author_pic);
+        ImageLoader.get().loadImage(imageView, model.getPublisherAvatarUrl());
+
+        List<String> imageList = model.getImagesUrl();
+//        System.out.println("imagelist="+imageList);
+        if (imageList!=null&&imageList.size()>0){
+            NetRadiusImageView firstImage = holder.findViewById(R.id.cardView_firstImage);
+            ImageLoader.get().loadImage(firstImage, model.getImagesUrl().get(0));
+        }
+//        System.out.println(detailResponse.getReadNum());
+        holder.text(R.id.cardView_readNumber, "阅读量 " +model.getReadNum().toString());
+        if (activityVO!=null){
+            System.out.println("id="+activityVO.getId());
+            System.out.println(activityVO.getActivityComment());
+
+            holder.text(R.id.cardView_author_name, activityVO.getUserName());
+            holder.text(R.id.cardView_tag, activityVO.getActivityLabel());
+            holder.text(R.id.cardView_title, activityVO.getActivityTitle());
+            holder.text(R.id.cardView_summary, activityVO.getActivityDetail());
+            holder.text(R.id.cardView_praiseNumber, activityVO.getActivityLike().toString());
+            holder.text(R.id.cardView_commentNumber, activityVO.getActivityComment().toString());
+            holder.text(R.id.cardView_collectNumber, activityVO.getActivityCollect().toString());
+        }
+        if (helpVO!=null){
+            System.out.println("id="+helpVO.getId());
+            holder.text(R.id.cardView_author_name, helpVO.getUserName());
+            holder.text(R.id.cardView_title, helpVO.getHelpTitle());
+            holder.text(R.id.cardView_summary,helpVO.getHelpDetail());
+            holder.text(R.id.cardView_praiseNumber, helpVO.getHelpLike().toString());
+            holder.text(R.id.cardView_commentNumber, helpVO.getHelpComment().toString());
+            holder.text(R.id.cardView_collectNumber, helpVO.getHelpCollect().toString());
+            if (helpVO.getHelpPaid()==0){
+                holder.text(R.id.cardView_tag, "无偿");
+            }
+            else {
+                holder.text(R.id.cardView_tag, "有偿");
+            }
 
 
         }
-        else {holder.visible(R.id.card_view,  View.GONE);}
+        if (holeVO!=null){
+            holder.text(R.id.cardView_author_name, holeVO.getUserName());
+            holder.text(R.id.cardView_tag, holeVO.getHoleLabel());
+            holder.text(R.id.cardView_title, holeVO.getHoleTitle());
+            holder.text(R.id.cardView_summary, holeVO.getHoleDetail());
+            holder.text(R.id.cardView_praiseNumber, holeVO.getHoleLike().toString());
+            holder.text(R.id.cardView_commentNumber, holeVO.getHoleComment().toString());
+            holder.text(R.id.cardView_collectNumber, holeVO.getHoleCollect().toString());
 
-//        RadiusImageView imageView = holder.findViewById(R.id.iv_image);
-//        ImageLoader.get().loadImage(imageView, model.getImageUrl());
+        }
+//        HoleVO h = model.getHoleVO();
+//        System.out.println(h);
+//        if (null != h){
+//            holder.text(R.id.cardView_author_name, h.getUserName());
+//            holder.text(R.id.cardView_tag, h.getHoleLabel());
+//            holder.text(R.id.cardView_title, h.getHoleTitle());
+//            holder.text(R.id.cardView_summary, h.getHoleDetail());
+//            holder.text(R.id.cardView_praiseNumber, h.getHoleLike().toString());
+//            holder.text(R.id.cardView_commentNumber, h.getHoleComment().toString());
+//            holder.text(R.id.cardView_readNumber, "阅读量 " +h.getReadNum().toString());
+//        }
+//        else {
+//        }
+
+
 
 //        holder.visible(R.id.scb_select, mIsManageMode ? View.VISIBLE : View.GONE);
         if (mIsManageMode) {
@@ -148,7 +205,10 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
                 holder.findView(R.id.cardView_praiseNumber),
                 holder.findView(R.id.cardView_commentIcon),
                 holder.findView(R.id.cardView_commentNumber),
-                holder.findView(R.id.cardView_readNumber)
+                holder.findView(R.id.cardView_readNumber),
+                holder.findView(R.id.cardView_collectIcon),
+                holder.findView(R.id.cardView_collectNumber),
+                holder.findView(R.id.cardView_author_pic)
         );
     }
 

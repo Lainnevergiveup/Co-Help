@@ -44,7 +44,7 @@
             android:layout_marginEnd="@dimen/config_margin_16dp"
             android:visibility="gone" />
 
-        <include layout="@layout/layout_news_card_item" />
+        <include layout="@layout/view_cardlist_card" />
 
     </LinearLayout>
 
