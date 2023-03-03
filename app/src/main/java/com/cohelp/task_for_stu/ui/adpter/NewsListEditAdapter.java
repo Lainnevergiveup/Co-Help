@@ -17,6 +17,7 @@
 
 package com.cohelp.task_for_stu.ui.adpter;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -183,19 +184,7 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
     }
 
 
-//    @Override
-//    protected void bindData(@NonNull RecyclerViewHolder holder, int position, DetailResponse item) {
-//        super.bindData(holder, position, item);
-//    }
-//
-//    @Override
-//    protected void onBindData(RecyclerViewHolder holder, DetailResponse model, int position) {
-//
-//        model.getHoleVO();
-//        model.getHoleVO().getAvatar();
-//
-//
-//    }
+
 
     @Override
     protected void onBindBroccoli(RecyclerViewHolder holder, Broccoli broccoli) {
@@ -218,7 +207,7 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position, @NonNull List<Object> payloads) {
+    public void onBindViewHolder(@NonNull RecyclerViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull List<Object> payloads) {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

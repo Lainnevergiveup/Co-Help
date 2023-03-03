@@ -235,6 +235,8 @@ public class MyTaskActivity extends BaseActivity {
     private void refreshManageMode() {
         if (mTvSwitch != null) {
             mTvSwitch.setText(mAdapter.isManageMode() ? "退出" : "管理");
+            mTvSwitch.getCompoundPaddingLeft();
+
         }
         ViewUtils.setVisibility(flEdit, mAdapter.isManageMode());
     }
