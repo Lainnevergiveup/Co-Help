@@ -16,6 +16,7 @@ import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.biz.TaskBiz;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
+import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.NewsListEditAdapter;
@@ -149,7 +150,14 @@ public class MyTaskActivity extends BaseActivity {
             if (mAdapter.isManageMode()) {
                 mAdapter.updateSelectStatus(position);
             } else {
+                toDetailActivity(position);
 //                Utils.goWeb(getContext(), item.getDetailUrl());
+            }
+        });
+        mAdapter.setOnItemClickListener(new NewsListEditAdapter.OnItemListenter() {
+            @Override
+            public void onItemClick(View view, int postion) {
+                toDetailActivity(postion);
             }
         });
         mAdapter.setOnItemLongClickListener((itemView, item, position) -> {
@@ -254,6 +262,19 @@ public class MyTaskActivity extends BaseActivity {
         startActivity(intent);
         finish();
     }
+
+    private void toDetailActivity(int postion){
+        Intent intent = new Intent(MyTaskActivity.this,DetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("detailResponse",taskList.get(postion));
+        intent.putExtras(bundle);
+        IdAndType idAndType = new IdAndType(taskList.get(postion).getActivityVO().getId(),1);
+        new Thread(()->{
+            System.out.println(okHttpUtils.getDetail(idAndType));
+        }).start();
+        startActivity(intent);
+    }
+
     private synchronized void getTaskList(){
         Thread t1 = new Thread(()->{
             taskList = okHttpUtils.searchPublic();
