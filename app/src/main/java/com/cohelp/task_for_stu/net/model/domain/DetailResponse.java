@@ -149,4 +149,11 @@ public class DetailResponse implements Serializable,Cloneable {
     public void setIsCollected(Integer isCollected) {
         this.isCollected = isCollected;
     }
+
+    public Integer getType(){
+        if (this.getActivityVO()!=null) return 1;
+        else if (this.getHelpVO()!=null)    return 2;
+        else if (this.getHoleVO()!=null)    return 3;
+        return -1;
+    }
 }
