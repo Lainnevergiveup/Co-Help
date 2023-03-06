@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.biz.TaskBiz;
@@ -22,14 +26,18 @@ import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.NewsListEditAdapter;
 import com.cohelp.task_for_stu.ui.adpter.TaskAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
+import com.cohelp.task_for_stu.ui.widget.ContentPage;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.utils.ViewUtils;
 import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
+import com.xuexiang.xui.widget.tabbar.EasyIndicator;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MyTaskActivity extends BaseActivity {
     LinearLayout HoleCenter;
@@ -42,7 +50,10 @@ public class MyTaskActivity extends BaseActivity {
     RecyclerView eRecyclerView;
     SwipeRefreshLayout eSwipeRefreshLayout;
     Button delbutton;
+    EasyIndicator mEasyIndicator;
+    ViewPager mViewPager;
 
+    LinearLayout linearLayout;
     private TextView mTvSwitch;
     SmartRefreshLayout refreshLayout;
     RecyclerView recyclerView;
@@ -130,48 +141,8 @@ public class MyTaskActivity extends BaseActivity {
             }
         });
 
+        initCardView();
 
-
-        WidgetUtils.initRecyclerView(recyclerView, 0);
-        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
-            if (scbSelectAll != null) {
-                scbSelectAll.setCheckedSilent(isSelectAll);
-            }
-        },taskList));
-        scbSelectAll.setOnCheckedChangeListener((checkBox, isChecked) -> mAdapter.setSelectAll(isChecked));
-
-        //下拉刷新
-        refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-            mAdapter.refresh(taskList);
-            refreshLayout.finishRefresh();
-        }, 1000));
-        //上拉加载
-        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-            mAdapter.loadMore(taskList);
-            refreshLayout.finishLoadMore();
-        }, 1000));
-        refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
-
-        mAdapter.setOnItemClickListener((itemView, item, position) -> {
-            if (mAdapter.isManageMode()) {
-                mAdapter.updateSelectStatus(position);
-            } else {
-                toDetailActivity(position);
-//                Utils.goWeb(getContext(), item.getDetailUrl());
-            }
-        });
-        mAdapter.setOnItemClickListener(new NewsListEditAdapter.OnItemListenter() {
-            @Override
-            public void onItemClick(View view, int postion) {
-                toDetailActivity(postion);
-            }
-        });
-        mAdapter.setOnItemLongClickListener((itemView, item, position) -> {
-            if (!mAdapter.isManageMode()) {
-                mAdapter.enterManageMode(position);
-                refreshManageMode();
-            }
-        });
 
 
     }
@@ -214,9 +185,24 @@ public class MyTaskActivity extends BaseActivity {
         refreshLayout = findViewById(R.id.refreshLayout);
         btn_delete = findViewById(R.id.btn_delete);
         mTvSwitch = findViewById(R.id.id_tv_manager);
+        mViewPager = findViewById(R.id.view_pager);
+        mEasyIndicator = findViewById(R.id.easy_indicator);
         getTaskList();
         System.out.println("list"+taskList);
         cardViewListAdapter = new CardViewListAdapter(taskList);
+//        linearLayout  = findViewById(R.id.id_ll_cardview);
+
+
+
+        // 设置指示器
+        mEasyIndicator.setTabTitles(ContentPage.getPageNames());
+        mEasyIndicator.setViewPager(mViewPager, mPagerAdapter);
+        mViewPager.setOffscreenPageLimit(ContentPage.size() - 1);
+        mViewPager.setCurrentItem(0);
+
+//
+//        initIndicatorNoViewPager();
+
 
 //        eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
 //        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
@@ -237,6 +223,52 @@ public class MyTaskActivity extends BaseActivity {
 //        }
 //        ViewUtils.setVisibility(flEdit, mAdapter.isManageMode());
 //    }
+
+
+    private  void initCardView(){
+
+        WidgetUtils.initRecyclerView(recyclerView, 0);
+        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
+            if (scbSelectAll != null) {
+                scbSelectAll.setCheckedSilent(isSelectAll);
+            }
+        },taskList));
+        scbSelectAll.setOnCheckedChangeListener((checkBox, isChecked) -> mAdapter.setSelectAll(isChecked));
+
+        //下拉刷新
+        refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
+            mAdapter.refresh(taskList);
+            refreshLayout.finishRefresh();
+        }, 1000));
+        //上拉加载
+        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
+            mAdapter.loadMore(taskList);
+            refreshLayout.finishLoadMore();
+        }, 1000));
+        refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
+
+        mAdapter.setOnItemClickListener((itemView, item, position) -> {
+            if (mAdapter.isManageMode()) {
+                mAdapter.updateSelectStatus(position);
+            } else {
+                toDetailActivity(position);
+//                Utils.goWeb(getContext(), item.getDetailUrl());
+            }
+        });
+        mAdapter.setOnItemClickListener(new NewsListEditAdapter.OnItemListenter() {
+            @Override
+            public void onItemClick(View view, int postion) {
+                toDetailActivity(postion);
+            }
+        });
+        mAdapter.setOnItemLongClickListener((itemView, item, position) -> {
+            if (!mAdapter.isManageMode()) {
+                mAdapter.enterManageMode(position);
+                refreshManageMode();
+            }
+        });
+    }
+
 
     private void refreshManageMode() {
         if (mTvSwitch != null) {
@@ -319,9 +351,52 @@ public class MyTaskActivity extends BaseActivity {
                 .show();
     }
 
-//    new MaterialDialog.Builder(getContext())
-//            .title("asd")
-//        .items("R.array.menu_values")
-//        .itemsCallback((dialog, view, which, text) -> Toast(which + ": " + text)).show();
+
+    /**
+     *  指示器
+     */
+    private Map<ContentPage, View> mPageMap = new HashMap<>();
+
+    private PagerAdapter mPagerAdapter = new PagerAdapter() {
+        @Override
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+            return view == object;
+        }
+
+        @Override
+        public int getCount() {
+            return ContentPage.size();
+        }
+
+        @Override
+        public Object instantiateItem(final ViewGroup container, int position) {
+            ContentPage page = ContentPage.getPage(position);
+            View view = getPageView(page);
+            initCardView();
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            container.addView(view, params);
+            return view;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
+            container.removeView((View) object);
+        }
+    };
+
+    private View getPageView(ContentPage page) {
+        View view = mPageMap.get(page);
+        if (view == null) {
+
+
+            view = linearLayout;
+//            recyclerView = view.findViewById(R.id.recyclerView);
+            initCardView();
+            mPageMap.put(page, view);
+        }
+        return view;
+    }
+
+
 
 }
