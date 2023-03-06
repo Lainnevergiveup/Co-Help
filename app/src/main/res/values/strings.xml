@@ -39,4 +39,6 @@
     <string name="title_login_register"><登录></登录></string>
     <string name="lab_select_all">全选</string>
     <string name="lab_submit">确定</string>
+    <string name="lab_yes">是</string>
+    <string name="lab_no">否</string>
 </resources>

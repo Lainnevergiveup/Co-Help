@@ -331,6 +331,10 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
         }
     }
 
+    /**
+     * 返回选中的表
+     * @return
+     */
     public List<Integer> getSelectedIndexList() {
         List<Integer> list = new ArrayList<>();
         for (int i = 0; i < getItemCount(); i++) {

@@ -16,6 +16,16 @@
         <item name="android:background">@drawable/xui_config_bg_blue_btn</item>
     </style>
 
+    <style name="Button.Red" parent="Button.Style">
+        <item name="android:background">@color/xui_config_color_red</item>
+    </style>
+
+    <style name="Button.Red.wrap">
+        <item name="android:paddingStart">?attr/xui_config_content_spacing_horizontal</item>
+        <item name="android:paddingEnd">?attr/xui_config_content_spacing_horizontal</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
     <style name="Button.Blue.wrap">
         <item name="android:paddingStart">?attr/xui_config_content_spacing_horizontal</item>
         <item name="android:paddingEnd">?attr/xui_config_content_spacing_horizontal</item>

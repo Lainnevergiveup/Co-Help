@@ -27,6 +27,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.utils.ViewUtils;
 import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
+import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class MyTaskActivity extends BaseActivity {
     TextView taskPosted;
     RecyclerView eRecyclerView;
     SwipeRefreshLayout eSwipeRefreshLayout;
-
+    Button delbutton;
 
     private TextView mTvSwitch;
     SmartRefreshLayout refreshLayout;
@@ -50,7 +51,7 @@ public class MyTaskActivity extends BaseActivity {
     SmoothCheckBox scbSelectAll;
     TaskAdapter taskAdapter;
     CardViewListAdapter cardViewListAdapter;
-    Button btn_submit;
+    Button btn_delete;
     List<DetailResponse> taskList;
     OkHttpUtils okHttpUtils;
     Intent intent;
@@ -97,7 +98,12 @@ public class MyTaskActivity extends BaseActivity {
                 refreshManageMode();
             }
         });
-
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSimpleConfirmDialog();
+            }
+        });
 
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,7 +212,7 @@ public class MyTaskActivity extends BaseActivity {
         scbSelectAll = findViewById(R.id.scb_select_all);
         recyclerView = findViewById(R.id.recyclerView);
         refreshLayout = findViewById(R.id.refreshLayout);
-        btn_submit = findViewById(R.id.btn_submit);
+        btn_delete = findViewById(R.id.btn_delete);
         mTvSwitch = findViewById(R.id.id_tv_manager);
         getTaskList();
         System.out.println("list"+taskList);
@@ -302,7 +308,20 @@ public class MyTaskActivity extends BaseActivity {
         },1000);
     }
 
+    /**
+     * 简单的确认对话框
+     */
+    private void showSimpleConfirmDialog() {
+        new MaterialDialog.Builder(MyTaskActivity.this)
+                .content("是否确认删除")
+                .positiveText(R.string.lab_yes)
+                .negativeText(R.string.lab_no)
+                .show();
+    }
 
-
+//    new MaterialDialog.Builder(getContext())
+//            .title("asd")
+//        .items("R.array.menu_values")
+//        .itemsCallback((dialog, view, which, text) -> Toast(which + ": " + text)).show();
 
 }

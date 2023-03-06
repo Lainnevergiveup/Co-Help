@@ -225,18 +225,18 @@ public class HoleCenterActivity extends BaseActivity {
 
         getHoleList();
 //        holeAdapter = new HoleAdapter(holeList);
-        cardViewListAdapter = new CardViewListAdapter(holeList);
-//        holeList.add(new Hole("强奸","wow", 0,0,0,"friend"));
-        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
-            @Override
-            public void onItemClick(View view, int postion) {
-                Intent intent = new Intent(HoleCenterActivity.this,DetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("detailResponse",holeList.get(postion));
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
+//        cardViewListAdapter = new CardViewListAdapter(holeList);
+////        holeList.add(new Hole("强奸","wow", 0,0,0,"friend"));
+//        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
+//            @Override
+//            public void onItemClick(View view, int postion) {
+//                Intent intent = new Intent(HoleCenterActivity.this,DetailActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("detailResponse",holeList.get(postion));
+//                intent.putExtras(bundle);
+//                startActivity(intent);
+//            }
+//        });
 
         eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         eRecyclerView.setAdapter(cardViewListAdapter);
