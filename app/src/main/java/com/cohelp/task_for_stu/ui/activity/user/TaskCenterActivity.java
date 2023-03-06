@@ -304,10 +304,12 @@ public class TaskCenterActivity extends BaseActivity {
         startActivity(intent);
     }
     private  void getActivityList(Integer CconditionType){
-        if (activityVOList!=null){
-            System.out.println("is not empty");
-            return;
-        }
+//        if (activityVOList!=null){
+//            System.out.println("is not empty");
+//            activityVOList = SessionUtils.getActivityPreference(TaskCenterActivity.this);
+
+//            return;
+//        }
         Thread t1 = new Thread(()->{
             activityVOList = okHttpUtils.activityList(conditionState);
             Message msg = Message.obtain();
