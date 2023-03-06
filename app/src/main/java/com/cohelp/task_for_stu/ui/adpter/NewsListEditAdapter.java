@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
+import com.cohelp.task_for_stu.net.model.domain.PublishDeleteRequest;
 import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
 import com.cohelp.task_for_stu.net.model.vo.HelpVO;
 import com.cohelp.task_for_stu.net.model.vo.HoleVO;
@@ -345,11 +346,23 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
         return list;
     }
 
-    public List<DetailResponse> getSelectedDetailResponeList() {
+    public List<DetailResponse> getSelectedDetailResponseList() {
         List<DetailResponse> list = new ArrayList<>();
         for (int i = 0; i < getItemCount(); i++) {
             if (mSparseArray.get(i)) {
                 list.add(getItem(i));
+            }
+        }
+        return list;
+    }
+
+    public List<PublishDeleteRequest> getDeleteList() {
+        List<PublishDeleteRequest> list = new ArrayList<>();
+        for (int i = 0; i < getItemCount(); i++) {
+            if (mSparseArray.get(i)) {
+                DetailResponse item = getItem(i);
+                Integer type = item.getType();
+                list.add(new PublishDeleteRequest(item.getIdByType(type),item.getOwnerIdByType(type),type));
             }
         }
         return list;

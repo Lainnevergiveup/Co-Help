@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
@@ -27,6 +28,8 @@ import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.ui.adpter.CommentAdapter;
 import com.cohelp.task_for_stu.ui.adpter.CommentExpandableListAdapter;
 import com.cohelp.task_for_stu.ui.view.AvatorImageView;
+import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
+import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -67,6 +70,8 @@ public class DetailActivity extends AppCompatActivity {
     OkHttpUtils okHttpUtils;
     Intent intent;
 
+    SwipeRefreshLayout eSwipeRefreshLayout;
+
     DetailResponse detail;
     List<RemarkVO> remarkList;
     IdAndType idAndType;
@@ -78,6 +83,7 @@ public class DetailActivity extends AppCompatActivity {
         initTools();
         getComment();
         initView();
+        initData();
         initEvent();
 
         setTitle("话题详情");
@@ -108,9 +114,10 @@ public class DetailActivity extends AppCompatActivity {
 //
 //        avatorPic = (AvatorImageView) findViewById(R.id.image_UserIcon);
 //
-//        likeButton = (ImageButton) findViewById(R.id.imageButton_Like);
-//        collectButton = (ImageButton) findViewById(R.id.imageButton_Collect);
+        likeButton = (ImageButton) findViewById(R.id.imageButton_Like);
+        collectButton = (ImageButton) findViewById(R.id.imageButton_Collect);
         commentButton =  findViewById(R.id.imageButton_Comment);
+
 //
 //        topicTitle = (TextView) findViewById(R.id.text_MessageTitle);
 //        topicTime = (TextView) findViewById(R.id.text_TopicCreateTime);
@@ -122,7 +129,8 @@ public class DetailActivity extends AppCompatActivity {
         bottomSheetDialog = new BottomSheetDialog(this,R.style.BottomSheetDialogStyle1);
 //
 //        bottomSheetDialog2 = new BottomSheetDialog(this,R.style.BottomSheetDialog);
-//
+
+
         setBottomSheet();
 //        initCommentRecycleView();
 //        ExpandableTextView mExpandableTextView = findViewById(R.id.expand_text_view);
@@ -136,6 +144,23 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+    private void initData(){
+
+        if (detail.getIsLiked() == 0) {
+            likeButton.setImageResource(R.drawable.icon_dianzan_undo);
+        } else {
+            likeButton.setImageResource(R.drawable.icon_dianzan_success);
+        }
+
+        if (detail.getIsCollected()==1){
+            collectButton.setImageResource(R.drawable.icon_collect_success);
+        }
+        else {
+            collectButton.setImageResource(R.drawable.icon_collect_undo);
+        }
+        System.out.println(detail.getIsCollected());
+
+    }
     private void initEvent(){
 
 
@@ -152,14 +177,23 @@ public class DetailActivity extends AppCompatActivity {
 //
 //            }
 //        });
-//        likeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new Thread(()->{
-//                    okHttpUtils.remark(1,detail.getActivityVO().getId());
-//                }).start();
-//            }
-//        });
+
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Integer type = detail.getType();
+                new Thread(()->{
+                    okHttpUtils.remark(type,detail.getIdByType(type));
+                }).start();
+                detail.setIsLiked(detail.getIsLiked()==1?0:1);
+                if (detail.getIsLiked()==1){
+                    likeButton.setImageResource(R.drawable.icon_dianzan_success);
+                }
+                else {
+                    likeButton.setImageResource(R.drawable.icon_dianzan_undo);
+                }
+            }
+        });
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,17 +206,27 @@ public class DetailActivity extends AppCompatActivity {
                 }
             }
         });
-//        collectButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Collect collect = new Collect();
-//                collect.setTopicId(detail.getActivityVO().getId());
-//                collect.setTopicType(1);
-//                new Thread(()->{
-//                    okHttpUtils.insertCollection(collect);
-//                }).start();
-//            }
-//        });
+        collectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Collect collect = new Collect();
+                Integer type = detail.getType();
+                collect.setTopicId(detail.getIdByType(type));
+                collect.setTopicType(type);
+                detail.setIsCollected(detail.getIsCollected()==1?0:1);
+                if (detail.getIsCollected()==1){
+                    collectButton.setImageResource(R.drawable.icon_collect_success);
+                }
+                else {
+                    collectButton.setImageResource(R.drawable.icon_collect_undo);
+                }
+                new Thread(()->{
+                    okHttpUtils.insertCollection(collect);
+                }).start();
+
+            }
+
+        });
     }
 
     private void setBottomSheet(){
@@ -295,5 +339,9 @@ public class DetailActivity extends AppCompatActivity {
             arrayLists.add(remarkVOS);
         }
         return arrayLists;
+    }
+    private void changeLocalState(){
+        List<DetailResponse> detailResponses = SessionUtils.getActivityPreference(DetailActivity.this);
+
     }
 }
