@@ -358,27 +358,7 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
             if (mSparseArray.get(i)) {
                 DetailResponse item = getItem(i);
                 Integer type = item.getType();
-                switch (type){
-                    case 1:{
-                        ActivityVO x = item.getActivityVO();
-                        list.add(new PublishDeleteRequest(x.getId().intValue(),x.getActivityOwnerId().intValue(),type.intValue()));
-                        break;
-                    }
-                    case 2:{
-                        HelpVO x = item.getHelpVO();
-                        list.add(new PublishDeleteRequest(x.getId().intValue(),x.getHelpOwnerId().intValue(),type.intValue()));
-                        break;
-
-                    }
-                    case 3:{
-                        HoleVO x = item.getHoleVO();
-                        list.add(new PublishDeleteRequest(x.getId().intValue(),x.getHoleOwnerId().intValue(),type.intValue()));
-                        break;
-                    }
-                    default:{
-                        break;
-                    }
-                }
+                list.add(new PublishDeleteRequest(item.getIdByType(type),item.getOwnerIdByType(type),type));
             }
         }
         return list;

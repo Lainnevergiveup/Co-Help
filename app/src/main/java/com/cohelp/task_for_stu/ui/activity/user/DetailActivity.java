@@ -78,6 +78,7 @@ public class DetailActivity extends AppCompatActivity {
         initTools();
         getComment();
         initView();
+        initData();
         initEvent();
 
         setTitle("话题详情");
@@ -108,8 +109,8 @@ public class DetailActivity extends AppCompatActivity {
 //
 //        avatorPic = (AvatorImageView) findViewById(R.id.image_UserIcon);
 //
-//        likeButton = (ImageButton) findViewById(R.id.imageButton_Like);
-//        collectButton = (ImageButton) findViewById(R.id.imageButton_Collect);
+        likeButton = (ImageButton) findViewById(R.id.imageButton_Like);
+        collectButton = (ImageButton) findViewById(R.id.imageButton_Collect);
         commentButton =  findViewById(R.id.imageButton_Comment);
 //
 //        topicTitle = (TextView) findViewById(R.id.text_MessageTitle);
@@ -122,7 +123,8 @@ public class DetailActivity extends AppCompatActivity {
         bottomSheetDialog = new BottomSheetDialog(this,R.style.BottomSheetDialogStyle1);
 //
 //        bottomSheetDialog2 = new BottomSheetDialog(this,R.style.BottomSheetDialog);
-//
+
+
         setBottomSheet();
 //        initCommentRecycleView();
 //        ExpandableTextView mExpandableTextView = findViewById(R.id.expand_text_view);
@@ -136,6 +138,16 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+    private void initData(){
+
+        if (detail.getIsLiked() == 0) {
+            likeButton.setImageResource(R.drawable.icon_dianzan_undo);
+        } else {
+            likeButton.setImageResource(R.drawable.icon_dianzan_success);
+        }
+
+
+    }
     private void initEvent(){
 
 
@@ -152,14 +164,22 @@ public class DetailActivity extends AppCompatActivity {
 //
 //            }
 //        });
-//        likeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new Thread(()->{
-//                    okHttpUtils.remark(1,detail.getActivityVO().getId());
-//                }).start();
-//            }
-//        });
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Integer type = detail.getType();
+                new Thread(()->{
+                    okHttpUtils.remark(type,detail.getIdByType(type));
+                }).start();
+                detail.setIsLiked(detail.getIsLiked()==1?0:1);
+                if (detail.getIsLiked()==1){
+                    likeButton.setImageResource(R.drawable.icon_dianzan_success);
+                }
+                else {
+                    likeButton.setImageResource(R.drawable.icon_dianzan_undo);
+                }
+            }
+        });
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
