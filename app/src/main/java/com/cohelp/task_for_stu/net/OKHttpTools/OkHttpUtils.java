@@ -360,7 +360,7 @@ public class OkHttpUtils {
         System.out.println(res);
     }
     public List<DetailResponse> getCollectList(){
-        okHttp.sendGetRequest(baseURL+"/collect/getcollectlist",cookie);
+        okHttp.sendGetRequest(baseURL+"/collect/getcollectlist/1/5",cookie);
         String res = null;
         try {
             res = okHttp.getResponse().body().string();
@@ -378,7 +378,7 @@ public class OkHttpUtils {
     Publish
      */
     public List<DetailResponse> searchPublic(){
-        okHttp.sendGetRequest(baseURL+"/user/searchpub",cookie);
+        okHttp.sendGetRequest(baseURL+"/user/searchpub/1/5",cookie);
         String res = null;
         try {
             res = okHttp.getResponse().body().string();

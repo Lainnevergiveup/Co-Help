@@ -89,6 +89,7 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
     public NewsListEditAdapter(OnAllSelectStatusChangedListener listener,List<DetailResponse> detailResponseList){
         super(detailResponseList);
         mListener = listener;
+
 //        this.detailResponseListList = detailResponseList;
     }
 
@@ -104,7 +105,9 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
         ActivityVO activityVO = model.getActivityVO();
         HelpVO helpVO = model.getHelpVO();
         HoleVO holeVO = model.getHoleVO();
-
+        System.out.println("help"+helpVO);
+        System.out.println("help"+activityVO);
+        System.out.println("help"+holeVO);
         NetRadiusImageView imageView = holder.findViewById(R.id.cardView_author_pic);
         ImageLoader.get().loadImage(imageView, model.getPublisherAvatarUrl());
 

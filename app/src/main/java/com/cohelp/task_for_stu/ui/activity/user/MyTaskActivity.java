@@ -12,6 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -40,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class MyTaskActivity extends BaseActivity {
     LinearLayout HoleCenter;
     LinearLayout HelpCenter;
@@ -65,12 +69,14 @@ public class MyTaskActivity extends BaseActivity {
     CardViewListAdapter cardViewListAdapter;
     Button btn_delete;
     List<DetailResponse> taskList;
-    OkHttpUtils okHttpUtils;
+    OkHttpUtils okHttpUtils = new OkHttpUtils();
     Intent intent;
     TaskBiz taskBiz;
     List<View> list1 = new ArrayList<>();
 
-
+    private ViewPager vp;
+    private List<ViewPagerFragment> list = new ArrayList<>();
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +86,56 @@ public class MyTaskActivity extends BaseActivity {
         initTools();
         initView();
         initEvent();
+
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+
+
+
+        for (int i = 0; i < 4; i++) {
+            ViewPagerFragment viewpager_fragment = new ViewPagerFragment();
+
+//            Bundle bundle = new Bundle();
+//            bundle.putString("name","第"+(i+1)+"页");
+//            viewpager_fragment.setArguments(bundle);
+
+
+            Bundle bundle = new Bundle();
+            String json = okHttpUtils.getGson().toJson(taskList);
+            System.out.println(taskList);
+            System.out.println("11"+json);
+            bundle.putString("datailResponse",json);
+            viewpager_fragment.setArguments(bundle);
+
+            list.add(viewpager_fragment);
+        }
+
+        mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+            @NonNull
+            @Override
+            public Fragment getItem(int position) {
+                return list.get(position);
+            }
+
+            @Override
+            public int getCount() {
+                return list.size();
+            }
+        });
+
     }
     private void initTools(){
 //        intent = getIntent();
@@ -113,12 +169,12 @@ public class MyTaskActivity extends BaseActivity {
                 refreshManageMode();
             }
         });
-        btn_delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSimpleConfirmDialog();
-            }
-        });
+//        btn_delete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showSimpleConfirmDialog();
+//            }
+//        });
 
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,31 +201,13 @@ public class MyTaskActivity extends BaseActivity {
             }
         });
 
-        initCardView();
+//        initCardView();
 
 
 
     }
 
-//    private void loadAll() {
-//        //TODO 查询所有问题
-//        startLoadingProgress();
-//        taskBiz.getAllMyTask(UserInfoHolder.getInstance().geteUser().getId(),new CommonCallback<List<Task>>() {
-//            @Override
-//            public void onError(Exception e) {
-//                stopLoadingProgress();
-//                T.showToast(e.getMessage());
-//            }
-//
-//            @SuppressLint("NotifyDataSetChanged")
-//            @Override
-//            public void onSuccess(List<Task> response) {
-//                stopLoadingProgress();
-//                T.showToast("更新任务数据成功！");
-////                updateList(response);
-//            }
-//        });
-//    }
+
 
     @SuppressLint("NotifyDataSetChanged")
     private void updateList(List<DetailResponse> response) {
@@ -191,7 +229,6 @@ public class MyTaskActivity extends BaseActivity {
         mTvSwitch = findViewById(R.id.id_tv_manager);
         mViewPager = findViewById(R.id.view_pager);
         mEasyIndicator = findViewById(R.id.easy_indicator);
-
 //        list1.add(LayoutInflater.from(this).inflate(R.layout.activity_act_summary,null));
         getTaskList();
         System.out.println("list"+taskList);
@@ -324,7 +361,7 @@ public class MyTaskActivity extends BaseActivity {
     private synchronized void getTaskList(){
         Thread t1 = new Thread(()->{
             taskList = okHttpUtils.searchPublic();
-//            System.out.println(taskList);
+            System.out.println(taskList);
         });
         t1.start();
         try {
@@ -394,11 +431,12 @@ public class MyTaskActivity extends BaseActivity {
         View view = mPageMap.get(page);
         if (view == null) {
 
-            initCardView();
             mPageMap.put(page, view);
         }
         return view;
     }
+
+
 
 
 
