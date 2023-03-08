@@ -35,6 +35,7 @@ import com.xuexiang.xui.widget.button.SmoothCheckBox;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xui.widget.tabbar.EasyIndicator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,9 @@ public class MyTaskActivity extends BaseActivity {
     OkHttpUtils okHttpUtils;
     Intent intent;
     TaskBiz taskBiz;
+    List<View> list1 = new ArrayList<>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,6 +191,8 @@ public class MyTaskActivity extends BaseActivity {
         mTvSwitch = findViewById(R.id.id_tv_manager);
         mViewPager = findViewById(R.id.view_pager);
         mEasyIndicator = findViewById(R.id.easy_indicator);
+
+//        list1.add(LayoutInflater.from(this).inflate(R.layout.activity_act_summary,null));
         getTaskList();
         System.out.println("list"+taskList);
         cardViewListAdapter = new CardViewListAdapter(taskList);
@@ -388,9 +394,6 @@ public class MyTaskActivity extends BaseActivity {
         View view = mPageMap.get(page);
         if (view == null) {
 
-
-            view = linearLayout;
-//            recyclerView = view.findViewById(R.id.recyclerView);
             initCardView();
             mPageMap.put(page, view);
         }
