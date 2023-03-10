@@ -69,9 +69,6 @@
 
     </FrameLayout>
 
-
-
-
     <TextView
         android:id="@+id/tv_show"
         android:layout_width="match_parent"
