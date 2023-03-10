@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
@@ -73,7 +74,7 @@ public class MyTaskActivity extends BaseActivity {
     Intent intent;
     TaskBiz taskBiz;
     List<View> list1 = new ArrayList<>();
-
+    ViewPagerFragment fragment = new ViewPagerFragment();
     private ViewPager vp;
     private List<ViewPagerFragment> list = new ArrayList<>();
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -123,7 +124,8 @@ public class MyTaskActivity extends BaseActivity {
             list.add(viewpager_fragment);
         }
 
-        mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+
+        mViewPager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager(),list) {
             @NonNull
             @Override
             public Fragment getItem(int position) {
@@ -137,6 +139,28 @@ public class MyTaskActivity extends BaseActivity {
         });
 
     }
+
+
+    public class MyViewPagerAdapter extends FragmentPagerAdapter {
+       List<ViewPagerFragment> viewPagerFragmentList;
+        public MyViewPagerAdapter(FragmentManager fm, List<ViewPagerFragment> fragment) {
+            super(fm);
+            this.viewPagerFragmentList = fragment;
+        }
+
+
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+        @Override
+        public Fragment getItem(int arg0) {
+            return list.get(arg0);
+        }
+    }
+
+
     private void initTools(){
 //        intent = getIntent();
 //        user = (User) intent.getSerializableExtra("user");
@@ -415,7 +439,6 @@ public class MyTaskActivity extends BaseActivity {
         public Object instantiateItem(final ViewGroup container, int position) {
             ContentPage page = ContentPage.getPage(position);
             View view = getPageView(page);
-            initCardView();
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             container.addView(view, params);
             return view;
@@ -429,10 +452,12 @@ public class MyTaskActivity extends BaseActivity {
 
     private View getPageView(ContentPage page) {
         View view = mPageMap.get(page);
-        if (view == null) {
-
-            mPageMap.put(page, view);
-        }
+        ViewPagerFragment viewPagerFragment = new ViewPagerFragment();
+        View view1 = viewPagerFragment.view;
+        mPageMap.put(page, view1);
+//        if (view == null) {
+//
+//        }
         return view;
     }
 
