@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +23,6 @@ import com.cohelp.task_for_stu.ui.adpter.NewsListEditAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.utils.ViewUtils;
-import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 
@@ -39,7 +39,7 @@ public class ViewPagerFragment extends Fragment {
     Button btn_delete;
     OkHttpUtils okHttpUtils = new OkHttpUtils();
     List<DetailResponse> taskList;
-
+    List<DetailResponse> json ;
 
     private TextView mTvSwitch;
     public ViewPagerFragment() {
@@ -65,57 +65,62 @@ public class ViewPagerFragment extends Fragment {
         refreshLayout = view.findViewById(R.id.refreshLayout);
         btn_delete = view.findViewById(R.id.btn_delete);
         mTvSwitch = view.findViewById(R.id.id_tv_manager);
+//        tvShow = view.findViewById(R.id.tv_show);
+
         initEvent();
         Bundle arguments = getArguments();
         String name = arguments.getString("datailResponse");
         System.out.println(name);
-        List<DetailResponse> json = okHttpUtils.getGson().fromJson(name, new TypeToken<List<DetailResponse>>() {
+        json = okHttpUtils.getGson().fromJson(name, new TypeToken<List<DetailResponse>>() {
         }.getType());
-
+//        tvShow.setText(json.toString());
         System.out.println("json"+json);
         System.out.println("11111111111111111111111111111111111111");
-        WidgetUtils.initRecyclerView(recyclerView, 0);
-        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
-            if (scbSelectAll != null) {
-                scbSelectAll.setCheckedSilent(isSelectAll);
-            }
-        },json));
-        scbSelectAll.setOnCheckedChangeListener((checkBox, isChecked) -> mAdapter.setSelectAll(isChecked));
 
-        //下拉刷新
-        refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-            mAdapter.refresh(json);
-            refreshLayout.finishRefresh();
-        }, 1000));
-        //上拉加载
-        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-            mAdapter.loadMore(json);
-            refreshLayout.finishLoadMore();
-        }, 1000));
-        refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
+//        WidgetUtils.initRecyclerView(recyclerView,0 200);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+////        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
+////            if (scbSelectAll != null) {
+////                scbSelectAll.setCheckedSilent(isSelectAll);
+////            }
+////        },json));
+//        recyclerView.setAdapter(new CardViewListAdapter(json));
+//        scbSelectAll.setOnCheckedChangeListener((checkBox, isChecked) -> mAdapter.setSelectAll(isChecked));
 
-        mAdapter.setOnItemClickListener((itemView, item, position) -> {
-            if (mAdapter.isManageMode()) {
-                mAdapter.updateSelectStatus(position);
-            } else {
-                toDetailActivity(position);
-//                Utils.goWeb(getContext(), item.getDetailUrl());
-            }
-        });
-        mAdapter.setOnItemClickListener(new NewsListEditAdapter.OnItemListenter() {
-            @Override
-            public void onItemClick(View view, int postion) {
-                toDetailActivity(postion);
-            }
-        });
-        mAdapter.setOnItemLongClickListener((itemView, item, position) -> {
-            if (!mAdapter.isManageMode()) {
-                mAdapter.enterManageMode(position);
-                refreshManageMode();
-            }
-        });
+//        //下拉刷新
+//        refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
+//            mAdapter.refresh(json);
+//            refreshLayout.finishRefresh();
+//        }, 1000));
+//        //上拉加载
+//        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
+//            mAdapter.loadMore(json);
+//            refreshLayout.finishLoadMore();
+//        }, 1000));
+//        refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
 
+//        mAdapter.setOnItemClickListener((itemView, item, position) -> {
+//            if (mAdapter.isManageMode()) {
+//                mAdapter.updateSelectStatus(position);
+//            } else {
+//                toDetailActivity(position);
+////                Utils.goWeb(getContext(), item.getDetailUrl());
+//            }
+//        });
+//        mAdapter.setOnItemClickListener(new NewsListEditAdapter.OnItemListenter() {
+//            @Override
+//            public void onItemClick(View view, int postion) {
+//                toDetailActivity(postion);
+//            }
+//        });
+//        mAdapter.setOnItemLongClickListener((itemView, item, position) -> {
+//            if (!mAdapter.isManageMode()) {
+//                mAdapter.enterManageMode(position);
+//                refreshManageMode();
+//            }
+//        });
 
+        System.out.println("2222222222222");
 
         return view;
     }
@@ -209,5 +214,14 @@ public class ViewPagerFragment extends Fragment {
 
         }
         ViewUtils.setVisibility(flEdit, mAdapter.isManageMode());
+    }
+
+    @Nullable
+    @Override
+    public View getView() {
+
+
+
+        return view;
     }
 }

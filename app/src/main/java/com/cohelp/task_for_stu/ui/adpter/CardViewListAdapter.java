@@ -145,6 +145,7 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
 
     @Override
     public int getItemCount() {
+        System.out.println("detail"+detailResponseListList);
         if (detailResponseListList!=null)
         return detailResponseListList.size();
         else return 0;
