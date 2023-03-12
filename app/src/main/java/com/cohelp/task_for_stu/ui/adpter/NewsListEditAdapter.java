@@ -158,6 +158,7 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
             holder.text(R.id.cardView_collectNumber, holeVO.getHoleCollect().toString());
 
         }
+
 //        HoleVO h = model.getHoleVO();
 //        System.out.println(h);
 //        if (null != h){
@@ -236,6 +237,7 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse>
             }
         }
     }
+
 
     /**
      * 切换管理模式

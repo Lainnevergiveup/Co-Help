@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -163,13 +162,13 @@ public class MyTaskActivity extends BaseActivity {
             bundle.putString("datailResponse",json);
             viewpager_fragment.setArguments(bundle);
             list.add(viewpager_fragment);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//            recyclerView.setLayoutManager(new LinearLayoutManager());
 //        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
 //            if (scbSelectAll != null) {
 //                scbSelectAll.setCheckedSilent(isSelectAll);
 //            }
 //        },json));
-            recyclerView.setAdapter(new CardViewListAdapter(taskList));
+//            recyclerView.setAdapter(new CardViewListAdapter(taskList));
             fragmentTransaction.add(R.id.view_pager,viewpager_fragment);
             fragmentTransaction.commit();
 //            Bundle bundle = new Bundle();
