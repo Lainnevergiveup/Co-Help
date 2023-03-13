@@ -142,7 +142,7 @@ public class MyTaskActivity extends BaseActivity {
                 toUserCenterActivity();
             }
         });
-
+        System.out.println(list);
 
         for (int i = 0; i < 4; i++) {
             ViewPagerFragment viewpager_fragment = new ViewPagerFragment();
@@ -151,16 +151,16 @@ public class MyTaskActivity extends BaseActivity {
 //            bundle.putString("name","第"+(i+1)+"页");
 //            viewpager_fragment.setArguments(bundle);
 
-
+            System.out.println(viewpager_fragment.getView());
             Bundle bundle = new Bundle();
             String json = okHttpUtils.getGson().toJson(taskList);
-            System.out.println(taskList);
-            System.out.println("11"+json);
+//            System.out.println(taskList);
+//            System.out.println("11"+json);
             bundle.putString("datailResponse",json);
             viewpager_fragment.setArguments(bundle);
             list.add(viewpager_fragment);
         }
-        System.out.println("list"+list);
+//        System.out.println("list"+list);
 
 
 
@@ -377,7 +377,7 @@ public class MyTaskActivity extends BaseActivity {
             ContentPage page = ContentPage.getPage(position);
             System.out.println("getpage"+page.getPosition());
             View view = getPageView(page);
-            System.out.println(view);
+//            System.out.println(view);
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             container.addView(view, params);
             return view;
@@ -395,8 +395,9 @@ public class MyTaskActivity extends BaseActivity {
             System.out.println("page"+page.getPosition());
             System.out.println(list.size());
             ViewPagerFragment viewPagerFragment = list.get(page.getPosition());
+            viewPagerFragment.getRecyclerView().setAdapter(new CardViewListAdapter(taskList));
             System.out.println(viewPagerFragment);
-            view = viewPagerFragment.view;
+            view = viewPagerFragment.getView();
             System.out.println("view"+view);
             mPageMap.put(page, view);
         }
