@@ -1,5 +1,6 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -100,6 +102,7 @@ public class MyTaskActivity extends BaseActivity {
         }
         okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
     }
+    @SuppressLint("ResourceType")
     private void initEvent() {
 
         mTvSwitch.setOnClickListener(new View.OnClickListener() {
@@ -145,11 +148,11 @@ public class MyTaskActivity extends BaseActivity {
         System.out.println(list);
 
         for (int i = 0; i < 4; i++) {
-            ViewPagerFragment viewpager_fragment = new ViewPagerFragment();
 
-//            Bundle bundle = new Bundle();
-//            bundle.putString("name","第"+(i+1)+"页");
-//            viewpager_fragment.setArguments(bundle);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            ViewPagerFragment viewpager_fragment = new ViewPagerFragment();
 
             System.out.println(viewpager_fragment.getView());
             Bundle bundle = new Bundle();
@@ -159,6 +162,22 @@ public class MyTaskActivity extends BaseActivity {
             bundle.putString("datailResponse",json);
             viewpager_fragment.setArguments(bundle);
             list.add(viewpager_fragment);
+//            recyclerView.setLayoutManager(new LinearLayoutManager());
+//        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
+//            if (scbSelectAll != null) {
+//                scbSelectAll.setCheckedSilent(isSelectAll);
+//            }
+//        },json));
+//            recyclerView.setAdapter(new CardViewListAdapter(taskList));
+            fragmentTransaction.add(R.id.view_pager,viewpager_fragment);
+            fragmentTransaction.commit();
+//            Bundle bundle = new Bundle();
+//            bundle.putString("name","第"+(i+1)+"页");
+//            viewpager_fragment.setArguments(bundle);
+
+
+
+
         }
 //        System.out.println("list"+list);
 

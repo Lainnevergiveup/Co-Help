@@ -5,6 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+<!--    <include layout="@layout/view_cardlist_card"/>-->
+
+
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
@@ -13,9 +16,9 @@
         app:srlEnableAutoLoadMore="true"
         app:srlEnableLoadMore="true">
 
-        <com.scwang.smartrefresh.header.MaterialHeader
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+<!--        <com.scwang.smartrefresh.header.MaterialHeader-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" />-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -24,9 +27,9 @@
             android:overScrollMode="never"
             tools:listitem="@layout/view_cardlist_card" />
 
-        <com.cohelp.task_for_stu.ui.widget.MaterialFooter
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+<!--        <com.cohelp.task_for_stu.ui.widget.MaterialFooter-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" />-->
 
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
@@ -69,11 +72,11 @@
 
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/tv_show"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="我是fragment" />
+<!--    <TextView-->
+<!--        android:id="@+id/tv_show"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:text="我是fragment" />-->
 
 
 </FrameLayout>

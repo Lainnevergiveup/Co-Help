@@ -9,9 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +40,7 @@ public class ViewPagerFragment extends Fragment {
     private OkHttpUtils okHttpUtils = new OkHttpUtils();
     private List<DetailResponse> taskList;
 
+    private List<DetailResponse> json ;
 
     private TextView mTvSwitch;
     public ViewPagerFragment() {
@@ -71,17 +70,20 @@ public class ViewPagerFragment extends Fragment {
         Bundle arguments = getArguments();
         String name = arguments.getString("datailResponse");
         System.out.println(name);
-        List<DetailResponse> json = okHttpUtils.getGson().fromJson(name, new TypeToken<List<DetailResponse>>() {
+        json = okHttpUtils.getGson().fromJson(name, new TypeToken<List<DetailResponse>>() {
         }.getType());
-
+//        tvShow.setText(json.toString());
         System.out.println("json"+json);
         System.out.println("11111111111111111111111111111111111111");
-        WidgetUtils.initRecyclerView(recyclerView, 0);
+
+        WidgetUtils.initRecyclerView(recyclerView,200);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
             if (scbSelectAll != null) {
                 scbSelectAll.setCheckedSilent(isSelectAll);
             }
         },json));
+//        recyclerView.setAdapter(new CardViewListAdapter(json));
         scbSelectAll.setOnCheckedChangeListener((checkBox, isChecked) -> mAdapter.setSelectAll(isChecked));
 
         //下拉刷新
