@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cohelp.task_for_stu.R;
@@ -77,12 +78,12 @@ public class ViewPagerFragment extends Fragment {
         System.out.println("11111111111111111111111111111111111111");
 
         WidgetUtils.initRecyclerView(recyclerView,200);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
-            if (scbSelectAll != null) {
-                scbSelectAll.setCheckedSilent(isSelectAll);
-            }
-        },json));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
+//            if (scbSelectAll != null) {
+//                scbSelectAll.setCheckedSilent(isSelectAll);
+//            }
+//        },json));
 //        recyclerView.setAdapter(new CardViewListAdapter(json));
         scbSelectAll.setOnCheckedChangeListener((checkBox, isChecked) -> mAdapter.setSelectAll(isChecked));
 
@@ -135,7 +136,6 @@ public class ViewPagerFragment extends Fragment {
 
 
 
-    @Nullable
     @Override
     public View getView() {
         return this.view;
