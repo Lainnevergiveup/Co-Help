@@ -92,7 +92,7 @@ public class OkHttpUtils {
         activityListRequest.setConditionType(conditionType);
 //        activityListRequest.setDayNum(2);
         String req = gson.toJson(activityListRequest);
-        okHttp.sendRequest(baseURL+"/activity/list",req,cookie);
+        okHttp.sendRequest(baseURL+"/activity/list/1/90",req,cookie);
         String res = null;
         try {
             res = okHttp.getResponse().body().string();

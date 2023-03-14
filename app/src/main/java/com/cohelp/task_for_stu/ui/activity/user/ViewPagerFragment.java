@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
+import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.NewsListEditAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -32,27 +34,44 @@ import java.util.List;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class ViewPagerFragment extends Fragment {
     private TextView tvShow;
-    private SmartRefreshLayout refreshLayout;
-    private RecyclerView recyclerView;
+    SmartRefreshLayout refreshLayout;
+    RecyclerView recyclerView;
     private NewsListEditAdapter mAdapter;
-    private FrameLayout flEdit;
-    private SmoothCheckBox scbSelectAll;
-    private Button btn_delete;
-    private OkHttpUtils okHttpUtils = new OkHttpUtils();
-    private List<DetailResponse> taskList;
-
-    private List<DetailResponse> json ;
+    FrameLayout flEdit;
+    SmoothCheckBox scbSelectAll;
+    Button btn_delete;
+    OkHttpUtils okHttpUtils = new OkHttpUtils();
+    List<DetailResponse> taskList;
+    List<DetailResponse> json ;
 
     private TextView mTvSwitch;
     public ViewPagerFragment() {
         // Required empty public constructor
     }
-    private View view;
+    View view;
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        this.view = inflater.inflate(R.layout.viewpagerfragment, container, false);
+
+        view = inflater.inflate(R.layout.viewpagerfragment, container, false);
 
 //        tvShow = (TextView) view.findViewById(R.id.tv_show);
 //
@@ -60,31 +79,53 @@ public class ViewPagerFragment extends Fragment {
 //        String name = arguments.getString("name");
 //        tvShow.setText(name);
         System.out.println("fview:::"+view);
-        flEdit = this.view.findViewById(R.id.fl_edit);
-        scbSelectAll = this.view.findViewById(R.id.scb_select_all);
-        recyclerView = this.view.findViewById(R.id.recyclerView);
-        refreshLayout = this.view.findViewById(R.id.refreshLayout);
-        btn_delete = this.view.findViewById(R.id.btn_delete);
-        mTvSwitch = this.view.findViewById(R.id.id_tv_manager);
+        flEdit = view.findViewById(R.id.fl_edit);
+        scbSelectAll = view.findViewById(R.id.scb_select_all);
+        recyclerView = view.findViewById(R.id.recyclerView);
+        refreshLayout = view.findViewById(R.id.refreshLayout);
+        btn_delete = view.findViewById(R.id.btn_delete);
+        mTvSwitch = view.findViewById(R.id.id_tv_manager);
+//        tvShow = view.findViewById(R.id.tv_show);
 
-        initEvent();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         Bundle arguments = getArguments();
         String name = arguments.getString("datailResponse");
-        System.out.println(name);
         json = okHttpUtils.getGson().fromJson(name, new TypeToken<List<DetailResponse>>() {
         }.getType());
+        mAdapter = new NewsListEditAdapter(isSelectAll -> {
+            if (scbSelectAll != null) {
+                scbSelectAll.setCheckedSilent(isSelectAll);
+            }
+        },json);
+        initEvent();
+
+        System.out.println(name);
+
 //        tvShow.setText(json.toString());
         System.out.println("json"+json);
         System.out.println("11111111111111111111111111111111111111");
 
         WidgetUtils.initRecyclerView(recyclerView,200);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
-//            if (scbSelectAll != null) {
-//                scbSelectAll.setCheckedSilent(isSelectAll);
-//            }
-//        },json));
-//        recyclerView.setAdapter(new CardViewListAdapter(json));
+
+        System.out.println("adapter!");
+        recyclerView.setAdapter(mAdapter);
+        System.out.println("recycle!");
+        recyclerView.setAdapter(new CardViewListAdapter(json,getActivity()));
+
+        System.out.println("2222222222222");
+
+        return view;
+    }
+
+
+
+    private void initEvent(){
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                showSimpleConfirmDialog();
+            }
+        });
         scbSelectAll.setOnCheckedChangeListener((checkBox, isChecked) -> mAdapter.setSelectAll(isChecked));
 
         //下拉刷新
@@ -120,26 +161,10 @@ public class ViewPagerFragment extends Fragment {
             }
         });
 
-        return this.view;
     }
 
 
 
-    private void initEvent(){
-        btn_delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                showSimpleConfirmDialog();
-            }
-        });
-    }
-
-
-
-    @Override
-    public View getView() {
-        return this.view;
-    }
 
     /**
      * 简单的确认对话框
@@ -218,21 +243,11 @@ public class ViewPagerFragment extends Fragment {
         ViewUtils.setVisibility(flEdit, mAdapter.isManageMode());
     }
 
+    @Nullable
+    @Override
+    public View getView() {
 
-    public TextView getTvShow() {
-        return tvShow;
-    }
-
-    public void setTvShow(TextView tvShow) {
-        this.tvShow = tvShow;
-    }
-
-    public SmartRefreshLayout getRefreshLayout() {
-        return refreshLayout;
-    }
-
-    public void setRefreshLayout(SmartRefreshLayout refreshLayout) {
-        this.refreshLayout = refreshLayout;
+        return view;
     }
 
     public RecyclerView getRecyclerView() {
@@ -241,65 +256,5 @@ public class ViewPagerFragment extends Fragment {
 
     public void setRecyclerView(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
-    }
-
-    public NewsListEditAdapter getmAdapter() {
-        return mAdapter;
-    }
-
-    public void setmAdapter(NewsListEditAdapter mAdapter) {
-        this.mAdapter = mAdapter;
-    }
-
-    public FrameLayout getFlEdit() {
-        return flEdit;
-    }
-
-    public void setFlEdit(FrameLayout flEdit) {
-        this.flEdit = flEdit;
-    }
-
-    public SmoothCheckBox getScbSelectAll() {
-        return scbSelectAll;
-    }
-
-    public void setScbSelectAll(SmoothCheckBox scbSelectAll) {
-        this.scbSelectAll = scbSelectAll;
-    }
-
-    public Button getBtn_delete() {
-        return btn_delete;
-    }
-
-    public void setBtn_delete(Button btn_delete) {
-        this.btn_delete = btn_delete;
-    }
-
-    public OkHttpUtils getOkHttpUtils() {
-        return okHttpUtils;
-    }
-
-    public void setOkHttpUtils(OkHttpUtils okHttpUtils) {
-        this.okHttpUtils = okHttpUtils;
-    }
-
-    public List<DetailResponse> getTaskList() {
-        return taskList;
-    }
-
-    public void setTaskList(List<DetailResponse> taskList) {
-        this.taskList = taskList;
-    }
-
-    public TextView getmTvSwitch() {
-        return mTvSwitch;
-    }
-
-    public void setmTvSwitch(TextView mTvSwitch) {
-        this.mTvSwitch = mTvSwitch;
-    }
-
-    public void setView(View view) {
-        this.view = view;
     }
 }

@@ -230,13 +230,13 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setBottomSheet(){
-//        bottomSheetDialog.setCanceledOnTouchOutside(true);
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
         bottomSheetDialog.getWindow().setDimAmount(0f);
         bottomSheetDialog.setContentView(view);
         //用户行为
         bottomSheetBehavior = BottomSheetBehavior.from((View) view.getParent());
         //dialog的高度
-        bottomSheetBehavior.setPeekHeight(getWindowHeight()/4);
+        bottomSheetBehavior.setPeekHeight(getWindowHeight());
 
 //        bottomSheetDialog2.setCanceledOnTouchOutside(true);
 //        bottomSheetDialog2.getWindow().setDimAmount(0f);
@@ -260,8 +260,15 @@ public class DetailActivity extends AppCompatActivity {
         commentRecycleView.setAdapter(commentAdapter);
     }
     private void initCommentListView(){
+        List<List<RemarkVO>> orderRemarkVO = orderRemarkVO(remarkList);
+        ArrayList<RemarkVO> firstList = new ArrayList<>();
+        for (List<RemarkVO> voList:orderRemarkVO){
+            RemarkVO vo = voList.get(0);
+            firstList.add(vo);
+            voList.remove(0);
+        }
 
-        commentExpandableListAdapter = new CommentExpandableListAdapter(orderRemarkVO(remarkList),this);
+        commentExpandableListAdapter = new CommentExpandableListAdapter(orderRemarkVO,firstList,this);
         commentListView.setAdapter(commentExpandableListAdapter);
 
     }
@@ -275,7 +282,7 @@ public class DetailActivity extends AppCompatActivity {
         DisplayMetrics displayMetrics = res.getDisplayMetrics();
         int heightPixels = displayMetrics.heightPixels;
         //设置弹窗高度为屏幕高度的3/4
-        return heightPixels - heightPixels / 9;
+        return  heightPixels-heightPixels /4;
     }
     private synchronized void getComment(){
 
@@ -294,6 +301,7 @@ public class DetailActivity extends AppCompatActivity {
         if(data==null){
             return null;
         }
+        System.out.println("length="+data.size());
         Stack<RemarkVO> stackA = new Stack<>();
         Stack<RemarkVO> stackB = new Stack<>();
         ArrayList<RemarkVO> topRemark = new ArrayList<>();
@@ -338,6 +346,10 @@ public class DetailActivity extends AppCompatActivity {
             }
             arrayLists.add(remarkVOS);
         }
+
+
+
+
         return arrayLists;
     }
     private void changeLocalState(){

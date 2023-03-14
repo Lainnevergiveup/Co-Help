@@ -21,16 +21,14 @@ import java.util.List;
 public class CommentExpandableListAdapter extends BaseExpandableListAdapter {
 
     private List<List<RemarkVO>> commentList;
+    private List<RemarkVO>  rootList;
     private Context context;
 
 
-    public CommentExpandableListAdapter(List<List<RemarkVO>> commentList, Context context) {
+    public CommentExpandableListAdapter(List<List<RemarkVO>> commentList, List<RemarkVO> rootList, Context context) {
         this.commentList = commentList;
+        this.rootList = rootList;
         this.context = context;
-    }
-
-    public CommentExpandableListAdapter(List<List<RemarkVO>> commentList) {
-        this.commentList = commentList;
     }
 
     public CommentExpandableListAdapter() {
@@ -47,8 +45,7 @@ public class CommentExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int i) {
-        if (commentList.get(i) == null) return 0;
-        else return commentList.get(i)!=null?commentList.get(i).size()-1:0;
+        return commentList.get(i)!=null?commentList.get(i).size():0;
     }
 
     @Override
@@ -58,7 +55,7 @@ public class CommentExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int i, int i1) {
-        return commentList.get(i).get(i1+1);
+        return commentList.get(i).get(i1);
     }
 
     @Override
@@ -68,7 +65,7 @@ public class CommentExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getChildId(int i, int i1) {
-        return getCombinedChildId(i, i1+1);
+        return getCombinedChildId(i, i1);
     }
 
     @Override
@@ -89,10 +86,10 @@ public class CommentExpandableListAdapter extends BaseExpandableListAdapter {
         }else {
             groupHolder = (GroupHolder) view.getTag();
         }
-        groupHolder.logo.setImageURL(commentList.get(i).get(0).getRemarkOwnerAvatar());
-        groupHolder.tv_name.setText(commentList.get(i).get(0).getRemarkOwnerName());
-        groupHolder.tv_time.setText(commentList.get(i).get(0).getRemarkTime().toString());
-        groupHolder.tv_content.setText(commentList.get(i).get(0).getRemarkContent());
+        groupHolder.logo.setImageURL(rootList.get(i).getRemarkOwnerAvatar());
+        groupHolder.tv_name.setText(rootList.get(i).getRemarkOwnerName());
+        groupHolder.tv_time.setText(rootList.get(i).getRemarkTime().toString());
+        groupHolder.tv_content.setText(rootList.get(i).getRemarkContent());
         groupHolder.iv_like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -58,6 +60,8 @@ public class MyTaskActivity extends BaseActivity {
     Button delbutton;
     EasyIndicator mEasyIndicator;
     ViewPager mViewPager;
+
+    LayoutInflater inflater;
 
     LinearLayout linearLayout;
     private TextView mTvSwitch;
@@ -154,7 +158,10 @@ public class MyTaskActivity extends BaseActivity {
 
             ViewPagerFragment viewpager_fragment = new ViewPagerFragment();
 
-            System.out.println(viewpager_fragment.getView());
+//            System.out.println(viewpager_fragment.getView());
+//            recyclerView = viewpager_fragment.getRecyclerView();
+//            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//            recyclerView.setAdapter(new CardViewListAdapter(taskList));
             Bundle bundle = new Bundle();
             String json = okHttpUtils.getGson().toJson(taskList);
 //            System.out.println(taskList);
@@ -197,18 +204,7 @@ public class MyTaskActivity extends BaseActivity {
 
             }
         });
-        mViewPager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager(),list) {
-            @NonNull
-            @Override
-            public Fragment getItem(int position) {
-                return list.get(position);
-            }
-
-            @Override
-            public int getCount() {
-                return list.size();
-            }
-        });
+        mViewPager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager(),list));
 
 
 
@@ -414,8 +410,8 @@ public class MyTaskActivity extends BaseActivity {
             System.out.println("page"+page.getPosition());
             System.out.println(list.size());
             ViewPagerFragment viewPagerFragment = list.get(page.getPosition());
-            viewPagerFragment.getRecyclerView().setAdapter(new CardViewListAdapter(taskList));
-            System.out.println(viewPagerFragment);
+//            viewPagerFragment.getRecyclerView().setAdapter(new CardViewListAdapter(taskList));
+//            System.out.println(viewPagerFragment);
             view = viewPagerFragment.getView();
             System.out.println("view"+view);
             mPageMap.put(page, view);
@@ -433,11 +429,11 @@ public class MyTaskActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return list.size();
+            return viewPagerFragmentList.size();
         }
         @Override
         public Fragment getItem(int arg0) {
-            return list.get(arg0);
+            return viewPagerFragmentList.get(arg0);
         }
     }
 

@@ -23,9 +23,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:overScrollMode="never"
-            tools:listitem="@layout/view_cardlist_card" />
+            android:layout_height="wrap_content" />
 
 <!--        <com.cohelp.task_for_stu.ui.widget.MaterialFooter-->
 <!--            android:layout_width="match_parent"-->
