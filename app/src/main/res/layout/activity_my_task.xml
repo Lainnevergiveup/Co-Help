@@ -25,23 +25,122 @@
 <!--    </com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout>-->
 
 
-    <com.xuexiang.xui.widget.tabbar.EasyIndicator
-        android:id="@+id/easy_indicator"
+<!--    <com.xuexiang.xui.widget.tabbar.EasyIndicator-->
+<!--        android:id="@+id/easy_indicator"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        app:indicator_height="42dp"-->
+<!--        app:indicator_line_height="3dp"-->
+<!--        app:indicator_line_show="true"-->
+<!--        app:indicator_textSize="14sp" />-->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:indicator_height="42dp"
-        app:indicator_line_height="3dp"
-        app:indicator_line_show="true"
-        app:indicator_textSize="14sp" />
+        android:orientation="horizontal"
 
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
+        >
+        <LinearLayout
+            android:id="@+id/ll_all"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/tab_main_pic"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/user_bottom_chosed"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="全部"
+                android:id="@+id/id_tv_all"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_tab_activity"
+
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/tab_message_pic"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/user_bottom_chosed"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="活动"
+                android:id="@+id/id_tv_activity"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_tab_help"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/tab_personal_pic"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/user_bottom_chosed"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="互助"
+                android:id="@+id/id_tv_help"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_tab_dis"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_tab_dis"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/user_bottom_chosed"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="讨论"
+                android:id="@+id/id_tv_dis"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/id_viewpaper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    </androidx.viewpager.widget.ViewPager>
+    </androidx.viewpager2.widget.ViewPager2>
 
 
     <View

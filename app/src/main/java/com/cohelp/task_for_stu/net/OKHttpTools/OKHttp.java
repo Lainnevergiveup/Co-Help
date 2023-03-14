@@ -1,7 +1,5 @@
 package com.cohelp.task_for_stu.net.OKHttpTools;
 
-import com.cohelp.task_for_stu.utils.SessionUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -73,6 +71,7 @@ public class OKHttp {
     public void sendGetRequest(String ip,String session) {
         client = new OkHttpClient().newBuilder()
                 .build();
+        System.out.println("se"+session);
         request = new Request.Builder()
                 .url(ip)
                 .method("GET",null)

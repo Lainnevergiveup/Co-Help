@@ -31,6 +31,13 @@
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="wrap_content" />-->
 
+        <com.cohelp.task_for_stu.ui.view.MyListViewForScrollView
+            android:id="@+id/task_list"
+            android:divider="@null"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+
+
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 

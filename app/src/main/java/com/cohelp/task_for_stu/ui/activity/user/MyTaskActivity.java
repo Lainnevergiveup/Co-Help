@@ -4,22 +4,18 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
@@ -27,10 +23,10 @@ import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
+import com.cohelp.task_for_stu.ui.adpter.MyFragmentPagerAdapter;
 import com.cohelp.task_for_stu.ui.adpter.NewsListEditAdapter;
 import com.cohelp.task_for_stu.ui.adpter.TaskAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
-import com.cohelp.task_for_stu.ui.widget.ContentPage;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.utils.ViewUtils;
@@ -40,16 +36,15 @@ import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xui.widget.tabbar.EasyIndicator;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class MyTaskActivity extends BaseActivity {
+public class MyTaskActivity extends BaseActivity implements View.OnClickListener{
     LinearLayout HoleCenter;
     LinearLayout HelpCenter;
     LinearLayout TaskCenter;
     LinearLayout UserCenter;
+    LinearLayout ll_all,ll_ac,ll_help,ll_dis,ll_current;
     TextView all;
     TextView taskSolved;
     TextView taskPosted;
@@ -57,7 +52,7 @@ public class MyTaskActivity extends BaseActivity {
     SwipeRefreshLayout eSwipeRefreshLayout;
     Button delbutton;
     EasyIndicator mEasyIndicator;
-    ViewPager mViewPager;
+    ViewPager2 mViewPager;
 
     LinearLayout linearLayout;
     private TextView mTvSwitch;
@@ -85,18 +80,13 @@ public class MyTaskActivity extends BaseActivity {
         initTools();
         initView();
         initEvent();
-
+        initPager();
 
 
     }
 
 
-
-
-
     private void initTools(){
-//        intent = getIntent();
-//        user = (User) intent.getSerializableExtra("user");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             okHttpUtils = new OkHttpUtils();
         }
@@ -147,76 +137,74 @@ public class MyTaskActivity extends BaseActivity {
         });
 
 
-        for (int i = 0; i < 4; i++) {
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-            ViewPagerFragment viewpager_fragment = new ViewPagerFragment();
-
-
-            Bundle bundle = new Bundle();
-            String json = okHttpUtils.getGson().toJson(taskList);
-            System.out.println(taskList);
-            System.out.println("11"+json);
-            bundle.putString("datailResponse",json);
-            viewpager_fragment.setArguments(bundle);
-            list.add(viewpager_fragment);
-//            recyclerView.setLayoutManager(new LinearLayoutManager());
-//        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
-//            if (scbSelectAll != null) {
-//                scbSelectAll.setCheckedSilent(isSelectAll);
-//            }
-//        },json));
-//            recyclerView.setAdapter(new CardViewListAdapter(taskList));
-            fragmentTransaction.add(R.id.view_pager,viewpager_fragment);
-            fragmentTransaction.commit();
+//        for (int i = 0; i < 4; i++) {
+//
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//
+//            ViewPagerFragment viewpager_fragment = new ViewPagerFragment();
+//
+//
 //            Bundle bundle = new Bundle();
-//            bundle.putString("name","第"+(i+1)+"页");
+//            String json = okHttpUtils.getGson().toJson(taskList);
+//            System.out.println(taskList);
+//            System.out.println("11"+json);
+//            bundle.putString("datailResponse",json);
 //            viewpager_fragment.setArguments(bundle);
-
-
-
-
-        }
-        System.out.println("list"+list);
-
-
-
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-
-            }
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
-        mViewPager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager(),list) {
-            @NonNull
-            @Override
-            public Fragment getItem(int position) {
-                return list.get(position);
-            }
-
-            @Override
-            public int getCount() {
-                return list.size();
-            }
-        });
-
-
-
-        // 设置指示器
-        mEasyIndicator.setTabTitles(ContentPage.getPageNames());
-        mEasyIndicator.setViewPager(mViewPager, mPagerAdapter);
-        mViewPager.setOffscreenPageLimit(ContentPage.size() - 1);
-        mViewPager.setCurrentItem(0);
+//            list.add(viewpager_fragment);
+////            recyclerView.setLayoutManager(new LinearLayoutManager());
+////        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
+////            if (scbSelectAll != null) {
+////                scbSelectAll.setCheckedSilent(isSelectAll);
+////            }
+////        },json));
+////            recyclerView.setAdapter(new CardViewListAdapter(taskList));
+//            fragmentTransaction.add(R.id.view_pager,viewpager_fragment);
+//            fragmentTransaction.commit();
+////            Bundle bundle = new Bundle();
+////            bundle.putString("name","第"+(i+1)+"页");
+////            viewpager_fragment.setArguments(bundle);
+//
+//
+//
+//
+//        }
+//        System.out.println("list"+list);
+//
+//
+//
+//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int i, float v, int i1) {
+//
+//            }
+//            @Override
+//            public void onPageSelected(int position) {
+//
+//            }
+//            @Override
+//            public void onPageScrollStateChanged(int i) {
+//
+//            }
+//        });
+//        mViewPager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager(),list) {
+//            @NonNull
+//            @Override
+//            public Fragment getItem(int position) {
+//                return list.get(position);
+//            }
+//
+//            @Override
+//            public int getCount() {
+//                return list.size();
+//            }
+//        });
+//
+//        // 设置指示器
+//        mEasyIndicator.setTabTitles(ContentPage.getPageNames());
+//        mEasyIndicator.setViewPager(mViewPager, mPagerAdapter);
+//        mViewPager.setOffscreenPageLimit(ContentPage.size() - 1);
+//        mViewPager.setCurrentItem(0);
 
     }
     private void initView() {
@@ -231,11 +219,23 @@ public class MyTaskActivity extends BaseActivity {
         btn_delete = findViewById(R.id.btn_delete);
         mTvSwitch = findViewById(R.id.id_tv_manager);
         mViewPager = findViewById(R.id.view_pager);
-        mEasyIndicator = findViewById(R.id.easy_indicator);
+        ll_all = findViewById(R.id.ll_all);
+        ll_ac = findViewById(R.id.ll_tab_activity);
+        ll_all.setOnClickListener(this);
+        ll_ac.setOnClickListener(this);
+        //选择默认界面
+        ll_all.setSelected(true);
+        ll_current = ll_ac;
+
+
+
+
+//        ll_help = findViewById();
+//        mEasyIndicator = findViewById(R.id.easy_indicator);
 //        list1.add(LayoutInflater.from(this).inflate(R.layout.activity_act_summary,null));
         getTaskList();
 //        System.out.println("list"+taskList);
-        cardViewListAdapter = new CardViewListAdapter(taskList);
+//        cardViewListAdapter = new CardViewListAdapter(taskList);
 //        linearLayout  = findViewById(R.id.id_ll_cardview);
 
 
@@ -292,6 +292,66 @@ public class MyTaskActivity extends BaseActivity {
         });
     }
 
+    private void initPager(){
+        mViewPager = findViewById(R.id.id_viewpaper);
+        ArrayList<Fragment> list = new ArrayList<>();
+        list.add(new BlankFragment1(this));
+        list.add(new BlankFragment2(this));
+        MyFragmentPagerAdapter pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),getLifecycle(),list);
+        mViewPager.setAdapter(pagerAdapter);
+        mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                changeTap(position);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+            }
+        });
+
+    }
+    //设置左滑右滑
+    private void  changeTap(int positon){
+        ll_current.setSelected(false);
+        switch (positon){
+            case 0:
+                ll_all.setSelected(true);
+                ll_current = ll_all;
+                System.out.println("ll_all");
+                break;
+            case 1:
+                ll_ac.setSelected(true);
+                ll_current = ll_ac;
+                System.out.println("ll_ac");
+                break;
+        }
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.ll_all:
+                mViewPager.setCurrentItem(0);
+
+                break;
+            case R.id.ll_tab_activity:
+                mViewPager.setCurrentItem(1);
+                break;
+//            case R.id.ll_tab_help:
+//                mViewPager.setCurrentItem(2);
+//                break;
+        }
+    }
 
     private void refreshManageMode() {
         if (mTvSwitch != null) {
@@ -375,71 +435,105 @@ public class MyTaskActivity extends BaseActivity {
     }
 
 
-    /**
-     *  指示器
-     */
-    private Map<ContentPage, View> mPageMap = new HashMap<>();
-
-    private PagerAdapter mPagerAdapter = new PagerAdapter() {
-        @Override
-        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            return view == object;
-        }
-
-        @Override
-        public int getCount() {
-            return ContentPage.size();
-        }
-
-        @Override
-        public Object instantiateItem(final ViewGroup container, int position) {
-            ContentPage page = ContentPage.getPage(position);
-            System.out.println("getpage"+page.getPosition());
-            View view = getPageView(page);
-            System.out.println(view);
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            container.addView(view, params);
-            return view;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
-            container.removeView((View) object);
-        }
-    };
-
-    private View getPageView(ContentPage page) {
-        View view = mPageMap.get(page);
-        if(view == null){
-            System.out.println("page"+page.getPosition());
-            System.out.println(list.size());
-            ViewPagerFragment viewPagerFragment = list.get(page.getPosition());
-            System.out.println(viewPagerFragment);
-            view = viewPagerFragment.getView();
-            System.out.println("view"+view);
-            mPageMap.put(page, view);
-        }
-
-        return view;
+    public interface MyOnTouchListener {
+        public boolean onTouch(MotionEvent ev);
     }
+    private ArrayList<MyOnTouchListener> onTouchListeners = new ArrayList<MyOnTouchListener>(10);
 
-    public class MyViewPagerAdapter extends FragmentPagerAdapter {
-        List<ViewPagerFragment> viewPagerFragmentList;
-        public MyViewPagerAdapter(FragmentManager fm, List<ViewPagerFragment> fragment) {
-            super(fm);
-            this.viewPagerFragmentList = fragment;
+    //fragment触摸事件分发，将触摸事件分发给每个能够响应的fragment
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        for (MyOnTouchListener listener : onTouchListeners) {
+            if(listener != null) {
+                listener.onTouch(ev);
+            }
         }
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-        @Override
-        public Fragment getItem(int arg0) {
-            return list.get(arg0);
+        return super.dispatchTouchEvent(ev);
+    }
+    public void registerMyOnTouchListener(MyOnTouchListener myOnTouchListener) {
+        onTouchListeners.add(myOnTouchListener);
+    }
+    public void unregisterMyOnTouchListener(MyOnTouchListener myOnTouchListener) {
+        onTouchListeners.remove(myOnTouchListener) ;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (getSupportFragmentManager().getFragments() != null && getSupportFragmentManager().getFragments().size() > 0) {
+            List<Fragment> fragments = getSupportFragmentManager().getFragments();
+            for (Fragment mFragment : fragments) {
+                mFragment.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 
+
+
+//    /**
+//     *  指示器
+//     */
+//    private Map<ContentPage, View> mPageMap = new HashMap<>();
+//
+//    private PagerAdapter mPagerAdapter = new PagerAdapter() {
+//        @Override
+//        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+//            return view == object;
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return ContentPage.size();
+//        }
+//
+//        @Override
+//        public Object instantiateItem(final ViewGroup container, int position) {
+//            ContentPage page = ContentPage.getPage(position);
+//            System.out.println("getpage"+page.getPosition());
+//            View view = getPageView(page);
+//            System.out.println(view);
+//            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//            container.addView(view, params);
+//            return view;
+//        }
+//
+//        @Override
+//        public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
+//            container.removeView((View) object);
+//        }
+//    };
+//
+//    private View getPageView(ContentPage page) {
+//        View view = mPageMap.get(page);
+//        if(view == null){
+//            System.out.println("page"+page.getPosition());
+//            System.out.println(list.size());
+//            ViewPagerFragment viewPagerFragment = list.get(page.getPosition());
+//            System.out.println(viewPagerFragment);
+//            view = viewPagerFragment.getView();
+//            System.out.println("view"+view);
+//            mPageMap.put(page, view);
+//        }
+//
+//        return view;
+//    }
+//
+//    public class MyViewPagerAdapter extends FragmentPagerAdapter {
+//        List<ViewPagerFragment> viewPagerFragmentList;
+//        public MyViewPagerAdapter(FragmentManager fm, List<ViewPagerFragment> fragment) {
+//            super(fm);
+//            this.viewPagerFragmentList = fragment;
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return list.size();
+//        }
+//        @Override
+//        public Fragment getItem(int arg0) {
+//            return list.get(arg0);
+//        }
+//    }
+//
 
 
 }

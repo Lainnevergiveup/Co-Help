@@ -378,7 +378,8 @@ public class OkHttpUtils {
     Publish
      */
     public List<DetailResponse> searchPublic(){
-        okHttp.sendGetRequest(baseURL+"/user/searchpub/1/5",cookie);
+        okHttp.sendGetRequest(baseURL+"/user/searchpub/1/20",cookie);
+        System.out.println(cookie);
         String res = null;
         try {
             res = okHttp.getResponse().body().string();

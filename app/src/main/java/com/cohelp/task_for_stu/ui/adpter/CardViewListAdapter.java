@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cohelp.task_for_stu.R;
@@ -44,6 +45,7 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
 
 //    private OnAllSelectStatusChangedListener mListener;
 
+     public Fragment fragment;
 
 
 
@@ -59,6 +61,12 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
 
     public CardViewListAdapter(List<DetailResponse> detailResponseListList) {
         this.detailResponseListList = detailResponseListList;
+    }
+
+    public CardViewListAdapter(List<DetailResponse> detailResponseListList, Context context, Fragment fragment) {
+        this.detailResponseListList = detailResponseListList;
+        this.context = context;
+        this.fragment = fragment;
     }
 
     public CardViewListAdapter() {
@@ -168,6 +176,7 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
             authorAvator = itemView.findViewById(R.id.cardView_author_pic);
             authorName = itemView.findViewById(R.id.cardView_author_name);
             tag = itemView.findViewById(R.id.cardView_tag);
@@ -183,6 +192,7 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
             readNumber = itemView.findViewById(R.id.cardView_readNumber);
         }
     }
+
 
 //    /**
 //     * 切换管理模式
