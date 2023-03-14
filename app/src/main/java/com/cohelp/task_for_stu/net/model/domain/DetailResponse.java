@@ -56,6 +56,8 @@ public class DetailResponse implements Serializable,Cloneable {
      */
     private Integer readNum;
 
+
+
     public Integer getReadNum() {
         return readNum;
     }
