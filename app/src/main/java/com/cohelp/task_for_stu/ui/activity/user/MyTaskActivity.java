@@ -376,7 +376,7 @@ public class MyTaskActivity extends BaseActivity {
      */
     private Map<ContentPage, View> mPageMap = new HashMap<>();
 
-    private PagerAdapter mPagerAdapter = new PagerAdapter() {
+    private PagerAdapter mPagerAdapter = new PagerAdapter( ) {
         @Override
         public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return view == object;

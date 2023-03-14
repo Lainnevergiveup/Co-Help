@@ -34,4 +34,46 @@ public class RemarkRequest implements Serializable {
      * 评论的所属类型
      */
     Integer type;
+
+    public RemarkRequest(RemarkActivity remarkActivity, RemarkHelp remarkHelp, RemarkHole remarkHole, Integer type) {
+        this.remarkActivity = remarkActivity;
+        this.remarkHelp = remarkHelp;
+        this.remarkHole = remarkHole;
+        this.type = type;
+    }
+
+    public RemarkRequest() {
+    }
+
+    public RemarkActivity getRemarkActivity() {
+        return remarkActivity;
+    }
+
+    public void setRemarkActivity(RemarkActivity remarkActivity) {
+        this.remarkActivity = remarkActivity;
+    }
+
+    public RemarkHelp getRemarkHelp() {
+        return remarkHelp;
+    }
+
+    public void setRemarkHelp(RemarkHelp remarkHelp) {
+        this.remarkHelp = remarkHelp;
+    }
+
+    public RemarkHole getRemarkHole() {
+        return remarkHole;
+    }
+
+    public void setRemarkHole(RemarkHole remarkHole) {
+        this.remarkHole = remarkHole;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 }

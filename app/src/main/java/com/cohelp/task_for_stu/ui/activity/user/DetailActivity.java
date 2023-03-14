@@ -13,6 +13,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -22,7 +23,9 @@ import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
+import com.cohelp.task_for_stu.net.model.domain.RemarkRequest;
 import com.cohelp.task_for_stu.net.model.entity.Collect;
+import com.cohelp.task_for_stu.net.model.entity.RemarkActivity;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.ui.adpter.CommentAdapter;
@@ -36,7 +39,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.xuexiang.xui.widget.textview.ExpandableTextView;
 import com.xuexiang.xutil.tip.ToastUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
@@ -53,6 +58,8 @@ public class DetailActivity extends AppCompatActivity {
     ImageButton likeButton;
     ImageButton collectButton;
     ImageButton commentButton;
+    EditText commentText;
+    Button commentCommitButton;
 
     View view;
     View view2;
@@ -72,19 +79,31 @@ public class DetailActivity extends AppCompatActivity {
 
     SwipeRefreshLayout eSwipeRefreshLayout;
 
+
     DetailResponse detail;
     List<RemarkVO> remarkList;
+    List<RemarkVO> firstList;
+    List<List<RemarkVO>> orderRemarkVO;
     IdAndType idAndType;
+
+    Integer commentRootType = 1;
+    Integer commentTargetID;
+    Integer commentTopID;
+    Integer commentDetailResopnseID;
+
+    Integer detailType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
         initTools();
-        getComment();
         initView();
         initData();
         initEvent();
+
+
 
         setTitle("话题详情");
     }
@@ -118,6 +137,7 @@ public class DetailActivity extends AppCompatActivity {
         collectButton = (ImageButton) findViewById(R.id.imageButton_Collect);
         commentButton =  findViewById(R.id.imageButton_Comment);
 
+
 //
 //        topicTitle = (TextView) findViewById(R.id.text_MessageTitle);
 //        topicTime = (TextView) findViewById(R.id.text_TopicCreateTime);
@@ -125,6 +145,8 @@ public class DetailActivity extends AppCompatActivity {
 //        avatorName = (TextView) findViewById(R.id.text_UserId);
 //
 //        commentRecycleView = (RecyclerView) view.findViewById(R.id.dialog_bottomsheet_rv_lists);
+        commentText = view.findViewById(R.id.edit_comment);
+        commentCommitButton = view.findViewById(R.id.btn_send_comment);
         commentListView = (ExpandableListView) view.findViewById(R.id.comment_item_list);
         bottomSheetDialog = new BottomSheetDialog(this,R.style.BottomSheetDialogStyle1);
 //
@@ -146,6 +168,16 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initData(){
 
+        getComment();
+        orderRemarkVO = orderRemarkVO(remarkList);
+        firstList = new ArrayList<>();
+        for (List<RemarkVO> voList:orderRemarkVO){
+            RemarkVO vo = voList.get(0);
+            firstList.add(vo);
+            voList.remove(0);
+        }
+        detailType = detail.getType();
+
         if (detail.getIsLiked() == 0) {
             likeButton.setImageResource(R.drawable.icon_dianzan_undo);
         } else {
@@ -158,7 +190,6 @@ public class DetailActivity extends AppCompatActivity {
         else {
             collectButton.setImageResource(R.drawable.icon_collect_undo);
         }
-        System.out.println(detail.getIsCollected());
 
     }
     private void initEvent(){
@@ -227,6 +258,39 @@ public class DetailActivity extends AppCompatActivity {
             }
 
         });
+        commentCommitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RemarkActivity remarkActivity = remarkActivityBuilder();
+                RemarkRequest remarkRequest = new RemarkRequest();
+                remarkRequest.setRemarkActivity(remarkActivity);
+                remarkRequest.setType(detail.getType());
+                sendRemark(remarkRequest);
+                commentText.setText("");
+            }
+        });
+//        commentListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+//            @Override
+//            public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
+//                commentTopID = firstList.get(groupPosition).getId();
+//                commentTargetID = detail.getIdByType(detailType);
+//
+//
+//                return true;
+//            }
+//        });
+        commentListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
+
+                commentTopID = firstList.get(groupPosition).getId();
+                commentTargetID = orderRemarkVO.get(groupPosition).get(childPosition).getId();
+                commentRootType = 0;
+                System.out.println(commentTopID);
+                commentText.requestFocus();
+                return true;
+            }
+        });
     }
 
     private void setBottomSheet(){
@@ -237,36 +301,10 @@ public class DetailActivity extends AppCompatActivity {
         bottomSheetBehavior = BottomSheetBehavior.from((View) view.getParent());
         //dialog的高度
         bottomSheetBehavior.setPeekHeight(getWindowHeight());
-
-//        bottomSheetDialog2.setCanceledOnTouchOutside(true);
-//        bottomSheetDialog2.getWindow().setDimAmount(0f);
-//        bottomSheetDialog2.setContentView(view2);
-//        用户行为
-//        bottomSheetBehavior2 = BottomSheetBehavior.from((View) view2.getParent());
-//        dialog的高度
-//        bottomSheetBehavior2.setPeekHeight(getWindowHeight()/2);
     }
-    private void initCommentRecycleView(){
 
-        commentRecycleView.setHasFixedSize(true);
-        commentRecycleView.setLayoutManager(new LinearLayoutManager(this));
-        commentRecycleView.setItemAnimator(new DefaultItemAnimator());
-        if (commentAdapter==null){
-            commentAdapter = new CommentAdapter(remarkList);
-        }
-        else{
-            commentAdapter.setCommentList(remarkList);
-        }
-        commentRecycleView.setAdapter(commentAdapter);
-    }
     private void initCommentListView(){
-        List<List<RemarkVO>> orderRemarkVO = orderRemarkVO(remarkList);
-        ArrayList<RemarkVO> firstList = new ArrayList<>();
-        for (List<RemarkVO> voList:orderRemarkVO){
-            RemarkVO vo = voList.get(0);
-            firstList.add(vo);
-            voList.remove(0);
-        }
+
 
         commentExpandableListAdapter = new CommentExpandableListAdapter(orderRemarkVO,firstList,this);
         commentListView.setAdapter(commentExpandableListAdapter);
@@ -354,6 +392,29 @@ public class DetailActivity extends AppCompatActivity {
     }
     private void changeLocalState(){
         List<DetailResponse> detailResponses = SessionUtils.getActivityPreference(DetailActivity.this);
+    }
+    private RemarkActivity remarkActivityBuilder(){
+        RemarkActivity remarkActivity = new RemarkActivity();
+        remarkActivity.setRemarkTime(new Date());
+        remarkActivity.setRemarkContent(commentText.getText().toString());
+        remarkActivity.setRemarkLike(0);
+        remarkActivity.setTargetIsActivity(1);
+        remarkActivity.setRemarkActivityId(detail.getActivityVO().getId());
+        remarkActivity.setRemarkTargetId(detail.getActivityVO().getId());
+        remarkActivity.setTopId(0);
+        return remarkActivity;
+    }
+    private synchronized void sendRemark(RemarkRequest remarkRequest){
+        Thread thread = new Thread(() -> {
+            okHttpUtils.sendComment(remarkRequest);
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
+
 }

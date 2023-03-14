@@ -181,4 +181,5 @@ public class RemarkActivity implements Serializable {
     public void setRemarkTime(Date remarkTime) {
         this.remarkTime = remarkTime;
     }
+
 }

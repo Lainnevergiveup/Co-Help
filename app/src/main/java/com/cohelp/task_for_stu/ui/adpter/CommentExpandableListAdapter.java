@@ -129,7 +129,7 @@ public class CommentExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean isChildSelectable(int i, int i1) {
-        return false;
+        return true;
     }
 
     private class GroupHolder{
@@ -152,4 +152,5 @@ public class CommentExpandableListAdapter extends BaseExpandableListAdapter {
             tv_content = (TextView) view.findViewById(R.id.reply_item_content);
         }
     }
+
 }

@@ -38,7 +38,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/dialog_bottomsheet_rl_title"
-        android:background="#fff"/>
+        android:background="#fff"
+        android:groupIndicator="@null"/>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
