@@ -144,10 +144,11 @@
 
             <ImageView
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+
                 android:layout_gravity="center"
-                android:src="@drawable/task_bottom_chosed" />
+                android:src="@drawable/act1" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -170,7 +171,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/task_bottom" />
+                android:src="@drawable/help1" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -189,16 +190,16 @@
 
             <ImageView
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:src="@drawable/question_bottom" />
+                android:src="@drawable/dis2" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="树洞"
+                android:text="讨论"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -210,10 +211,10 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:src="@drawable/user_bottom" />
+                android:src="@drawable/person2" />
 
             <TextView
                 android:layout_width="wrap_content"

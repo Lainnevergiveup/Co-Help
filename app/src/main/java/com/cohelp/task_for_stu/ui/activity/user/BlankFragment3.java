@@ -28,10 +28,11 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class BlankFragment extends Fragment implements View.OnClickListener{
+public class BlankFragment3 extends Fragment implements View.OnClickListener{
 
     private Context context;
     private View root;
@@ -53,10 +54,10 @@ public class BlankFragment extends Fragment implements View.OnClickListener{
         }
         okHttpUtils.setCookie(SessionUtils.getCookiePreference(getActivity()));
     }
-    public BlankFragment(Context context){
+    public BlankFragment3(Context context){
         this.context = context;
     }
-    public BlankFragment(){
+    public BlankFragment3(){
 
     }
 
@@ -92,7 +93,7 @@ public class BlankFragment extends Fragment implements View.OnClickListener{
         refreshLayout = root.findViewById(R.id.refreshLayout);
         btn_delete = root.findViewById(R.id.btn_delete);
         mTvSwitch = root.findViewById(R.id.id_tv_manager);
-        scrollView = root.findViewById(R.id.task_list);
+        scrollView = root.findViewById(R.id.lv_task_list);
 
 
 
@@ -103,7 +104,8 @@ public class BlankFragment extends Fragment implements View.OnClickListener{
     }
 
     private void initEvent(){
-        myTaskAdapter = new MyTaskAdapter(getContext(),this,taskList);
+        System.out.println("2222list"+taskList.stream().filter(i->i.getType()==2).collect(Collectors.toList()));
+        myTaskAdapter = new MyTaskAdapter(getContext(),this,taskList.stream().filter(i->i.getType().equals(2)).collect(Collectors.toList()));
         scrollView.setAdapter(myTaskAdapter);
         myTaskAdapter.setOnItemClickListener(new MyTaskAdapter.OnItemListenter() {
             @Override

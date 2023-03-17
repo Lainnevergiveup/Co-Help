@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -48,6 +49,7 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
     TextView all;
     TextView taskSolved;
     TextView taskPosted;
+    ImageView mtabview1,mtabview2,mtabview3,mtabview4;
     RecyclerView eRecyclerView;
     SwipeRefreshLayout eSwipeRefreshLayout;
     Button delbutton;
@@ -95,16 +97,16 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
     @SuppressLint("ResourceType")
     private void initEvent() {
 
-        mTvSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mAdapter == null) {
-                    return;
-                }
-                mAdapter.switchManageMode();
-                refreshManageMode();
-            }
-        });
+//        mTvSwitch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mAdapter == null) {
+//                    return;
+//                }
+//                mAdapter.switchManageMode();
+//                refreshManageMode();
+//            }
+//        });
 //        btn_delete.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -219,33 +221,26 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
         btn_delete = findViewById(R.id.btn_delete);
         mTvSwitch = findViewById(R.id.id_tv_manager);
         mViewPager = findViewById(R.id.view_pager);
+//        mtabview1 = findViewById(R.id.tab_main_pic);
+//        mtabview2 = findViewById(R.id.tab_ac_pic);
+//        mtabview3 = findViewById(R.id.tab_help_pic);
+//        mtabview4 = findViewById(R.id.tab_dis);
         ll_all = findViewById(R.id.ll_all);
         ll_ac = findViewById(R.id.ll_tab_activity);
+        ll_help = findViewById(R.id.ll_tab_help);
+        ll_dis =findViewById(R.id.ll_tab_dis);
         ll_all.setOnClickListener(this);
         ll_ac.setOnClickListener(this);
+        ll_help.setOnClickListener(this);
+        ll_dis.setOnClickListener(this);
         //选择默认界面
         ll_all.setSelected(true);
         ll_current = ll_ac;
 
-
-
-
-//        ll_help = findViewById();
-//        mEasyIndicator = findViewById(R.id.easy_indicator);
-//        list1.add(LayoutInflater.from(this).inflate(R.layout.activity_act_summary,null));
         getTaskList();
-//        System.out.println("list"+taskList);
-//        cardViewListAdapter = new CardViewListAdapter(taskList);
-//        linearLayout  = findViewById(R.id.id_ll_cardview);
-
 
     }
-//    private void refreshManageMode() {
-//        if (mTvSwitch != null) {
-//            mTvSwitch.setText(mAdapter.isManageMode() ? R.string.title_exit_manage_mode : R.string.title_enter_manage_mode);
-//        }
-//        ViewUtils.setVisibility(flEdit, mAdapter.isManageMode());
-//    }
+
 
 
     private  void initCardView(){
@@ -297,6 +292,8 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
         ArrayList<Fragment> list = new ArrayList<>();
         list.add(new BlankFragment1(this));
         list.add(new BlankFragment2(this));
+        list.add(new BlankFragment3(this));
+        list.add(new BlankFragment4(this));
         MyFragmentPagerAdapter pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),getLifecycle(),list);
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -327,11 +324,26 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
                 ll_all.setSelected(true);
                 ll_current = ll_all;
                 System.out.println("ll_all");
+
+//                ChangeTabColor.setStatusBarColor(this, Color.parseColor("#32CD32"),true);
                 break;
             case 1:
                 ll_ac.setSelected(true);
                 ll_current = ll_ac;
                 System.out.println("ll_ac");
+
+//                ChangeTabColor.setStatusBarColor(this,Color.parseColor("#f0f0f0"),false);
+                break;
+            case 2:
+                ll_help.setSelected(true);
+                ll_current = ll_help;
+
+//                ChangeTabColor.setStatusBarColor(this,Color.parseColor("#f0f0f0"),false);
+                break;
+            case 3:
+                ll_dis.setSelected(true);
+                ll_current = ll_dis;
+//                ChangeTabColor.setStatusBarColor(this,Color.parseColor("#f0f0f0"),false);
                 break;
         }
 
@@ -347,9 +359,11 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
             case R.id.ll_tab_activity:
                 mViewPager.setCurrentItem(1);
                 break;
-//            case R.id.ll_tab_help:
-//                mViewPager.setCurrentItem(2);
-//                break;
+            case R.id.ll_tab_help:
+                mViewPager.setCurrentItem(2);
+                break;
+            case R.id.ll_tab_dis:
+                mViewPager.setCurrentItem(3);
         }
     }
 
