@@ -10,32 +10,104 @@
         android:layout_marginLeft="48dp"
         android:layout_marginRight="32dp"
         />
+
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:layout_height="45dp"
         android:layout_marginLeft="48dp"
-        android:layout_marginRight="32dp"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/reply_item_user"
+        android:layout_marginRight="0dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <com.cohelp.task_for_stu.ui.view.NetRadiusImageView
+            android:id="@+id/reply_item_logo"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="3dp"/>
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="6dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/reply_item_userSourse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#5B595A"
+                    android:textSize="14sp"
+                    android:text="沐风" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#5B595A"
+                    android:textSize="14sp"
+                    android:text="回复" />
+                <TextView
+                    android:id="@+id/reply_item_userTarget"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#5B595A"
+                    android:textSize="14sp"
+                    android:text="沐风" />
+            </LinearLayout>
 
-            android:text="沐风:"
-            android:textSize="14sp"
-            android:textColor="#626262"/>
+            <TextView
+                android:id="@+id/reply_item_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1小时前"
+                android:textSize="10sp"
+                android:layout_marginTop="2dp"
+                android:textColor="#989898"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btn_comment_report"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/ic_report"
+            android:layout_gravity="right">
+        </ImageView>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/line_reply_detail_and_priase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
         <TextView
             android:id="@+id/reply_item_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="4dp"
-            android:paddingRight="8dp"
-            android:maxLines="10"
-            android:ellipsize="end"
-            android:textColor="#949494"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="6dp"
+            android:textColor="#484848"
             android:textSize="14sp"
-            android:text="世上本没有路，走的人多了，也就成了路"/>
-    </LinearLayout>
+            android:layout_marginLeft="95dp"
+            android:layout_marginRight="24dp"
 
+            android:text="从前有座山，山里有座庙，庙里有个老和尚"/>
+        <TextView
+            android:id="@+id/text_praiseNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="201"
+            android:layout_alignParentRight="true">
+        </TextView>
+        <ImageView
+            android:id="@+id/btn_comment_like"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/icon_dianzan_undo"
+            android:layout_toLeftOf="@+id/text_praiseNumber"
+            >
+        </ImageView>
+
+    </RelativeLayout>
 </LinearLayout>

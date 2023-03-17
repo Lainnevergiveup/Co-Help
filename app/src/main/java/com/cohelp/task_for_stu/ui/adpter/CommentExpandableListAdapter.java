@@ -90,18 +90,24 @@ public class CommentExpandableListAdapter extends BaseExpandableListAdapter {
         groupHolder.tv_name.setText(rootList.get(i).getRemarkOwnerName());
         groupHolder.tv_time.setText(rootList.get(i).getRemarkTime().toString());
         groupHolder.tv_content.setText(rootList.get(i).getRemarkContent());
-        groupHolder.iv_like.setOnClickListener(new View.OnClickListener() {
+        groupHolder.reportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isLike){
-                    isLike = false;
-                    groupHolder.iv_like.setColorFilter(Color.parseColor("#aaaaaa"));
-                }else {
-                    isLike = true;
-                    groupHolder.iv_like.setColorFilter(Color.parseColor("#FF5C5C"));
-                }
+                System.out.println("report!!!");
             }
         });
+//        groupHolder.iv_like.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(isLike){
+//                    isLike = false;
+//                    groupHolder.iv_like.setColorFilter(Color.parseColor("#aaaaaa"));
+//                }else {
+//                    isLike = true;
+//                    groupHolder.iv_like.setColorFilter(Color.parseColor("#FF5C5C"));
+//                }
+//            }
+//        });
         return view;
     }
 
@@ -135,13 +141,15 @@ public class CommentExpandableListAdapter extends BaseExpandableListAdapter {
     private class GroupHolder{
         private NetRadiusImageView logo;
         private TextView tv_name, tv_content, tv_time;
+        private ImageView reportButton;
         private AvatorImageView iv_like;
         public GroupHolder(View view) {
             logo =  view.findViewById(R.id.comment_item_logo);
             tv_content = view.findViewById(R.id.comment_item_content);
             tv_name = view.findViewById(R.id.comment_item_userName);
             tv_time = view.findViewById(R.id.comment_item_time);
-            iv_like = view.findViewById(R.id.comment_item_like);
+            reportButton = view.findViewById(R.id.btn_comment_report);
+//            iv_like = view.findViewById(R.id.comment_item_like);
         }
     }
 

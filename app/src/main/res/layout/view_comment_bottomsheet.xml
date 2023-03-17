@@ -33,34 +33,45 @@
 
     </RelativeLayout>
 
-    <ExpandableListView
-        android:id="@+id/comment_item_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/dialog_bottomsheet_rl_title"
-        android:background="#fff"
-        android:groupIndicator="@null"/>
-
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/edit_comment"
-            android:layout_width="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:minWidth="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ExpandableListView
+            android:id="@+id/comment_item_list"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="bottom"/>
-        <Button
-            android:id="@+id/btn_send_comment"
-            android:layout_width="wrap_content"
+            android:background="#fff"
+            android:groupIndicator="@null"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/edit_comment"
-            android:text="发送"
-            android:maxLines="1"
-            android:layout_marginRight="15dp"
-            />
+            android:orientation="horizontal"
+
+            android:layout_below="@id/comment_item_list"
+            android:gravity="bottom">
+            <EditText
+                android:id="@+id/edit_comment"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:minWidth="300dp"
+                android:layout_height="40dp"
+                android:gravity="bottom"/>
+            <Button
+                android:id="@+id/btn_send_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_toRightOf="@id/edit_comment"
+                android:text="发送"
+                android:maxLines="1"
+                android:layout_marginRight="15dp"
+                />
+        </LinearLayout>
+
     </RelativeLayout>
+
+
+
 
 </LinearLayout>
