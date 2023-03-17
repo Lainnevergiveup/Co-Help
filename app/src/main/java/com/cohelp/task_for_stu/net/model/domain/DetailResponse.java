@@ -56,7 +56,17 @@ public class DetailResponse implements Serializable,Cloneable {
      */
     private Integer readNum;
 
+    /**
+     * 类型
+     * @return
+     */
 
+
+    private Integer type;
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
     public Integer getReadNum() {
         return readNum;
@@ -152,11 +162,15 @@ public class DetailResponse implements Serializable,Cloneable {
         this.isCollected = isCollected;
     }
 
-    public Integer getType(){
-        if (this.getActivityVO()!=null) return 1;
-        else if (this.getHelpVO()!=null)    return 2;
-        else if (this.getHoleVO()!=null)    return 3;
-        return null;
+//    public Integer getType(){
+//        if (this.getActivityVO()!=null) return 1;
+//        else if (this.getHelpVO()!=null)    return 2;
+//        else if (this.getHoleVO()!=null)    return 3;
+//        return null;
+//    }
+
+    public Integer getType() {
+        return type;
     }
 
     public Integer getIdByType(Integer type){

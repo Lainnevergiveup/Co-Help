@@ -100,7 +100,7 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
     }
 
     private void initEvent(){
-        System.out.println(taskList.stream().filter(i->i.getType().equals(1)).collect(Collectors.toList()));
+        System.out.println(taskList.stream().filter(i->i.getType()==1).collect(Collectors.toList()));
         myTaskAdapter = new MyTaskAdapter(getContext(),this,taskList.stream().filter(i->i.getType().equals(1)).collect(Collectors.toList()));
         scrollView.setAdapter(myTaskAdapter);
         scrollView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
