@@ -23,7 +23,7 @@ import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
 
 import java.util.List;
 
-public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapter.ViewHolder>{
+public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapter.ViewHolder> {
 
     private List<DetailResponse> detailResponseListList;
     public static final int GET_DATA_SUCCESS = 1;
@@ -101,26 +101,27 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
 
         holder.authorAvator.setImageURL(detailResponse.getPublisherAvatarUrl());
         List<String> imageList = detailResponse.getImagesUrl();
-        System.out.println("imagelist="+imageList);
+//        System.out.println("imagelist="+imageList);
         if (imageList!=null&&imageList.size()>0){
-            System.out.println(1);
+//            System.out.println(1);
             holder.firstImage.setImageURL(imageList.get(0));
         }
 //        System.out.println(detailResponse.getReadNum());
         holder.readNumber.setText("阅读量 "+detailResponse.getReadNum().toString());
         if (activityVO!=null){
-            System.out.println("id="+activityVO.getId());
-            System.out.println(activityVO.getActivityComment());
+//            System.out.println("id="+activityVO.getId());
+//            System.out.println(activityVO.getActivityComment());
             holder.authorName.setText(activityVO.getUserName());
             holder.title.setText(activityVO.getActivityTitle());
             holder.summary.setText(activityVO.getActivityDetail());
             holder.commentNumber.setText(activityVO.getActivityComment().toString());
             holder.praiseNumber.setText(activityVO.getActivityLike().toString());
+//            System.out.println(activityVO.getActivityComment().toString());
             holder.collectNumber.setText(activityVO.getActivityCollect().toString());
             holder.tag.setText(activityVO.getActivityLabel());
         }
         if (helpVO!=null){
-            System.out.println("id="+helpVO.getId());
+//            System.out.println("id="+helpVO.getId());
             holder.authorName.setText(helpVO.getUserName());
             holder.title.setText(helpVO.getHelpTitle());
             holder.summary.setText(helpVO.getHelpDetail());
@@ -133,7 +134,7 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
 
         }
         if (holeVO!=null){
-            System.out.println("id="+holeVO.getId());
+//            System.out.println("id="+holeVO.getId());
             holder.authorName.setText(holeVO.getUserName());
             holder.title.setText(holeVO.getHoleTitle());
             holder.summary.setText(holeVO.getHoleDetail());
@@ -153,7 +154,7 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
 
     @Override
     public int getItemCount() {
-        System.out.println("detail"+detailResponseListList);
+//        System.out.println("detail"+detailResponseListList);
         if (detailResponseListList!=null)
         return detailResponseListList.size();
         else return 0;

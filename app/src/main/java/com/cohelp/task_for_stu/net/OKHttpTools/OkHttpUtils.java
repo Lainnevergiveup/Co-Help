@@ -11,6 +11,7 @@ import com.cohelp.task_for_stu.net.model.domain.HelpListRequest;
 import com.cohelp.task_for_stu.net.model.domain.HoleListRequest;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
+import com.cohelp.task_for_stu.net.model.domain.RemarkRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.domain.SearchRequest;
 import com.cohelp.task_for_stu.net.model.domain.TeamUpdateRequest;
@@ -18,6 +19,7 @@ import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.net.model.entity.Collect;
 import com.cohelp.task_for_stu.net.model.entity.Help;
 import com.cohelp.task_for_stu.net.model.entity.Hole;
+import com.cohelp.task_for_stu.net.model.entity.RemarkActivity;
 import com.cohelp.task_for_stu.net.model.entity.Team;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
@@ -92,7 +94,7 @@ public class OkHttpUtils {
         activityListRequest.setConditionType(conditionType);
 //        activityListRequest.setDayNum(2);
         String req = gson.toJson(activityListRequest);
-        okHttp.sendRequest(baseURL+"/activity/list",req,cookie);
+        okHttp.sendRequest(baseURL+"/activity/list/1/90",req,cookie);
         String res = null;
         try {
             res = okHttp.getResponse().body().string();
@@ -325,9 +327,17 @@ public class OkHttpUtils {
         return userResult.getData();
     }
 
-    public void sortCommentList(List<RemarkVO> commentList){
+    public void sendComment(RemarkRequest remarkRequest){
+        String json = gson.toJson(remarkRequest);
+        okHttp.sendRequest(baseURL+"/general/insertremark",json,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-
+        return;
 
     }
     /*
