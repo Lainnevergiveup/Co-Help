@@ -139,12 +139,6 @@ public class BasicInfoActivity extends BaseActivity {
 
     private void initEvent() {
 
-        setToolbar(R.drawable.setting, new ClickListener() {
-            @Override
-            public void click() {
-                toSettingUserActivity();
-            }
-        });
 
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override

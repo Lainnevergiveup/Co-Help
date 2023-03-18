@@ -19,7 +19,6 @@ import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.net.model.entity.Collect;
 import com.cohelp.task_for_stu.net.model.entity.Help;
 import com.cohelp.task_for_stu.net.model.entity.Hole;
-import com.cohelp.task_for_stu.net.model.entity.RemarkActivity;
 import com.cohelp.task_for_stu.net.model.entity.Team;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
@@ -287,7 +286,7 @@ public class OkHttpUtils {
         searchRequest.setTypes(list);
         String searchMessage = ToJsonString.toJson(searchRequest);
 
-        okHttp.sendRequest(baseURL+"/general/search",searchMessage,cookie);
+        okHttp.sendRequest(baseURL+"/general/search/1/5",searchMessage,cookie);
         String res = null;
         try {
             res = okHttp.getResponse().body().string();

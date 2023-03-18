@@ -1,30 +1,25 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.listener.ClickListener;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
-
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.entity.User;
@@ -36,9 +31,10 @@ import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.leon.lfilepickerlibrary.utils.StringUtils;
+import com.wyt.searchbox.SearchFragment;
+import com.wyt.searchbox.custom.IOnSearchClickListener;
 import com.xuexiang.xui.widget.button.switchbutton.SwitchButton;
 
-import java.util.ArrayList;
 import java.util.List;
 /*
     活动
@@ -52,7 +48,7 @@ public class TaskCenterActivity extends BaseActivity {
     LinearLayout SearchTime;
 
     EditText searchedContent;
-    ImageView searchBtn;
+    ImageView searchBtn,search;
     SwipeRefreshLayout eSwipeRefreshLayout;
     RecyclerView eRecyclerView;
     RelativeLayout SearchBox;
@@ -62,7 +58,7 @@ public class TaskCenterActivity extends BaseActivity {
     User user;
     OkHttpUtils okHttpUtils;
     Intent intent;
-
+    SearchFragment searchFragment = SearchFragment.newInstance();
     ActivityAdapter activityAdapter;
     CardViewListAdapter cardViewListAdapter;
     Integer conditionState = 0;
@@ -120,6 +116,37 @@ public class TaskCenterActivity extends BaseActivity {
             }
         });
 
+        searchFragment.setOnSearchClickListener(new IOnSearchClickListener() {
+            @Override
+            public void OnSearchClick(String keyword) {
+                //这里处理逻辑
+                //TODO 从服务端搜索
+                if(StringUtils.isEmpty(keyword)){
+                    T.showToast("查询的标题不能为空哦~");
+                }
+                else {
+                    startLoadingProgress();
+                    searchActivity(keyword);
+//                    activityAdapter.setActivityList(activityVOList);
+                    cardViewListAdapter.setDetailResponseListList(activityVOList);
+//                    eRecyclerView.setAdapter(activityAdapter);
+                    eRecyclerView.setAdapter(cardViewListAdapter);
+                    eSwipeRefreshLayout.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            //关闭刷新
+                            eSwipeRefreshLayout.setRefreshing(false);
+                        }
+                    },1000);
+                }
+                stopLoadingProgress();
+
+
+                Toast.makeText(TaskCenterActivity.this, keyword, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,47 +165,47 @@ public class TaskCenterActivity extends BaseActivity {
             public void onClick(View v) {toHoleCenterActivity();}
         });
 
-        switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(switchButton.isChecked()){
+//        switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if(switchButton.isChecked()){
+////
+//                    SearchBox.setVisibility(buttonView.VISIBLE);
+//                }else {
+////
+//                    SearchBox.setVisibility(buttonView.GONE);
+//                }
 //
-                    SearchBox.setVisibility(buttonView.VISIBLE);
-                }else {
-//
-                    SearchBox.setVisibility(buttonView.GONE);
-                }
-
-            }
-        });
+//            }
+//        });
 
 
-        searchBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO 从服务端搜索
-                String s = searchedContent.getText().toString();
-                if(StringUtils.isEmpty(s)){
-                    T.showToast("查询的标题不能为空哦~");
-                }
-                else {
-                    startLoadingProgress();
-                    searchActivity(s);
-//                    activityAdapter.setActivityList(activityVOList);
-                    cardViewListAdapter.setDetailResponseListList(activityVOList);
-//                    eRecyclerView.setAdapter(activityAdapter);
-                    eRecyclerView.setAdapter(cardViewListAdapter);
-                    eSwipeRefreshLayout.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            //关闭刷新
-                            eSwipeRefreshLayout.setRefreshing(false);
-                        }
-                    },1000);
-                }
-                stopLoadingProgress();
-            }
-        });
+//        searchBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //TODO 从服务端搜索
+//                String s = searchedContent.getText().toString();
+//                if(StringUtils.isEmpty(s)){
+//                    T.showToast("查询的标题不能为空哦~");
+//                }
+//                else {
+//                    startLoadingProgress();
+//                    searchActivity(s);
+////                    activityAdapter.setActivityList(activityVOList);
+//                    cardViewListAdapter.setDetailResponseListList(activityVOList);
+////                    eRecyclerView.setAdapter(activityAdapter);
+//                    eRecyclerView.setAdapter(cardViewListAdapter);
+//                    eSwipeRefreshLayout.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            //关闭刷新
+//                            eSwipeRefreshLayout.setRefreshing(false);
+//                        }
+//                    },1000);
+//                }
+//                stopLoadingProgress();
+//            }
+//        });
 
         eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
             @Override
@@ -192,25 +219,25 @@ public class TaskCenterActivity extends BaseActivity {
             }
         });
 
-        SearchHot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startLoadingProgress();
-                conditionState = 0;
-                refreshActivityListData();
-                stopLoadingProgress();
-            }
-        });
-
-        SearchTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startLoadingProgress();
-                conditionState = 1;
-                refreshActivityListData();
-                stopLoadingProgress();
-            }
-        });
+//        SearchHot.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startLoadingProgress();
+//                conditionState = 0;
+//                refreshActivityListData();
+//                stopLoadingProgress();
+//            }
+//        });
+//
+//        SearchTime.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startLoadingProgress();
+//                conditionState = 1;
+//                refreshActivityListData();
+//                stopLoadingProgress();
+//            }
+//        });
         cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
             @Override
             public void onItemClick(View view, int postion) {
@@ -218,6 +245,16 @@ public class TaskCenterActivity extends BaseActivity {
                 toDetailActivity(postion);
             }
         });
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchFragment.showFragment(getSupportFragmentManager(),SearchFragment.TAG);
+
+
+            }
+        });
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -236,14 +273,11 @@ public class TaskCenterActivity extends BaseActivity {
 //        act = findViewById(R.id.id_tv_activity);
 //        help = findViewById(R.id.id_tv_help);
 //        tree = findViewById(R.id.id_tv_treehole);
-        searchedContent = findViewById(R.id.id_et_search);
+        search = findViewById(R.id.iv_search_search);
+        searchedContent = findViewById(R.id.et_search_keyword);
         searchBtn = findViewById(R.id.id_iv_search);
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
         eRecyclerView = findViewById(R.id.id_recyclerview);
-        SearchBox = findViewById(R.id.id_rl_search);
-        SearchHot = findViewById(R.id.id_ll_search_hot);
-        SearchTime = findViewById(R.id.id_ll_search_time);
-        switchButton = findViewById(R.id.id_sb_check);
         eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
         cardViewListAdapter = new CardViewListAdapter();

@@ -17,13 +17,15 @@ import com.cohelp.task_for_stu.ui.activity.manager.ManagerCreateNewUserActivity;
 import com.cohelp.task_for_stu.ui.activity.manager.ManagerQuestionCenterActivity;
 import com.cohelp.task_for_stu.ui.activity.manager.ManagerTaskCenterActivity;
 import com.cohelp.task_for_stu.ui.activity.manager.ManagerUserCenterActivity;
+import com.xuexiang.xui.widget.searchview.MaterialSearchView;
 
 /**
  * 所有activity的基本超类，用来抽取常用方法
  */
 public class BaseActivity extends AppCompatActivity {
     private ProgressDialog eLoadingDialog;
-    private Toolbar toolbar;
+    private Toolbar toolbar,toolbar1;
+    private MaterialSearchView materialSearchView;
     private UserBiz userBiz;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +67,12 @@ public class BaseActivity extends AppCompatActivity {
             }
         });
     }
+//    protected TitleBar initTitle() {
+//        return TitleUtils.addTitleBarDynamic((ViewGroup) getRootView(), getPageTitle(), v -> popToBack())
+//                .setLeftImageDrawable(getNavigationBackDrawable(R.attr.xui_actionbar_ic_navigation_back));
+//    }
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

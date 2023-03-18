@@ -7,12 +7,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,21 +21,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.listener.ClickListener;
-
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
-
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
-
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
-import com.cohelp.task_for_stu.ui.adpter.HelpAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
-import com.cohelp.task_for_stu.utils.T;
-import com.leon.lfilepickerlibrary.utils.StringUtils;
 import com.xuexiang.xui.widget.button.switchbutton.SwitchButton;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -200,36 +191,36 @@ public class HelpCenterActivity extends BaseActivity {
 
 
 
-        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(aSwitch.isChecked()){
+//        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if(aSwitch.isChecked()){
+////
+//                    SearchBox.setVisibility(buttonView.VISIBLE);
+//                }else {
+////
+//                    SearchBox.setVisibility(buttonView.GONE);
+//                }
 //
-                    SearchBox.setVisibility(buttonView.VISIBLE);
-                }else {
+//            }
+//        });
+
+//        searchBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //TODO 从服务端搜索
+//                String s = searchedContent.getText().toString();
+//                if (StringUtils.isEmpty(s)) {
+//                    T.showToast("查询的标题不能为空哦~");
+//                } else {
+//                    startLoadingProgress();
+//                    refreshHelpListData();
+//                    stopLoadingProgress();
+//                }
 //
-                    SearchBox.setVisibility(buttonView.GONE);
-                }
-
-            }
-        });
-
-        searchBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO 从服务端搜索
-                String s = searchedContent.getText().toString();
-                if (StringUtils.isEmpty(s)) {
-                    T.showToast("查询的标题不能为空哦~");
-                } else {
-                    startLoadingProgress();
-                    refreshHelpListData();
-                    stopLoadingProgress();
-                }
-
-
-            }
-        });
+//
+//            }
+//        });
         eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -272,8 +263,7 @@ public class HelpCenterActivity extends BaseActivity {
 
         searchedContent = findViewById(R.id.id_et_search);
         searchBtn = findViewById(R.id.id_iv_search);
-        SearchBox = findViewById(R.id.id_rl_search);
-        aSwitch = findViewById(R.id.id_sb_check);
+
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
         eRecyclerView = findViewById(R.id.id_recyclerview);
 

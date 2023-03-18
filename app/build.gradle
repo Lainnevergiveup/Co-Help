@@ -141,7 +141,7 @@ dependencies {
 //    implementation 'com.zhy.base:fileprovider:1.0.0'
 
 
-
+    implementation 'com.wenwenwen888:searchbox:1.0.1'
 
 }
 
