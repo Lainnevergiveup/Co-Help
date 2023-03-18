@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context=".ui.activity.user.TaskCenterActivity">
     <include layout="@layout/sa_toolbar"
+
         />
 
 

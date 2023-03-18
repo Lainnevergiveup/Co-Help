@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.activity.user.BasicInfoActivity">
-    <include layout="@layout/sa_toolbar"/>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
