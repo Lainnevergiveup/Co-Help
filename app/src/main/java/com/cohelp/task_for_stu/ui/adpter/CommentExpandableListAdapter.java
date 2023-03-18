@@ -15,6 +15,7 @@ import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.ui.view.AvatorImageView;
 import com.cohelp.task_for_stu.ui.view.CircleImageView;
 import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
+import com.cohelp.task_for_stu.utils.T;
 
 import java.util.List;
 
@@ -122,14 +123,14 @@ public class CommentExpandableListAdapter extends BaseExpandableListAdapter {
         else {
             childHolder = (ChildHolder) view.getTag();
         }
-
-        String replyUser = commentList.get(i).get(i1).getRemarkOwnerName();
+        RemarkVO remarkVO = commentList.get(i).get(i1);
+        String replyUser = remarkVO.getRemarkOwnerName();
         if(!TextUtils.isEmpty(replyUser)){
-            childHolder.tv_name.setText(replyUser + ":");
+            childHolder.tv_sourseName.setText(replyUser);
         }
-
-        childHolder.tv_content.setText(commentList.get(i).get(i1).getRemarkContent());
-
+//        childHolder.logo.setImageURL(remarkVO.getRemarkOwnerAvatar());
+        childHolder.tv_content.setText(remarkVO.getRemarkContent());
+        childHolder.tv_targetName.setText(remarkVO.getRemarkTargetName());
         return view;
     }
 
@@ -140,7 +141,7 @@ public class CommentExpandableListAdapter extends BaseExpandableListAdapter {
 
     private class GroupHolder{
         private NetRadiusImageView logo;
-        private TextView tv_name, tv_content, tv_time;
+        private TextView  tv_name,tv_content, tv_time;
         private ImageView reportButton;
         private AvatorImageView iv_like;
         public GroupHolder(View view) {
@@ -154,9 +155,12 @@ public class CommentExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     private class ChildHolder{
-        private TextView tv_name, tv_content;
+        private NetRadiusImageView logo;
+        private TextView tv_sourseName,tv_targetName,tv_content;
         public ChildHolder(View view) {
-            tv_name = (TextView) view.findViewById(R.id.reply_item_user);
+//            logo =  view.findViewById(R.id.reply_item_logo);
+            tv_sourseName = (TextView) view.findViewById(R.id.reply_item_userSourse);
+            tv_targetName = (TextView) view.findViewById(R.id.reply_item_userTarget);
             tv_content = (TextView) view.findViewById(R.id.reply_item_content);
         }
     }

@@ -6,19 +6,23 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +33,7 @@ import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.domain.RemarkRequest;
 import com.cohelp.task_for_stu.net.model.entity.Collect;
 import com.cohelp.task_for_stu.net.model.entity.RemarkActivity;
+import com.cohelp.task_for_stu.net.model.entity.RemarkHelp;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.ui.adpter.CommentAdapter;
@@ -65,22 +70,16 @@ public class DetailActivity extends AppCompatActivity {
     Button commentCommitButton;
 
     View view;
-    View view2;
-    RecyclerView commentRecycleView;
     ExpandableListView commentListView;
 
     BottomSheetDialog bottomSheetDialog;
-    BottomSheetDialog bottomSheetDialog2;
 
     BottomSheetBehavior bottomSheetBehavior;
-    BottomSheetBehavior bottomSheetBehavior2;
 
-    CommentAdapter commentAdapter;
     CommentExpandableListAdapter commentExpandableListAdapter;
     OkHttpUtils okHttpUtils;
     Intent intent;
 
-    SwipeRefreshLayout eSwipeRefreshLayout;
 
 
     DetailResponse detail;
@@ -89,10 +88,9 @@ public class DetailActivity extends AppCompatActivity {
     List<List<RemarkVO>> orderRemarkVO;
     IdAndType idAndType;
 
-    Integer commentRootType = 1;
-    Integer commentTargetID;
-    Integer commentTopID;
-    Integer commentDetailResopnseID;
+    Integer commentRootType = 1;//是否为根评论
+    Integer commentTargetID;//目标ID
+    Integer commentTopID;//评论链首ID
 
     Integer detailType;
 
@@ -172,27 +170,11 @@ public class DetailActivity extends AppCompatActivity {
     private void initData(){
 
         getComment();
-        orderRemarkVO = orderRemarkVO(remarkList);
-        firstList = new ArrayList<>();
-        for (List<RemarkVO> voList:orderRemarkVO){
-            RemarkVO vo = voList.get(0);
-            firstList.add(vo);
-            voList.remove(0);
-        }
-        detailType = detail.getType();
+        sortCommentList();
 
-        if (detail.getIsLiked() == 0) {
-            likeButton.setImageResource(R.drawable.icon_dianzan_undo);
-        } else {
-            likeButton.setImageResource(R.drawable.icon_dianzan_success);
-        }
+        initCommentTarget();
 
-        if (detail.getIsCollected()==1){
-            collectButton.setImageResource(R.drawable.icon_collect_success);
-        }
-        else {
-            collectButton.setImageResource(R.drawable.icon_collect_undo);
-        }
+        updateButtonState();
 
     }
     private void initEvent(){
@@ -220,12 +202,7 @@ public class DetailActivity extends AppCompatActivity {
                     okHttpUtils.remark(type,detail.getIdByType(type));
                 }).start();
                 detail.setIsLiked(detail.getIsLiked()==1?0:1);
-                if (detail.getIsLiked()==1){
-                    likeButton.setImageResource(R.drawable.icon_dianzan_success);
-                }
-                else {
-                    likeButton.setImageResource(R.drawable.icon_dianzan_undo);
-                }
+                updateButtonState();
             }
         });
         commentButton.setOnClickListener(new View.OnClickListener() {
@@ -248,12 +225,7 @@ public class DetailActivity extends AppCompatActivity {
                 collect.setTopicId(detail.getIdByType(type));
                 collect.setTopicType(type);
                 detail.setIsCollected(detail.getIsCollected()==1?0:1);
-                if (detail.getIsCollected()==1){
-                    collectButton.setImageResource(R.drawable.icon_collect_success);
-                }
-                else {
-                    collectButton.setImageResource(R.drawable.icon_collect_undo);
-                }
+                updateButtonState();
                 new Thread(()->{
                     okHttpUtils.insertCollection(collect);
                 }).start();
@@ -264,10 +236,8 @@ public class DetailActivity extends AppCompatActivity {
         commentCommitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RemarkActivity remarkActivity = remarkActivityBuilder();
-                RemarkRequest remarkRequest = new RemarkRequest();
-                remarkRequest.setRemarkActivity(remarkActivity);
-                remarkRequest.setType(detail.getType());
+                RemarkRequest remarkRequest = remarkRequestBuilder();
+                remarkRequest.setType(detailType);
                 sendRemark(remarkRequest);
                 commentText.setText("");
             }
@@ -288,10 +258,51 @@ public class DetailActivity extends AppCompatActivity {
 
                 commentTopID = firstList.get(groupPosition).getId();
                 commentTargetID = orderRemarkVO.get(groupPosition).get(childPosition).getId();
+                System.out.println(orderRemarkVO.get(groupPosition).get(childPosition).getRemarkOwnerName());
                 commentRootType = 0;
-                System.out.println(commentTopID);
-                commentText.requestFocus();
+                getFocusForEditText(commentText);
+//                commentText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                commentText.setHint("Enter text");
+//
+//                // 计算 EditText 在屏幕中的位置
+//                int[] location = new int[2];
+//                view.getLocationOnScreen(location);
+//                int x = location[0];
+//                int y = location[1] + view.getHeight();
+//
+//                // 创建 PopupWindow
+//                PopupWindow popupWindow = new PopupWindow(commentText,
+//                        ViewGroup.LayoutParams.MATCH_PARENT,
+//                        ViewGroup.LayoutParams.WRAP_CONTENT);
+//                popupWindow.showAtLocation(expandableListView, Gravity.NO_GRAVITY, x, y);
+//                EditText editText = new EditText(DetailActivity.this);
+//                editText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                editText.setHint("Enter text");
+//
+//                // 计算 EditText 在屏幕中的位置
+//                int[] location = new int[2];
+//                view.getLocationOnScreen(location);
+//                int x = location[0];
+//                int y = location[1] + view.getHeight();
+//
+//                // 创建 PopupWindow
+//                PopupWindow popupWindow = new PopupWindow(editText,
+//                        ViewGroup.LayoutParams.MATCH_PARENT,
+//                        ViewGroup.LayoutParams.WRAP_CONTENT);
+//                popupWindow.showAtLocation(expandableListView, Gravity.NO_GRAVITY, x, y);
+
                 return true;
+            }
+        });
+        commentListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+                commentTopID = firstList.get(i).getId();
+                commentTargetID = firstList.get(i).getId();
+                System.out.println(firstList.get(i).getRemarkOwnerName());
+                commentRootType = 0;
+                getFocusForEditText(commentText);
+                return false;
             }
         });
         commentListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
@@ -311,6 +322,8 @@ public class DetailActivity extends AppCompatActivity {
                 //Do Nothing
             }
         });
+
+
     }
 
     private void setBottomSheet(){
@@ -368,6 +381,15 @@ public class DetailActivity extends AppCompatActivity {
             t1.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+    private void sortCommentList(){
+        orderRemarkVO = orderRemarkVO(remarkList);
+        firstList = new ArrayList<>();
+        for (List<RemarkVO> voList:orderRemarkVO){
+            RemarkVO vo = voList.get(0);
+            firstList.add(vo);
+            voList.remove(0);
         }
     }
     public List<List<RemarkVO>> orderRemarkVO(List<RemarkVO> data){
@@ -433,11 +455,43 @@ public class DetailActivity extends AppCompatActivity {
         remarkActivity.setRemarkTime(new Date());
         remarkActivity.setRemarkContent(commentText.getText().toString());
         remarkActivity.setRemarkLike(0);
-        remarkActivity.setTargetIsActivity(1);
-        remarkActivity.setRemarkActivityId(detail.getActivityVO().getId());
-        remarkActivity.setRemarkTargetId(detail.getActivityVO().getId());
-        remarkActivity.setTopId(0);
+        remarkActivity.setTargetIsActivity(commentRootType);
+        remarkActivity.setRemarkActivityId(detail.getIdByType(detailType));
+        remarkActivity.setRemarkTargetId(commentTargetID);
+        remarkActivity.setTopId(commentTopID);
         return remarkActivity;
+    }
+    private RemarkHelp remarkHelpBiulder(){
+        RemarkHelp remarkHelp = new RemarkHelp();
+        remarkHelp.setRemarkTime(new Date());
+        remarkHelp.setRemarkContent(commentText.getText().toString());
+        remarkHelp.setRemarkLike(0);
+        remarkHelp.setRemarkTargetId(commentTargetID);
+        remarkHelp.setRemarkHelpId(detail.getIdByType(detailType));
+        remarkHelp.setTargetIsHelp(commentRootType);
+        remarkHelp.setTopId(commentTopID);
+        return remarkHelp;
+    }
+    private RemarkRequest remarkRequestBuilder(){
+        RemarkRequest remarkRequest = new RemarkRequest();
+        remarkRequest.setType(detailType);
+        switch (detailType){
+            case 1:{
+                remarkRequest.setRemarkActivity(remarkActivityBuilder());
+                break;
+            }
+            case 2:{
+                remarkRequest.setRemarkHelp((remarkHelpBiulder()));
+                break;
+            }
+            case 3:{
+
+            }
+            default:{
+                break;
+            }
+        }
+        return remarkRequest;
     }
     private synchronized void sendRemark(RemarkRequest remarkRequest){
         Thread thread = new Thread(() -> {
@@ -469,11 +523,41 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
         ViewGroup.LayoutParams params = listView.getLayoutParams();
-        int height = totalHeight + (listView.getDividerHeight() * (listAdapter.getGroupCount() - 3));
-        if (height < 10) height = 200;
+        int height = totalHeight + (listView.getDividerHeight() * (listAdapter.getGroupCount() - 1));
+        if (height < 10) height = 160;
         params.height = height;
         listView.setLayoutParams(params);
         listView.requestLayout();
     }
+    private void initCommentTarget(){
+        detailType = detail.getType();
+        commentRootType = 1;
+        commentTargetID = detail.getIdByType(detailType);
+        commentTopID = 0;
+        return;
+    }
+    private void getFocusForEditText(EditText editText){
+        if (editText!=null){
+            commentText.setFocusable(true);
+            commentText.setFocusableInTouchMode(true);
+            commentText.requestFocus();
+            InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            in.showSoftInput(commentText,0);
+        }
+        return;
+    }
+    private void updateButtonState(){
+        if (detail.getIsLiked() == 0) {
+            likeButton.setImageResource(R.drawable.icon_dianzan_undo);
+        } else {
+            likeButton.setImageResource(R.drawable.icon_dianzan_success);
+        }
 
+        if (detail.getIsCollected()==1){
+            collectButton.setImageResource(R.drawable.icon_collect_success);
+        }
+        else {
+            collectButton.setImageResource(R.drawable.icon_collect_undo);
+        }
+    }
 }

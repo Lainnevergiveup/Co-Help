@@ -19,12 +19,7 @@
         android:layout_marginRight="0dp"
         android:orientation="horizontal"
         android:gravity="center_vertical">
-        <com.cohelp.task_for_stu.ui.view.NetRadiusImageView
-            android:id="@+id/reply_item_logo"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="3dp"/>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,20 +33,21 @@
                     android:id="@+id/reply_item_userSourse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#5B595A"
+                    android:textColor="@color/blue"
                     android:textSize="14sp"
+
                     android:text="沐风" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#5B595A"
                     android:textSize="14sp"
-                    android:text="回复" />
+                    android:text="\t回复\t" />
                 <TextView
                     android:id="@+id/reply_item_userTarget"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#5B595A"
+                    android:textColor="@color/blue"
                     android:textSize="14sp"
                     android:text="沐风" />
             </LinearLayout>
@@ -70,7 +66,7 @@
             android:id="@+id/btn_comment_report"
             android:layout_width="15dp"
             android:layout_height="15dp"
-            android:src="@drawable/ic_report"
+            android:src="@drawable/ic_more"
             android:layout_gravity="right">
         </ImageView>
 
@@ -89,7 +85,7 @@
             android:layout_marginTop="6dp"
             android:textColor="#484848"
             android:textSize="14sp"
-            android:layout_marginLeft="95dp"
+            android:layout_marginLeft="52dp"
             android:layout_marginRight="24dp"
 
             android:text="从前有座山，山里有座庙，庙里有个老和尚"/>
