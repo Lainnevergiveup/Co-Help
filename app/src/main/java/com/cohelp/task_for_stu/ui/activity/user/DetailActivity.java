@@ -2,6 +2,7 @@ package com.cohelp.task_for_stu.ui.activity.user;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,20 +10,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,7 +76,7 @@ public class DetailActivity extends AppCompatActivity {
     ImageButton commentButton;
     EditText commentText;
     Button commentCommitButton;
-
+    EditText editText;
     View view;
     ExpandableListView commentListView;
 
@@ -170,6 +178,9 @@ public class DetailActivity extends AppCompatActivity {
     private void initData(){
 
         getComment();
+        for (RemarkVO remarkVO:remarkList){
+            System.out.println(remarkVO.getRemarkTargetName());
+        }
         sortCommentList();
 
         initCommentTarget();
@@ -260,36 +271,71 @@ public class DetailActivity extends AppCompatActivity {
                 commentTargetID = orderRemarkVO.get(groupPosition).get(childPosition).getId();
                 System.out.println(orderRemarkVO.get(groupPosition).get(childPosition).getRemarkOwnerName());
                 commentRootType = 0;
-                getFocusForEditText(commentText);
+//                getFocusForEditText(commentText);
 //                commentText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 //                commentText.setHint("Enter text");
 //
-//                // 计算 EditText 在屏幕中的位置
-//                int[] location = new int[2];
-//                view.getLocationOnScreen(location);
-//                int x = location[0];
-//                int y = location[1] + view.getHeight();
+                // 计算 EditText 在屏幕中的位置
+                int[] location = new int[2];
+                view.getLocationOnScreen(location);
+                int x = location[0];
+                int y = location[1] + view.getHeight();
 //
 //                // 创建 PopupWindow
 //                PopupWindow popupWindow = new PopupWindow(commentText,
 //                        ViewGroup.LayoutParams.MATCH_PARENT,
 //                        ViewGroup.LayoutParams.WRAP_CONTENT);
 //                popupWindow.showAtLocation(expandableListView, Gravity.NO_GRAVITY, x, y);
-//                EditText editText = new EditText(DetailActivity.this);
-//                editText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//                editText.setHint("Enter text");
+                editText = new EditText(DetailActivity.this);
+                editText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                editText.setHint("Enter text");
+                getFocusForEditText(editText);
+
 //
-//                // 计算 EditText 在屏幕中的位置
+//                ScrollView frameLayout = (ScrollView)LayoutInflater.from(DetailActivity.this).inflate(R.layout.view_input_text_with_button, (ViewGroup) view).findViewById(R.id.layout_frame);
+//                frameLayout.removeAllViews();
+//                frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//frameLayout.setVisibility(1);
+                // 计算 EditText 在屏幕中的位置
 //                int[] location = new int[2];
 //                view.getLocationOnScreen(location);
 //                int x = location[0];
 //                int y = location[1] + view.getHeight();
+
+                // 创建 PopupWindow
+                PopupWindow popupWindow = new PopupWindow(commentText,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                popupWindow.setFocusable(true);
+
 //
-//                // 创建 PopupWindow
-//                PopupWindow popupWindow = new PopupWindow(editText,
-//                        ViewGroup.LayoutParams.MATCH_PARENT,
-//                        ViewGroup.LayoutParams.WRAP_CONTENT);
-//                popupWindow.showAtLocation(expandableListView, Gravity.NO_GRAVITY, x, y);
+                popupWindow.showAtLocation(editText, Gravity.BOTTOM,0,0);
+
+
+//                // 获取屏幕高度
+//                DisplayMetrics displayMetrics = new DisplayMetrics();
+//                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//                int screenHeight = displayMetrics.heightPixels;
+//
+//// 获取键盘高度
+//                final int keyboardHeight = screenHeight - getStatusBarHeight() - getActionBarHeight() - 0;
+//
+//// 设置布局的位置
+//                frameLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                    @Override
+//                    public void onGlobalLayout() {
+//                        Rect rect = new Rect();
+//                        frameLayout.getWindowVisibleDisplayFrame(rect);
+//                        int scrollViewBottom = rect.bottom;
+//                        int scrollViewHeight = frameLayout.getHeight();
+//                        int keyboardTop = screenHeight - keyboardHeight;
+//                        if (scrollViewBottom > keyboardTop) {
+//                            int delta = scrollViewBottom - keyboardTop + scrollViewHeight;
+//                            frameLayout.smoothScrollBy(0, delta);
+//                        }
+//                    }
+//                });
 
                 return true;
             }
@@ -297,12 +343,19 @@ public class DetailActivity extends AppCompatActivity {
         commentListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+
+                return false;
+            }
+        });
+        commentListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 commentTopID = firstList.get(i).getId();
                 commentTargetID = firstList.get(i).getId();
                 System.out.println(firstList.get(i).getRemarkOwnerName());
                 commentRootType = 0;
                 getFocusForEditText(commentText);
-                return false;
+                return true;
             }
         });
         commentListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
@@ -396,7 +449,6 @@ public class DetailActivity extends AppCompatActivity {
         if(data==null){
             return null;
         }
-        System.out.println("length="+data.size());
         Stack<RemarkVO> stackA = new Stack<>();
         Stack<RemarkVO> stackB = new Stack<>();
         ArrayList<RemarkVO> topRemark = new ArrayList<>();
@@ -421,6 +473,7 @@ public class DetailActivity extends AppCompatActivity {
                 while(iter.hasNext()){
                     RemarkVO remark = iter.next();
                     if(remark.getRemarkTargetId().equals(peekRemarkId)){
+                        remark.setRemarkTargetName(peek.getRemarkOwnerName());
                         stackA.push(remark);
                         iter.remove();
                     }
@@ -428,11 +481,11 @@ public class DetailActivity extends AppCompatActivity {
                 if(stackA.peek().equals(peek)){
                     RemarkVO pop = stackA.pop();
                     //设置当前评论的评论对象
-                    if (!stackA.isEmpty()){
-                        pop.setRemarkTargetName(stackA.peek().getRemarkOwnerName());
-                    }else {
-                        pop.setRemarkTargetName(null);
-                    }
+//                    if (!stackA.isEmpty()){
+//                        pop.setRemarkTargetName(stackA.peek().getRemarkOwnerName());
+//                    }else {
+//                        pop.setRemarkTargetName(null);
+//                    }
                     stackB.push(pop);
                 }
             }
@@ -491,6 +544,7 @@ public class DetailActivity extends AppCompatActivity {
                 break;
             }
         }
+        System.out.println(okHttpUtils.getGson().toJson(remarkRequest));
         return remarkRequest;
     }
     private synchronized void sendRemark(RemarkRequest remarkRequest){
@@ -538,11 +592,11 @@ public class DetailActivity extends AppCompatActivity {
     }
     private void getFocusForEditText(EditText editText){
         if (editText!=null){
-            commentText.setFocusable(true);
-            commentText.setFocusableInTouchMode(true);
-            commentText.requestFocus();
+            editText.setFocusable(true);
+            editText.setFocusableInTouchMode(true);
+            editText.requestFocus();
             InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            in.showSoftInput(commentText,0);
+            in.showSoftInput(editText,0);
         }
         return;
     }
@@ -559,5 +613,38 @@ public class DetailActivity extends AppCompatActivity {
         else {
             collectButton.setImageResource(R.drawable.icon_collect_undo);
         }
+    }
+
+
+    // 获取状态栏高度
+    private int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    // 获取 ActionBar 高度
+    private int getActionBarHeight() {
+        int actionBarHeight = 0;
+        TypedValue tv = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        }
+        return actionBarHeight;
+    }
+
+    // 获取键盘高度
+    private int getKeyboardHeight() {
+        int height = 0;
+        View decorView = getWindow().getDecorView();
+        Rect rect = new Rect();
+        decorView.getWindowVisibleDisplayFrame(rect);
+        int displayHeight = rect.bottom - rect.top;
+        int screenHeight = decorView.getHeight();
+        height = screenHeight - displayHeight;
+        return height;
     }
 }
