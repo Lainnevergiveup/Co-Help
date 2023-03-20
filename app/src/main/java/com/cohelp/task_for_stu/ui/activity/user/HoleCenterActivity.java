@@ -25,6 +25,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
+import com.cohelp.task_for_stu.net.model.vo.CourseVO;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
@@ -65,6 +66,7 @@ public class HoleCenterActivity extends BaseActivity {
     ViewPager mContentViewPager;
     OkHttpUtils okHttpUtils;
     List<DetailResponse> holeList = new ArrayList<>();
+    List<CourseVO> courseList;
     Integer conditionType = 0;
     Spinner mSpinnerFitOffset;
 //    HoleAdapter holeAdapter;
@@ -74,7 +76,7 @@ public class HoleCenterActivity extends BaseActivity {
     private final int TAB_COUNT = 10;
     private int mCurrentItemCount = TAB_COUNT;
     private MultiPage mDestPage = MultiPage.教育;
-    private Map<MultiPage, View> mPageMap = new HashMap<>();
+    private Map<String, View> mPageMap = new HashMap<>();
     private PagerAdapter mPagerAdapter = new PagerAdapter() {
         @Override
         public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
@@ -83,14 +85,15 @@ public class HoleCenterActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return mCurrentItemCount;
+            return courseList.size();
         }
 
         @Override
         public Object instantiateItem(final ViewGroup container, int position) {
-            MultiPage page = MultiPage.getPage(position);
-            View view = getPageView(page);
-            view.setTag(page);
+            CourseVO courseVO = courseList.get(position);
+
+            View view = getPageView(courseVO.getName());
+            view.setTag(courseVO.getName());
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             container.addView(view, params);
             return view;
@@ -116,16 +119,16 @@ public class HoleCenterActivity extends BaseActivity {
         }
     };
 
-    private View getPageView(MultiPage page) {
-        System.out.println("page"+page);
-        View view = mPageMap.get(page);
+    private View getPageView(String semeterName) {
+
+        View view = mPageMap.get(semeterName);
         if (view == null) {
             TextView textView = new TextView(HoleCenterActivity.this);
             textView.setTextAppearance(HoleCenterActivity.this, R.style.TextStyle_Content_Match);
             textView.setGravity(Gravity.CENTER);
-            textView.setText(String.format("这个是%s页面的内容", page.name()));
+            textView.setText(String.format("这个是%s页面的内容", semeterName));
             view = textView;
-            mPageMap.put(page, view);
+            mPageMap.put(semeterName, view);
         }
         return view;
     }
@@ -243,7 +246,7 @@ public class HoleCenterActivity extends BaseActivity {
         niceSpinner.attachDataSource(dataset);
 //        niceSpinner.setBackgroundDrawable();
         niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
-
+        getCourseList("2022-2023-2");
 
 
 
@@ -315,6 +318,21 @@ public class HoleCenterActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
+
+    private synchronized void getCourseList(String semeter){
+        Thread thread = new Thread(() -> {
+             courseList = okHttpUtils.getCourseList(semeter);
+            System.out.println("course"+courseList);
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private synchronized void refreshHoleList(){
         getHoleList();
         cardViewListAdapter.setDetailResponseListList(holeList);
@@ -329,9 +347,9 @@ public class HoleCenterActivity extends BaseActivity {
     }
     private void initTab(){
         mContentViewPager.setAdapter(mPagerAdapter);
-        mContentViewPager.setCurrentItem(mDestPage.getPosition(), false);
+        mContentViewPager.setCurrentItem(mTabSegment.getSelectedIndex(), false);
         for (int i = 0; i < mCurrentItemCount; i++) {
-            mTabSegment.addTab(new TabSegment.Tab(pages[i]));
+            mTabSegment.addTab(new TabSegment.Tab(courseList.get(i).getName()));
         }
         int space = DensityUtils.dp2px(HoleCenterActivity.this, 16);
         mTabSegment.setHasIndicator(true);
@@ -342,22 +360,22 @@ public class HoleCenterActivity extends BaseActivity {
         mTabSegment.addOnTabSelectedListener(new TabSegment.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int index) {
-                XToastUtils.toast("select " + pages[index]);
+                XToastUtils.toast("select " + courseList.get(index).getName());
             }
 
             @Override
             public void onTabUnselected(int index) {
-                XToastUtils.toast("unSelect " + pages[index]);
+                XToastUtils.toast("unSelect " +courseList.get(index).getName());
             }
 
             @Override
             public void onTabReselected(int index) {
-                XToastUtils.toast("reSelect " + pages[index]);
+                XToastUtils.toast("reSelect " + courseList.get(index).getName());
             }
 
             @Override
             public void onDoubleTap(int index) {
-                XToastUtils.toast("double tap " + pages[index]);
+                XToastUtils.toast("double tap " + courseList.get(index).getName());
             }
         });
 

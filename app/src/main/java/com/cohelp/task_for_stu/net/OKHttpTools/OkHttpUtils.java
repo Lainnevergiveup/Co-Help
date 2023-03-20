@@ -21,6 +21,7 @@ import com.cohelp.task_for_stu.net.model.entity.Help;
 import com.cohelp.task_for_stu.net.model.entity.Hole;
 import com.cohelp.task_for_stu.net.model.entity.Team;
 import com.cohelp.task_for_stu.net.model.entity.User;
+import com.cohelp.task_for_stu.net.model.vo.CourseVO;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -462,5 +463,17 @@ public class OkHttpUtils {
 
     }
 
+    public List<CourseVO> getCourseList(String semester){
+        okHttp.sendGetRequest(baseURL+"/course/list/"+semester,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<List<CourseVO>> result = gson.fromJson(res,new TypeToken<Result<List<CourseVO>>>(){}.getType());
+        return result.getData();
+
+    }
 
 }
