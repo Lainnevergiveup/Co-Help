@@ -7,38 +7,14 @@
     android:orientation="vertical"
     tools:context=".ui.activity.user.MyTaskActivity">
 
-    <include layout="@layout/common_toolbar" />
-
-<!--    <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout-->
-<!--        android:id="@+id/id_swiperefresh"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_marginTop="15sp"-->
-<!--        android:layout_marginLeft="15sp"-->
-<!--        android:layout_marginRight="15sp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_weight="1">-->
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/id_recyclerview"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent">-->
-<!--        </androidx.recyclerview.widget.RecyclerView>-->
-<!--    </com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout>-->
+    <include layout="@layout/common_toolbar_1" />
 
 
-<!--    <com.xuexiang.xui.widget.tabbar.EasyIndicator-->
-<!--        android:id="@+id/easy_indicator"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        app:indicator_height="42dp"-->
-<!--        app:indicator_line_height="3dp"-->
-<!--        app:indicator_line_show="true"-->
-<!--        app:indicator_textSize="14sp" />-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-
+        android:layout_marginTop="1dp"
 
         >
         <LinearLayout

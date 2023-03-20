@@ -4,14 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:navigationIcon="@drawable/back"
+    app:navigationIcon="@drawable/back_white"
     app:titleTextColor="#000000"
-
+    style="@style/ToolbarStyle"
     >
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/Button.Primary.wrap"
+        style="@style/Button.Radius"
         android:id="@+id/id_tv_manager"
         android:layout_marginLeft="250dp"
         android:layout_marginRight="20dp"

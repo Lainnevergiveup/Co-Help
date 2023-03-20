@@ -35,8 +35,13 @@ import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.utils.XToastUtils;
 import com.xuexiang.xui.widget.tabbar.TabSegment;
 
+import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +58,8 @@ public class HoleCenterActivity extends BaseActivity {
     LinearLayout SearchTime;
     RelativeLayout SearchBox;
     Switch aSwitch;
+    NiceSpinner niceSpinner;
+    String item;
     TabSegment mTabSegment1;
     TabSegment mTabSegment;
     ViewPager mContentViewPager;
@@ -110,6 +117,7 @@ public class HoleCenterActivity extends BaseActivity {
     };
 
     private View getPageView(MultiPage page) {
+        System.out.println("page"+page);
         View view = mPageMap.get(page);
         if (view == null) {
             TextView textView = new TextView(HoleCenterActivity.this);
@@ -201,7 +209,18 @@ public class HoleCenterActivity extends BaseActivity {
                 refreshHoleList();
             }
         });
+        niceSpinner.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                item = (String) niceSpinner.getItemAtPosition(position);
+                System.out.println(item);
 
+
+
+                initTab();
+
+            }
+        });
 
     }
 
@@ -211,14 +230,22 @@ public class HoleCenterActivity extends BaseActivity {
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
         searchBtn = findViewById(R.id.id_iv_search);
-
+        niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
         eRecyclerView = findViewById(R.id.id_recyclerview);
         eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
         mTabSegment = findViewById(R.id.tabSegment);
         mContentViewPager = findViewById(R.id.contentViewPager);
-        mSpinnerFitOffset = findViewById(R.id.spinner_system_fit_offset);
+//        mSpinnerFitOffset = findViewById(R.id.spinner_system_fit_offset);
+
+        List<String> dataset = new LinkedList<>(Arrays.asList("One", "Two", "Three", "Four", "Five"));
+        niceSpinner.attachDataSource(dataset);
+//        niceSpinner.setBackgroundDrawable();
+        niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
+
+
+
 
         getHoleList();
 //        holeAdapter = new HoleAdapter(holeList);
@@ -237,46 +264,14 @@ public class HoleCenterActivity extends BaseActivity {
 
         eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         eRecyclerView.setAdapter(cardViewListAdapter);
+        initTab();
 
 
 
 
-        mContentViewPager.setAdapter(mPagerAdapter);
-        mContentViewPager.setCurrentItem(mDestPage.getPosition(), false);
-        for (int i = 0; i < mCurrentItemCount; i++) {
-            mTabSegment.addTab(new TabSegment.Tab(pages[i]));
-        }
-        int space = DensityUtils.dp2px(HoleCenterActivity.this, 16);
-        mTabSegment.setHasIndicator(true);
-        mTabSegment.setMode(TabSegment.MODE_SCROLLABLE);
-        mTabSegment.setItemSpaceInScrollMode(space);
-        mTabSegment.setupWithViewPager(mContentViewPager, false);
-        mTabSegment.setPadding(space, 0, space, 0);
-        mTabSegment.addOnTabSelectedListener(new TabSegment.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(int index) {
-                XToastUtils.toast("select " + pages[index]);
-            }
-
-            @Override
-            public void onTabUnselected(int index) {
-                XToastUtils.toast("unSelect " + pages[index]);
-            }
-
-            @Override
-            public void onTabReselected(int index) {
-                XToastUtils.toast("reSelect " + pages[index]);
-            }
-
-            @Override
-            public void onDoubleTap(int index) {
-                XToastUtils.toast("double tap " + pages[index]);
-            }
-        });
 
 
-
-        WidgetUtils.setSpinnerDropDownVerticalOffset(mSpinnerFitOffset);
+//        WidgetUtils.setSpinnerDropDownVerticalOffset(mSpinnerFitOffset);
 
 
     }
@@ -331,5 +326,40 @@ public class HoleCenterActivity extends BaseActivity {
                 eSwipeRefreshLayout.setRefreshing(false);
             }
         },1000);
+    }
+    private void initTab(){
+        mContentViewPager.setAdapter(mPagerAdapter);
+        mContentViewPager.setCurrentItem(mDestPage.getPosition(), false);
+        for (int i = 0; i < mCurrentItemCount; i++) {
+            mTabSegment.addTab(new TabSegment.Tab(pages[i]));
+        }
+        int space = DensityUtils.dp2px(HoleCenterActivity.this, 16);
+        mTabSegment.setHasIndicator(true);
+        mTabSegment.setMode(TabSegment.MODE_SCROLLABLE);
+        mTabSegment.setItemSpaceInScrollMode(space);
+        mTabSegment.setupWithViewPager(mContentViewPager, false);
+        mTabSegment.setPadding(space, 0, space, 0);
+        mTabSegment.addOnTabSelectedListener(new TabSegment.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(int index) {
+                XToastUtils.toast("select " + pages[index]);
+            }
+
+            @Override
+            public void onTabUnselected(int index) {
+                XToastUtils.toast("unSelect " + pages[index]);
+            }
+
+            @Override
+            public void onTabReselected(int index) {
+                XToastUtils.toast("reSelect " + pages[index]);
+            }
+
+            @Override
+            public void onDoubleTap(int index) {
+                XToastUtils.toast("double tap " + pages[index]);
+            }
+        });
+
     }
 }

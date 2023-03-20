@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.activity.user.MyTaskActivity">
-    <include layout="@layout/common_toolbar" />
+    <include layout="@layout/common_toolbar_1" />
 
 
     <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout

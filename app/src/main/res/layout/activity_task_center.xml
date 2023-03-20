@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.activity.user.TaskCenterActivity">
-    <include layout="@layout/sa_toolbar"
+    <include layout="@layout/toolsearchbar"
 
         />
 

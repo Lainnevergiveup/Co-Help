@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,11 +15,8 @@ import com.cohelp.task_for_stu.UserInfoHolder;
 import com.cohelp.task_for_stu.bean.User;
 import com.cohelp.task_for_stu.biz.UserBiz;
 import com.cohelp.task_for_stu.config.Config;
-import com.cohelp.task_for_stu.listener.ClickListener;
 import com.cohelp.task_for_stu.net.CommonCallback;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
-import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
-import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.ui.CircleTransform;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.view.AvatorImageView;
@@ -37,7 +33,7 @@ public class BasicInfoActivity extends BaseActivity {
     TextView nickname;
     TextView team;
     RoundButton bt_logOut,bt_switch;
-    LinearLayout Browsing_history;
+    LinearLayout Setting;
     LinearLayout Personal_homepage;
     LinearLayout myTask;
     LinearLayout myQuestion;
@@ -82,7 +78,7 @@ public class BasicInfoActivity extends BaseActivity {
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
 
-        Browsing_history = findViewById(R.id.id_ll_browsing_history);
+        Setting = findViewById(R.id.id_ll_setting);
         Personal_homepage = findViewById(R.id.id_ll_personal_homepage);
         userBiz = new UserBiz();
 
@@ -190,10 +186,10 @@ public class BasicInfoActivity extends BaseActivity {
                 toMyQuestionActivity();
             }
         });
-        Browsing_history.setOnClickListener(new View.OnClickListener() {
+        Setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toHistoryActivity();
+                toSettingActivity();
             }
         });
         Personal_homepage.setOnClickListener(new View.OnClickListener() {
@@ -261,11 +257,11 @@ public class BasicInfoActivity extends BaseActivity {
 
     private void toSettingUserActivity() {
         Intent intent = new Intent(this,SettingUserActivity.class);
-        startActivityForResult(intent,1001);
+        startActivity(intent);
     }
 
-    private void toHistoryActivity(){
-        Intent intent = new Intent(this,HistoryActivity.class);
+    private void toSettingActivity(){
+        Intent intent = new Intent(this,SettingActivity.class);
         startActivity(intent);
     }
 

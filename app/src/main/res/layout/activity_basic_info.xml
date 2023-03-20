@@ -49,9 +49,9 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-
+        android:layout_marginBottom="10dp"
         android:background="@drawable/info_solid"
-        android:layout_height="130dp">
+        android:layout_height="100dp">
         <LinearLayout
             android:id="@+id/id_ll_myquestion"
             android:orientation="vertical"
@@ -62,14 +62,16 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/id_myJoin"
-                android:layout_width="wrap_content"
-                android:src="@drawable/question"
-                android:layout_height="wrap_content"/>
+                android:layout_width="50dp"
+                android:src="@drawable/canyu"
+                android:layout_height="50dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textSize="10dp"
                 android:text="我的参与"/>
         </LinearLayout>
 
@@ -83,14 +85,16 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/id_mypublish"
-                android:layout_width="wrap_content"
-                android:src="@drawable/task"
-                android:layout_height="wrap_content"/>
+                android:layout_width="50dp"
+                android:src="@drawable/publish3"
+                android:layout_height="50dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textSize="10dp"
                 android:text="我的发布"/>
         </LinearLayout>
 
@@ -111,15 +115,39 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/id_mycollect"
-                android:layout_width="wrap_content"
-                android:src="@drawable/task"
-                android:layout_height="wrap_content"/>
+                android:layout_width="50dp"
+                android:src="@drawable/collect1"
+                android:layout_height="50dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textSize="10dp"
                 android:text="我的收藏"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/id_ll_myRecord"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="50dp"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/id_myrecord"
+                android:layout_width="50dp"
+                android:src="@drawable/record"
+                android:layout_height="50dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textSize="10dp"
+                android:text="我的记录"/>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -153,16 +181,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/id_ll_browsing_history"
+            android:id="@+id/id_ll_setting"
             android:orientation="horizontal"
             >
             <TextView
-                android:id="@+id/id_tv_browsing_history"
+                android:id="@+id/id_tv_setting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:text="浏览记录"
+                android:text="设    置"
                 android:textStyle="bold"
                 android:textSize="20dp"
                 />
@@ -179,7 +207,7 @@
             style="@style/RoundButton.Blue"
             android:layout_width="match_parent"
             android:layout_height="40sp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="120dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:text="切换"

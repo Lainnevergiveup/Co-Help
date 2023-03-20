@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.activity.user.HistoryActivity">
-    <include layout="@layout/common_toolbar"/>
+    tools:context=".ui.activity.user.SettingActivity">
+    <include layout="@layout/common_toolbar_1"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/id_recyclerview"

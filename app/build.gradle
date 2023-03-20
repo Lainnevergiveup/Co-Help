@@ -143,5 +143,7 @@ dependencies {
 
     implementation 'com.wenwenwen888:searchbox:1.0.1'
 
+    //spinner
+    implementation 'com.github.arcadefire:nice-spinner:1.4.4'
 }
 

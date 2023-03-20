@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cohelp.task_for_stu.R;
-import com.cohelp.task_for_stu.listener.ClickListener;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
@@ -28,25 +26,26 @@ import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
-import com.xuexiang.xui.widget.button.switchbutton.SwitchButton;
+import com.wyt.searchbox.SearchFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 /*
 问答中心
  */
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class HelpCenterActivity extends BaseActivity {
     LinearLayout HelpCenter;
     LinearLayout TaskCenter;
     LinearLayout HoleCenter;
     LinearLayout UserCenter;
     TextView lb1,lb2,lb3,lb4,lb5;
-    RelativeLayout SearchBox;
-    SwitchButton aSwitch;
-    TextView all;
 
+    TextView title;
+    androidx.appcompat.widget.Toolbar toolbar;
+    SearchFragment searchFragment = SearchFragment.newInstance();
     EditText searchedContent;
-    ImageView searchBtn;
+    ImageView searchBtn,search;
     SwipeRefreshLayout eSwipeRefreshLayout;
     RecyclerView eRecyclerView;
     Integer conditionState = 0;
@@ -87,6 +86,7 @@ public class HelpCenterActivity extends BaseActivity {
         setContentView(R.layout.activity_help_center);
         initTools();
         initView();
+        initToolbar();
         initEvent();
         setTitle("互助");
     }
@@ -101,13 +101,13 @@ public class HelpCenterActivity extends BaseActivity {
     }
 
     private void initEvent() {
-        setToolbar(R.drawable.common_add, new ClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void click() {
-                toCreateNewHelpActivity();
-            }
-        });
+//        setToolbar(R.drawable.common_add, new ClickListener() {
+//            @RequiresApi(api = Build.VERSION_CODES.O)
+//            @Override
+//            public void click() {
+//                toCreateNewHelpActivity();
+//            }
+//        });
 
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -230,6 +230,24 @@ public class HelpCenterActivity extends BaseActivity {
 
     }
 
+    private void initToolbar(){
+        toolbar.setNavigationOnClickListener(onClickListener);
+        toolbar.inflateMenu(R.menu.menu_help);
+        toolbar.setOnMenuItemClickListener(menuItemClickListener);
+        title.setText("互助");
+    }
+    private View.OnClickListener onClickListener = v -> toCreateNewHelpActivity();  ;
+
+    androidx.appcompat.widget.Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
+//        XToastUtils.toast("点击了:" + item.getTitle());
+       if(item.getItemId() == R.id.item_search){
+            searchFragment.showFragment(getSupportFragmentManager(), SearchFragment.TAG);
+        }
+        return false;
+    };
+
+
+
     private synchronized void refreshHelpListData(){
         getHelpList(conditionState);
 //        helpAdapter.setHelpList(helpList);
@@ -251,6 +269,11 @@ public class HelpCenterActivity extends BaseActivity {
     }
 
     private void initView() {
+
+        toolbar = findViewById(R.id.tool_bar_2);
+        title = findViewById(R.id.tv_title);
+        search = findViewById(R.id.iv_search_search);
+
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
         TaskCenter = findViewById(R.id.id_ll_activityCenter);

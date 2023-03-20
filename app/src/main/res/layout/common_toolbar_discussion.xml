@@ -4,22 +4,34 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:navigationIcon="@drawable/back"
+    app:navigationIcon="@drawable/back_white"
     app:titleTextColor="#000000"
-
+    style="@style/ToolbarStyle"
     >
-    <Spinner
-        android:id="@+id/spinner_system_fit_offset"
+<!--    <Spinner-->
+<!--        android:id="@+id/spinner_system_fit_offset"-->
+<!--        android:popupBackground="@drawable/shape_for_custom_spinner"-->
+<!--        android:background="@drawable/selector_for_custom_spinner"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="?attr/ms_item_height_size"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:gravity="center"-->
+<!--        android:layout_marginTop="?attr/xui_config_content_spacing_vertical"-->
+<!--        android:entries="@array/sort_mode_entry"-->
+<!--        app:ms_hide_arrow="true"-->
+<!--        android:spinnerMode="dropdown" />-->
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/nice_spinner"
+        android:layout_width="100dp"
         android:popupBackground="@drawable/shape_for_custom_spinner"
         android:background="@drawable/selector_for_custom_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="?attr/ms_item_height_size"
-        android:layout_marginStart="50dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:layout_marginTop="?attr/xui_config_content_spacing_vertical"
-        android:entries="@array/sort_mode_entry"
-        app:ms_hide_arrow="true"
-        android:spinnerMode="dropdown" />
+
+        android:spinnerMode="dropdown"
+
+        />
+
 
 </com.google.android.material.appbar.MaterialToolbar>

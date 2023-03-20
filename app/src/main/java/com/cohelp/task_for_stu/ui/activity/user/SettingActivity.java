@@ -4,34 +4,40 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 
 public class SettingActivity extends BaseActivity {
 
-    LinearLayout questionCenter;
+    LinearLayout HoleCenter;
+    LinearLayout HelpCenter;
     LinearLayout TaskCenter;
     LinearLayout UserCenter;
-
+    TextView title;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
-        setUpToolBar();
+        setContentView(R.layout.activity_history);
+
         initView();
         initEvent();
-        setTitle("设置");
+        title.setText("我的设置");
     }
-
 
     private void initEvent(){
 
-        questionCenter.setOnClickListener(new View.OnClickListener() {
+        HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toQuestionCenterActivity();
+                toHelpCenterActivity();
             }
+        });
+
+        HoleCenter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {toHoleCenterActivity();}
         });
 
         TaskCenter.setOnClickListener(new View.OnClickListener() {
@@ -53,10 +59,11 @@ public class SettingActivity extends BaseActivity {
 
 
     private void initView() {
-        questionCenter = findViewById(R.id.id_ll_questionCenter);
-        TaskCenter = findViewById(R.id.id_ll_taskCenter);
+        HelpCenter = findViewById(R.id.id_ll_helpCenter);
+        HoleCenter =findViewById(R.id.id_ll_holeCenter);
+        TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
-
+        title = findViewById(R.id.tv_title);
     }
 
 
@@ -72,9 +79,20 @@ public class SettingActivity extends BaseActivity {
         finish();
     }
 
-    private void toQuestionCenterActivity() {
+    private void toHelpCenterActivity() {
         Intent intent = new Intent(this, HelpCenterActivity.class);
         startActivity(intent);
         finish();
     }
+    private void toHoleCenterActivity() {
+        Intent intent = new Intent(this, HoleCenterActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+
+
+
+
+
 }

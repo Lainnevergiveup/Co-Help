@@ -37,7 +37,7 @@ public class MyQuestionActivity extends BaseActivity {
     LinearLayout HelpCenter;
     LinearLayout TaskCenter;
     LinearLayout UserCenter;
-
+    TextView title;
     RecyclerView eRecyclerView;
     SwipeRefreshLayout eSwipeRefreshLayout;
 
@@ -48,11 +48,11 @@ public class MyQuestionActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_question);
-        setUpToolBar();
-        setTitle("我的参与");
+
         initTools();
         initView();
         initEvent();
+        title.setText("我的参与");
     }
 
     private void initTools(){
@@ -120,7 +120,7 @@ public class MyQuestionActivity extends BaseActivity {
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
-
+        title = findViewById(R.id.tv_title);
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
         eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);

@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -18,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cohelp.task_for_stu.R;
-import com.cohelp.task_for_stu.listener.ClickListener;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
@@ -39,14 +39,15 @@ import java.util.List;
 /*
     活动
  */
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class TaskCenterActivity extends BaseActivity {
     LinearLayout HelpCenter;
     LinearLayout TaskCenter;
     LinearLayout HoleCenter;
     LinearLayout UserCenter;
-    LinearLayout SearchHot;
-    LinearLayout SearchTime;
 
+    TextView title;
+    androidx.appcompat.widget.Toolbar toolbar;
     EditText searchedContent;
     ImageView searchBtn,search;
     SwipeRefreshLayout eSwipeRefreshLayout;
@@ -94,6 +95,7 @@ public class TaskCenterActivity extends BaseActivity {
         activityVOList = SessionUtils.getActivityPreference(TaskCenterActivity.this);
         initTools();
         initView();
+        initToolbar();
         initEvent();
         setTitle("活动");
     }
@@ -106,15 +108,42 @@ public class TaskCenterActivity extends BaseActivity {
         okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
     }
 
+    private void initToolbar(){
+        toolbar.setNavigationOnClickListener(onClickListener);
+        toolbar.inflateMenu(R.menu.menu);
+        toolbar.setOnMenuItemClickListener(menuItemClickListener);
+        title.setText("活动");
+    }
+    private View.OnClickListener onClickListener = v -> toCreateNewTaskActivity()  ;
+
+    androidx.appcompat.widget.Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
+//        XToastUtils.toast("点击了:" + item.getTitle());
+        if (item.getItemId() == R.id.item_hot) {
+            startLoadingProgress();
+            conditionState = 0;
+            refreshActivityListData();
+            stopLoadingProgress();
+        }else if(item.getItemId() == R.id.item_time){
+            startLoadingProgress();
+            conditionState = 1;
+            refreshActivityListData();
+            stopLoadingProgress();
+        }else if(item.getItemId() == R.id.item_search){
+            searchFragment.showFragment(getSupportFragmentManager(),SearchFragment.TAG);
+        }
+
+        return false;
+    };
+
 
     private void initEvent() {
-        setToolbar(R.drawable.common_add, new ClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void click() {
-                toCreateNewTaskActivity();
-            }
-        });
+//        setToolbar(R.drawable.common_add, new ClickListener() {
+//            @RequiresApi(api = Build.VERSION_CODES.O)
+//            @Override
+//            public void click() {
+//                toCreateNewTaskActivity();
+//            }
+//        });
 
         searchFragment.setOnSearchClickListener(new IOnSearchClickListener() {
             @Override
@@ -165,47 +194,6 @@ public class TaskCenterActivity extends BaseActivity {
             public void onClick(View v) {toHoleCenterActivity();}
         });
 
-//        switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if(switchButton.isChecked()){
-////
-//                    SearchBox.setVisibility(buttonView.VISIBLE);
-//                }else {
-////
-//                    SearchBox.setVisibility(buttonView.GONE);
-//                }
-//
-//            }
-//        });
-
-
-//        searchBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //TODO 从服务端搜索
-//                String s = searchedContent.getText().toString();
-//                if(StringUtils.isEmpty(s)){
-//                    T.showToast("查询的标题不能为空哦~");
-//                }
-//                else {
-//                    startLoadingProgress();
-//                    searchActivity(s);
-////                    activityAdapter.setActivityList(activityVOList);
-//                    cardViewListAdapter.setDetailResponseListList(activityVOList);
-////                    eRecyclerView.setAdapter(activityAdapter);
-//                    eRecyclerView.setAdapter(cardViewListAdapter);
-//                    eSwipeRefreshLayout.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            //关闭刷新
-//                            eSwipeRefreshLayout.setRefreshing(false);
-//                        }
-//                    },1000);
-//                }
-//                stopLoadingProgress();
-//            }
-//        });
 
         eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
             @Override
@@ -219,25 +207,7 @@ public class TaskCenterActivity extends BaseActivity {
             }
         });
 
-//        SearchHot.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startLoadingProgress();
-//                conditionState = 0;
-//                refreshActivityListData();
-//                stopLoadingProgress();
-//            }
-//        });
-//
-//        SearchTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startLoadingProgress();
-//                conditionState = 1;
-//                refreshActivityListData();
-//                stopLoadingProgress();
-//            }
-//        });
+
         cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
             @Override
             public void onItemClick(View view, int postion) {
@@ -246,14 +216,14 @@ public class TaskCenterActivity extends BaseActivity {
             }
         });
 
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchFragment.showFragment(getSupportFragmentManager(),SearchFragment.TAG);
-
-
-            }
-        });
+////        search.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View v) {
+//                searchFragment.showFragment(getSupportFragmentManager(),SearchFragment.TAG);
+////
+////
+////            }
+////        });
 
     }
 
@@ -265,7 +235,8 @@ public class TaskCenterActivity extends BaseActivity {
     }
 
     private void initView() {
-
+        toolbar = findViewById(R.id.tool_bar_2);
+        title = findViewById(R.id.tv_title);
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
         TaskCenter = findViewById(R.id.id_ll_taskCenter);
@@ -378,4 +349,6 @@ public class TaskCenterActivity extends BaseActivity {
             }
         },1000);
     }
+
+
 }

@@ -48,7 +48,7 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
     LinearLayout ll_all,ll_ac,ll_help,ll_dis,ll_current;
     TextView all;
     TextView taskSolved;
-    TextView taskPosted;
+    TextView taskPosted,title;
     ImageView mtabview1,mtabview2,mtabview3,mtabview4;
     RecyclerView eRecyclerView;
     SwipeRefreshLayout eSwipeRefreshLayout;
@@ -77,13 +77,12 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_task);
-        setUpToolBar();
-        setTitle("我的发布");
+
         initTools();
         initView();
         initEvent();
         initPager();
-
+        title.setText("我的发布");
 
     }
 
@@ -221,6 +220,7 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
         btn_delete = findViewById(R.id.btn_delete);
         mTvSwitch = findViewById(R.id.id_tv_manager);
         mViewPager = findViewById(R.id.view_pager);
+        title = findViewById(R.id.tv_title);
 //        mtabview1 = findViewById(R.id.tab_main_pic);
 //        mtabview2 = findViewById(R.id.tab_ac_pic);
 //        mtabview3 = findViewById(R.id.tab_help_pic);

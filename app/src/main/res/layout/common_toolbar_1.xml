@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.google.android.material.appbar.MaterialToolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/id_toolbar"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <com.xuexiang.xui.widget.actionbar.TitleBar
-        android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:navigationIcon="@drawable/back_white"
+    app:titleTextColor="#000000"
+    style="@style/ToolbarStyle"
+    >
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/xui_config_color_titlebar"
-        app:tb_actionPadding="20dp"
-        app:tb_barHeight="65dp"
-        app:tb_dividerColor="@color/xui_config_color_red"
-        app:tb_leftImageResource="@drawable/back"
-        app:tb_sideTextPadding="20dp"
-        app:tb_subTitleText="这是副标题"
-        app:tb_titleText="这是一个Title"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-1dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:text="文字居中"
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
+
+</com.google.android.material.appbar.MaterialToolbar>
