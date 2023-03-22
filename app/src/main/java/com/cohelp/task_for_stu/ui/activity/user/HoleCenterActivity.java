@@ -32,6 +32,7 @@ import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.xuexiang.xui.utils.DensityUtils;
+import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.utils.XToastUtils;
 import com.xuexiang.xui.widget.tabbar.TabSegment;
 
@@ -60,7 +61,7 @@ public class HoleCenterActivity extends BaseActivity {
     Switch aSwitch;
     NiceSpinner niceSpinner;
     String item;
-
+    TabSegment mTabSegment1;
     TabSegment mTabSegment;
     ViewPager mContentViewPager;
     OkHttpUtils okHttpUtils;
@@ -217,7 +218,8 @@ public class HoleCenterActivity extends BaseActivity {
                 item = (String) niceSpinner.getItemAtPosition(position);
                 System.out.println(item);
 
-
+                mPageMap.clear();
+                courseList.clear();
 
                 initTab();
 
@@ -246,9 +248,6 @@ public class HoleCenterActivity extends BaseActivity {
 //        niceSpinner.setBackgroundDrawable();
         niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
         getCourseList("2022-2023-2");
-
-
-
         getHoleList();
 //        holeAdapter = new HoleAdapter(holeList);
 //        cardViewListAdapter = new CardViewListAdapter(holeList);
@@ -345,11 +344,10 @@ public class HoleCenterActivity extends BaseActivity {
         },1000);
     }
     private void initTab(){
+        getCourseList("2022-2023-2");
+        mTabSegment.reset();
         mContentViewPager.setAdapter(mPagerAdapter);
-        System.out.println("mT"+mTabSegment.getSelectedIndex());
-        mTabSegment.clearOnTabSelectedListeners();
-        mContentViewPager.setCurrentItem(0, false);
-        mTabSegment.destroyDrawingCache();
+        mContentViewPager.setCurrentItem(mTabSegment.getSelectedIndex(), false);
         for (int i = 0; i < courseList.size(); i++) {
             mTabSegment.addTab(new TabSegment.Tab(courseList.get(i).getName()));
         }
@@ -380,6 +378,5 @@ public class HoleCenterActivity extends BaseActivity {
                 XToastUtils.toast("double tap " + courseList.get(index).getName());
             }
         });
-
     }
 }

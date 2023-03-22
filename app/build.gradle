@@ -145,5 +145,7 @@ dependencies {
 
     //spinner
     implementation 'com.github.arcadefire:nice-spinner:1.4.4'
+
+    implementation 'com.github.arcadefire:nice-spinner:1.4.4'
 }
 
