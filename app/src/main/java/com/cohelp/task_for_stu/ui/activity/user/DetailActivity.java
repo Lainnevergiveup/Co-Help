@@ -130,7 +130,7 @@ public class DetailActivity extends AppCompatActivity {
             okHttpUtils = new OkHttpUtils();
         }
         okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
-        idAndType = new IdAndType(detail.getActivityVO().getId(),1);
+        idAndType = new IdAndType(detail.getIdByType(detail.getType()),1);
     }
 
     private void initView(){

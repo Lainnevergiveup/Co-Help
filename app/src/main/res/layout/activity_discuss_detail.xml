@@ -144,7 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </androidx.recyclerview.widget.RecyclerView>
-            <include layout="@layout/layout_main_answer_list"/>
+
         </LinearLayout>
 
     </ScrollView>
