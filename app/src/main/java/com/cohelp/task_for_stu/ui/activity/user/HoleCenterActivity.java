@@ -139,12 +139,13 @@ public class HoleCenterActivity extends BaseActivity {
 //            RecyclerView recyclerView = findViewById(R.id.id_recyclerview);
 //            SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.id_swiperefresh);
 //            SwipeRefreshLayout swipeRefreshLayout  = new SwipeRefreshLayout(HoleCenterActivity.this);
-            RecyclerView recyclerView = new RecyclerView(HoleCenterActivity.this);
+            RecyclerView recyclerView = new RecyclerView(HoleCenterActivity.this,null);
 //            swipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
 //            swipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
 //            swipeRefreshLayout.addView(recyclerView);
-            eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            eRecyclerView.setAdapter(cardViewListAdapter);
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(cardViewListAdapter);
 //            swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
 //                @Override
 //                public void onRefresh() {
@@ -256,6 +257,9 @@ public class HoleCenterActivity extends BaseActivity {
                 toDetailActivity(postion);
             }
         });
+
+
+
     }
 
     private void initView(){
@@ -270,7 +274,7 @@ public class HoleCenterActivity extends BaseActivity {
         cardViewListAdapter.setDetailResponseListList(holeList);
         niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
-        eRecyclerView = findViewById(R.id.id_recyclerview);
+//        eRecyclerView = findViewById(R.id.id_recyclerview);
         eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
         mTabSegment = findViewById(R.id.tabSegment);
@@ -297,8 +301,8 @@ public class HoleCenterActivity extends BaseActivity {
 //            }
 //        });
 
-        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        eRecyclerView.setAdapter(cardViewListAdapter);
+//        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        eRecyclerView.setAdapter(cardViewListAdapter);
         initTab();
 
 
@@ -350,7 +354,17 @@ public class HoleCenterActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
-
+    private synchronized void getActivityList(){
+        Thread t1 = new Thread(()->{
+            holeList = okHttpUtils.activityList(1);
+        });
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     private synchronized void getCourseList(String semeter){
         Thread thread = new Thread(() -> {
              courseList = okHttpUtils.getCourseList(semeter);
@@ -366,9 +380,12 @@ public class HoleCenterActivity extends BaseActivity {
 
 
     private synchronized void refreshHoleList(){
-        getHoleList();
+        getActivityList();
         cardViewListAdapter.setDetailResponseListList(holeList);
-        eRecyclerView.setAdapter(cardViewListAdapter);
+        int currentItem = mContentViewPager.getCurrentItem();
+        RecyclerView childAt = (RecyclerView) mContentViewPager.getChildAt(currentItem);
+        childAt.setAdapter(cardViewListAdapter);
+//        eRecyclerView.setAdapter(cardViewListAdapter);
         eSwipeRefreshLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -450,7 +467,7 @@ public class HoleCenterActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putSerializable("detailResponse",holeList.get(postion));
         intent.putExtras(bundle);
-        IdAndType idAndType = new IdAndType(holeList.get(postion).getHelpVO().getId(),1);
+        IdAndType idAndType = new IdAndType(holeList.get(postion).getIdByType(holeList.get(postion).getType()),1);
         new Thread(()->{
             System.out.println(okHttpUtils.getDetail(idAndType));
         }).start();
