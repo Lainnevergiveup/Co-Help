@@ -15,29 +15,19 @@
         android:layout_height="40dp"
         app:ts_normal_color="@color/xui_config_color_pure_black"
         android:background="@color/xui_config_color_white"/>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/contentViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fitsSystemWindows="true"/>
-
-
     <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout
         android:id="@+id/id_swiperefresh"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="15sp"
-        android:layout_marginTop="15sp"
-        android:layout_marginRight="15sp"
-        android:layout_weight="1">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/id_recyclerview"
+        android:layout_height="wrap_content">
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/contentViewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fitsSystemWindows="true"/>
     </com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout>
+
+
 
     <View
         android:layout_width="match_parent"
