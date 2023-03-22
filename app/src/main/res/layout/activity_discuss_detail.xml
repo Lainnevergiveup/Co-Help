@@ -134,6 +134,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
             </LinearLayout>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_weight="1" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/id_recyclerview"
                 android:layout_width="match_parent"
