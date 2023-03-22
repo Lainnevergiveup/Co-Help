@@ -32,7 +32,6 @@ import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.xuexiang.xui.utils.DensityUtils;
-import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.utils.XToastUtils;
 import com.xuexiang.xui.widget.tabbar.TabSegment;
 
@@ -61,7 +60,7 @@ public class HoleCenterActivity extends BaseActivity {
     Switch aSwitch;
     NiceSpinner niceSpinner;
     String item;
-    TabSegment mTabSegment1;
+
     TabSegment mTabSegment;
     ViewPager mContentViewPager;
     OkHttpUtils okHttpUtils;
@@ -347,8 +346,11 @@ public class HoleCenterActivity extends BaseActivity {
     }
     private void initTab(){
         mContentViewPager.setAdapter(mPagerAdapter);
-        mContentViewPager.setCurrentItem(mTabSegment.getSelectedIndex(), false);
-        for (int i = 0; i < mCurrentItemCount; i++) {
+        System.out.println("mT"+mTabSegment.getSelectedIndex());
+        mTabSegment.clearOnTabSelectedListeners();
+        mContentViewPager.setCurrentItem(0, false);
+        mTabSegment.destroyDrawingCache();
+        for (int i = 0; i < courseList.size(); i++) {
             mTabSegment.addTab(new TabSegment.Tab(courseList.get(i).getName()));
         }
         int space = DensityUtils.dp2px(HoleCenterActivity.this, 16);
