@@ -178,7 +178,7 @@ public class OkHttpUtils {
         HelpListRequest helpListRequest = new HelpListRequest();
         helpListRequest.setConditionType(conditionType);
         String req = gson.toJson(helpListRequest);
-        okHttp.sendRequest(baseURL+"/help/list",req,cookie);
+        okHttp.sendRequest(baseURL+"/help/list/1/20",req,cookie);
         String res = null;
         try {
             res = okHttp.getResponse().body().string();
@@ -475,5 +475,15 @@ public class OkHttpUtils {
         return result.getData();
 
     }
-
+    public List<String> getSemesterList(){
+        okHttp.sendGetRequest(baseURL+"/user/semester",cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<List<String>> result = gson.fromJson(res,new TypeToken<Result<List<String>>>(){}.getType());
+        return result.getData();
+    }
 }

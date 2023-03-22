@@ -1,10 +1,12 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -14,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -25,12 +28,15 @@ import androidx.viewpager.widget.ViewPager;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
+import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.vo.CourseVO;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.xuexiang.xui.utils.DensityUtils;
 import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.utils.XToastUtils;
@@ -65,7 +71,7 @@ public class HoleCenterActivity extends BaseActivity {
     TabSegment mTabSegment;
     ViewPager mContentViewPager;
     OkHttpUtils okHttpUtils;
-    List<DetailResponse> holeList = new ArrayList<>();
+    List<DetailResponse> holeList;
     List<CourseVO> courseList;
     Integer conditionType = 0;
     Spinner mSpinnerFitOffset;
@@ -73,6 +79,7 @@ public class HoleCenterActivity extends BaseActivity {
     CardViewListAdapter cardViewListAdapter;
 
     String[] pages = MultiPage.getPageNames();
+    List<String> semesterList;
     private final int TAB_COUNT = 10;
     private int mCurrentItemCount = TAB_COUNT;
     private MultiPage mDestPage = MultiPage.教育;
@@ -123,11 +130,28 @@ public class HoleCenterActivity extends BaseActivity {
 
         View view = mPageMap.get(semeterName);
         if (view == null) {
-            TextView textView = new TextView(HoleCenterActivity.this);
-            textView.setTextAppearance(HoleCenterActivity.this, R.style.TextStyle_Content_Match);
-            textView.setGravity(Gravity.CENTER);
-            textView.setText(String.format("这个是%s页面的内容", semeterName));
-            view = textView;
+//            TextView textView = new TextView(HoleCenterActivity.this);
+//            textView.setTextAppearance(HoleCenterActivity.this, R.style.TextStyle_Content_Match);
+//            textView.setGravity(Gravity.CENTER);
+//            textView.setText(String.format("这个是%s页面的内容", semeterName));
+//            view = textView;
+//            view = initSubView();
+//            RecyclerView recyclerView = findViewById(R.id.id_recyclerview);
+//            SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.id_swiperefresh);
+//            SwipeRefreshLayout swipeRefreshLayout  = new SwipeRefreshLayout(HoleCenterActivity.this);
+            RecyclerView recyclerView = new RecyclerView(HoleCenterActivity.this);
+//            swipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
+//            swipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
+//            swipeRefreshLayout.addView(recyclerView);
+            eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            eRecyclerView.setAdapter(cardViewListAdapter);
+//            swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
+//                @Override
+//                public void onRefresh() {
+//                    System.out.println("isrefreshing");
+//                }
+//            });
+            view = recyclerView;
             mPageMap.put(semeterName, view);
         }
         return view;
@@ -215,17 +239,23 @@ public class HoleCenterActivity extends BaseActivity {
         niceSpinner.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
             @Override
             public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+
                 item = (String) niceSpinner.getItemAtPosition(position);
                 System.out.println(item);
 
                 mPageMap.clear();
                 courseList.clear();
-
+                getCourseList(item);
                 initTab();
 
             }
         });
-
+        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter() {
+            @Override
+            public void onItemClick(View view, int postion) {
+                toDetailActivity(postion);
+            }
+        });
     }
 
     private void initView(){
@@ -234,6 +264,10 @@ public class HoleCenterActivity extends BaseActivity {
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
         searchBtn = findViewById(R.id.id_iv_search);
+        getHoleList();
+        System.out.println(holeList);
+        cardViewListAdapter = new CardViewListAdapter();
+        cardViewListAdapter.setDetailResponseListList(holeList);
         niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
         eRecyclerView = findViewById(R.id.id_recyclerview);
@@ -242,13 +276,13 @@ public class HoleCenterActivity extends BaseActivity {
         mTabSegment = findViewById(R.id.tabSegment);
         mContentViewPager = findViewById(R.id.contentViewPager);
 //        mSpinnerFitOffset = findViewById(R.id.spinner_system_fit_offset);
-
-        List<String> dataset = new LinkedList<>(Arrays.asList("One", "Two", "Three", "Four", "Five"));
-        niceSpinner.attachDataSource(dataset);
+        getSemesterList();
+//        List<String> dataset = new LinkedList<>(Arrays.asList("One", "Two", "Three", "Four", "Five"));
+        niceSpinner.attachDataSource(semesterList);
 //        niceSpinner.setBackgroundDrawable();
         niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
-        getCourseList("2022-2023-2");
-        getHoleList();
+        getCourseList((String) niceSpinner.getSelectedItem());
+
 //        holeAdapter = new HoleAdapter(holeList);
 //        cardViewListAdapter = new CardViewListAdapter(holeList);
 ////        holeList.add(new Hole("强奸","wow", 0,0,0,"friend"));
@@ -307,7 +341,7 @@ public class HoleCenterActivity extends BaseActivity {
     }
     private synchronized void getHoleList(){
         Thread t1 = new Thread(()->{
-            holeList = okHttpUtils.holeList(conditionType);
+            holeList = okHttpUtils.helpList(1);
         });
         t1.start();
         try {
@@ -344,7 +378,7 @@ public class HoleCenterActivity extends BaseActivity {
         },1000);
     }
     private void initTab(){
-        getCourseList("2022-2023-2");
+
         mTabSegment.reset();
         mContentViewPager.setAdapter(mPagerAdapter);
         mContentViewPager.setCurrentItem(mTabSegment.getSelectedIndex(), false);
@@ -378,5 +412,48 @@ public class HoleCenterActivity extends BaseActivity {
                 XToastUtils.toast("double tap " + courseList.get(index).getName());
             }
         });
+    }
+    private synchronized void getSemesterList(){
+        Thread thread = new Thread(()->{
+            semesterList = okHttpUtils.getSemesterList();
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(semesterList);
+    }
+    private View initSubView( Context context){
+//        View view = LayoutInflater.from(context).inflate(R.layout.view_discuss_list,null);
+        RecyclerView recyclerView = findViewById(R.id.id_recyclerview);
+        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.id_swiperefresh);
+        swipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
+        swipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
+        swipeRefreshLayout.addView(recyclerView);
+        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        eRecyclerView.setAdapter(cardViewListAdapter);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                System.out.println("isrefreshing");
+            }
+        });
+        return swipeRefreshLayout;
+
+
+
+    }
+    private void toDetailActivity(int postion){
+        Intent intent = new Intent(HoleCenterActivity.this,DetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("detailResponse",holeList.get(postion));
+        intent.putExtras(bundle);
+        IdAndType idAndType = new IdAndType(holeList.get(postion).getHelpVO().getId(),1);
+        new Thread(()->{
+            System.out.println(okHttpUtils.getDetail(idAndType));
+        }).start();
+        startActivity(intent);
     }
 }
