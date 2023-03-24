@@ -47,6 +47,7 @@ import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.ui.adpter.CommentAdapter;
 import com.cohelp.task_for_stu.ui.adpter.CommentExpandableListAdapter;
 import com.cohelp.task_for_stu.ui.view.AvatorImageView;
+import com.cohelp.task_for_stu.ui.view.InputTextMsgDialog;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
@@ -83,6 +84,8 @@ public class DetailActivity extends AppCompatActivity {
     BottomSheetDialog bottomSheetDialog;
 
     BottomSheetBehavior bottomSheetBehavior;
+
+    InputTextMsgDialog inputTextMsgDialog;
 
     CommentExpandableListAdapter commentExpandableListAdapter;
     OkHttpUtils okHttpUtils;

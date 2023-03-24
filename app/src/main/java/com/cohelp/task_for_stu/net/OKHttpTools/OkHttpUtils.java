@@ -8,6 +8,7 @@ import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.ActivityListRequest;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.HelpListRequest;
+import com.cohelp.task_for_stu.net.model.domain.HelpTagRequest;
 import com.cohelp.task_for_stu.net.model.domain.HoleListRequest;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
@@ -190,7 +191,22 @@ public class OkHttpUtils {
         System.out.println(result);
         return result.getData();
     }
-
+    public List<DetailResponse> helpListByTag(String tag){
+        HelpTagRequest helpTagRequest = new HelpTagRequest();
+        helpTagRequest.setTag(tag);
+        String req = gson.toJson(helpTagRequest);
+        okHttp.sendRequest(baseURL+"/help/list/tag/1/20",req,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(res);
+        Result<List<DetailResponse>> result = gson.fromJson(res, new TypeToken<Result<List<DetailResponse>>>(){}.getType());
+        System.out.println(result);
+        return result.getData();
+    }
 
     /*
     UserBase相关接口

@@ -69,13 +69,17 @@ public class HelpCenterActivity extends BaseActivity {
     List<DetailResponse> helpList = new ArrayList<>();
 
 //    HelpAdapter helpAdapter;
-    CardViewListAdapter cardViewListAdapter;
+    CardViewListAdapter cardViewListAdapter = new CardViewListAdapter();
     OkHttpUtils okHttpUtils;
-    String labelType = "全部";
+    String helpTag = "组团招人";
     private final int TAB_COUNT = 10;
     private int mCurrentItemCount = TAB_COUNT;
     String[] pages = MultiPage.getPageNames();
     private MultiPage mDestPage = MultiPage.组团招人;
+
+    private Map<MultiPage, View> mPageMap = new HashMap<>();
+    private PagerAdapter mPagerAdapter ;
+
     public static final int GET_DATA_SUCCESS = 1;
     public static final int NETWORK_ERROR = 2;
     public static final int SERVER_ERROR = 3;
@@ -85,7 +89,10 @@ public class HelpCenterActivity extends BaseActivity {
             switch (msg.what){
                 case GET_DATA_SUCCESS:
                     helpList = (List<DetailResponse>) msg.obj;
+
                     cardViewListAdapter.setDetailResponseListList(helpList);
+                    System.out.println("handler's working");
+
 //                    eRecyclerView.setLayoutManager(new LinearLayoutManager(HelpCenterActivity.this));
 //                    eRecyclerView.setAdapter(cardViewListAdapter);
                     break;
@@ -98,48 +105,7 @@ public class HelpCenterActivity extends BaseActivity {
             }
         }
     };
-    private Map<MultiPage, View> mPageMap = new HashMap<>();
-    private PagerAdapter mPagerAdapter = new PagerAdapter() {
-        @Override
-        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            return view == object;
-        }
 
-        @Override
-        public int getCount() {
-            return mDestPage.size();
-        }
-
-        @Override
-        public Object instantiateItem(final ViewGroup container, int position) {
-            MultiPage page = MultiPage.getPage(position);
-
-            View view = getPageView(page);
-            view.setTag(page);
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            container.addView(view, params);
-            return view;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
-            container.removeView((View) object);
-        }
-
-        @Override
-        public int getItemPosition(@NonNull Object object) {
-            View view = (View) object;
-            Object page = view.getTag();
-            if (page instanceof MultiPage) {
-                int pos = ((MultiPage) page).getPosition();
-                if (pos >= mCurrentItemCount) {
-                    return POSITION_NONE;
-                }
-                return POSITION_UNCHANGED;
-            }
-            return POSITION_NONE;
-        }
-    };
 
     private View getPageView(MultiPage page) {
 
@@ -316,14 +282,40 @@ public class HelpCenterActivity extends BaseActivity {
                 refreshHelpListData();
             }
         });
-        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter() {
+
+        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
             @Override
             public void onItemClick(View view, int postion) {
-                toDetailActivity(postion);
+                Intent intent = new Intent(HelpCenterActivity.this,DetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("detailResponse",helpList.get(postion));
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 
+        mTabSegment.addOnTabSelectedListener(new TabSegment.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(int index) {
+                helpTag = pages[index];
+                refreshHelpListData();
+            }
 
+            @Override
+            public void onTabUnselected(int index) {
+
+            }
+
+            @Override
+            public void onTabReselected(int index) {
+
+            }
+
+            @Override
+            public void onDoubleTap(int index) {
+
+            }
+        });
     }
 
     private void initToolbar(){
@@ -347,12 +339,12 @@ public class HelpCenterActivity extends BaseActivity {
     private synchronized void refreshHelpListData(){
 
         int currentItem = mContentViewPager.getCurrentItem();
-        getHelpList(conditionState);
-        cardViewListAdapter.setDetailResponseListList(helpList);
+        getHelpList();
+//        cardViewListAdapter.setDetailResponseListList(helpList);
         RecyclerView childAt = (RecyclerView) mContentViewPager.getChildAt(currentItem);
         childAt.setAdapter(cardViewListAdapter);
 //        helpAdapter.setHelpList(helpList);
-        cardViewListAdapter.setDetailResponseListList(helpList);
+//        cardViewListAdapter.setDetailResponseListList(helpList);
 //        eRecyclerView.setAdapter(cardViewListAdapter);
         eSwipeRefreshLayout.postDelayed(new Runnable() {
             @Override
@@ -388,18 +380,9 @@ public class HelpCenterActivity extends BaseActivity {
 
         eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.PULL_FROM_START);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-        getHelpList(conditionState);
-        cardViewListAdapter = new CardViewListAdapter(helpList);
-        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
-            @Override
-            public void onItemClick(View view, int postion) {
-                Intent intent = new Intent(HelpCenterActivity.this,DetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("detailResponse",helpList.get(postion));
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
+        getHelpList();
+//        cardViewListAdapter = new CardViewListAdapter(helpList);
+
 //        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 //        eRecyclerView.setAdapter(cardViewListAdapter);
 
@@ -436,15 +419,21 @@ public class HelpCenterActivity extends BaseActivity {
         startActivity(intent);
         finish();
     }
-    private synchronized void getHelpList(Integer CconditionType){
+    private synchronized void getHelpList(){
         Thread t1 = new Thread(()->{
-            helpList = okHttpUtils.activityList(conditionState);
-            Message msg = Message.obtain();
-            msg.obj = helpList;
-            msg.what = GET_DATA_SUCCESS;
-            handler.sendMessage(msg);
+            helpList = okHttpUtils.helpListByTag(helpTag);
+//            Message msg = Message.obtain();
+//            msg.obj = helpList;
+//            msg.what = GET_DATA_SUCCESS;
+//            handler.sendMessage(msg);
+            cardViewListAdapter.setDetailResponseListList(helpList);
         });
         t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void toDetailActivity(int postion){
@@ -460,7 +449,48 @@ public class HelpCenterActivity extends BaseActivity {
     }
 
     private void initTab(){
+        mPagerAdapter = new PagerAdapter() {
+            @Override
+            public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+                return view == object;
+            }
 
+            @Override
+            public int getCount() {
+                return mDestPage.size();
+            }
+
+            @Override
+            public Object instantiateItem(final ViewGroup container, int position) {
+                MultiPage page = MultiPage.getPage(position);
+
+                View view = getPageView(page);
+                view.setTag(page);
+                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                container.addView(view, params);
+                return view;
+            }
+
+            @Override
+            public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
+                container.removeView((View) object);
+            }
+
+            @Override
+            public int getItemPosition(@NonNull Object object) {
+                View view = (View) object;
+                Object page = view.getTag();
+                if (page instanceof MultiPage) {
+                    int pos = ((MultiPage) page).getPosition();
+                    if (pos >= mCurrentItemCount) {
+                        return POSITION_NONE;
+                    }
+                    return POSITION_UNCHANGED;
+                }
+                return POSITION_NONE;
+            }
+        };
+        System.out.println("adapter init finish");
         mTabSegment.reset();
         mContentViewPager.setAdapter(mPagerAdapter);
         mContentViewPager.setCurrentItem(mTabSegment.getSelectedIndex(), false);
@@ -473,27 +503,7 @@ public class HelpCenterActivity extends BaseActivity {
         mTabSegment.setItemSpaceInScrollMode(space);
         mTabSegment.setupWithViewPager(mContentViewPager, false);
         mTabSegment.setPadding(space, 0, space, 0);
-        mTabSegment.addOnTabSelectedListener(new TabSegment.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(int index) {
-                XToastUtils.toast("select " + pages[index]);
-            }
 
-            @Override
-            public void onTabUnselected(int index) {
-                XToastUtils.toast("unSelect " +pages[index]);
-            }
-
-            @Override
-            public void onTabReselected(int index) {
-                XToastUtils.toast("reSelect " + pages[index]);
-            }
-
-            @Override
-            public void onDoubleTap(int index) {
-                XToastUtils.toast("double tap " +pages[index]);
-            }
-        });
     }
 
 }
