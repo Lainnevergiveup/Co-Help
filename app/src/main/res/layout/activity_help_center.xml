@@ -8,101 +8,107 @@
     tools:context=".ui.activity.user.HelpCenterActivity">
     <include layout="@layout/toolsearchbar"/>
 
-    <LinearLayout
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        >-->
+
+<!--            <LinearLayout-->
+<!--                android:background="@drawable/search_solid"-->
+<!--                android:layout_marginTop="15sp"-->
+<!--                android:layout_marginLeft="20sp"-->
+<!--                android:id="@+id/id_ll_search1"-->
+<!--                android:visibility="visible"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content">-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/id_tv_lb1"-->
+<!--                    android:layout_width="50dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="@string/team_organize"-->
+<!--                    android:textSize="15dp"-->
+<!--                    android:textStyle="bold" />-->
+<!--                <View-->
+<!--                    android:layout_width="1dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:background="@color/lfile_lightgray"/>-->
+
+<!--                <TextView-->
+<!--                        android:layout_width="50dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:gravity="center"-->
+
+<!--                        android:text="@string/find"-->
+<!--                        android:id="@+id/id_tv_lb2"-->
+<!--                        android:layout_marginLeft="5dp"-->
+<!--                        android:textSize="15dp"-->
+<!--                        android:textStyle="bold" />-->
+<!--                <View-->
+<!--                    android:layout_width="1dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:background="@color/lfile_lightgray"/>-->
+
+<!--                <TextView-->
+<!--                        android:layout_width="50dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:id="@+id/id_tv_lb3"-->
+<!--                        android:layout_marginLeft="5dp"-->
+<!--                        android:textSize="15dp"-->
+<!--                        android:text="@string/help"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:gravity="center" />-->
+<!--                <View-->
+<!--                    android:layout_width="1dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:background="@color/lfile_lightgray"/>-->
+
+<!--                <TextView-->
+<!--                        android:layout_width="50dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:text="@string/questions"-->
+<!--                        android:gravity="center"-->
+
+<!--                        android:id="@+id/id_tv_lb4"-->
+<!--                        android:layout_marginLeft="5dp"-->
+<!--                        android:textSize="15dp"-->
+<!--                        android:textStyle="bold" />-->
+<!--                <View-->
+<!--                    android:layout_width="1dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:background="@color/lfile_lightgray"/>-->
+
+<!--                <TextView-->
+<!--                        android:layout_width="50dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:text="其他"-->
+<!--                        android:gravity="center"-->
+<!--                        android:id="@+id/id_tv_lb5"-->
+<!--                        android:layout_marginLeft="5dp"-->
+<!--                        android:textSize="15dp"-->
+<!--                        android:textStyle="bold" />-->
+
+<!--            </LinearLayout>-->
+
+
+
+
+<!--    </LinearLayout>-->
+
+    <com.xuexiang.xui.widget.tabbar.TabSegment
+        android:id="@+id/tabSegment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-
-            <LinearLayout
-                android:background="@drawable/search_solid"
-                android:layout_marginTop="15sp"
-                android:layout_marginLeft="20sp"
-                android:id="@+id/id_ll_search1"
-                android:visibility="visible"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/id_tv_lb1"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="@string/team_organize"
-                    android:textSize="15dp"
-                    android:textStyle="bold" />
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/lfile_lightgray"/>
-
-                <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-
-                        android:text="@string/find"
-                        android:id="@+id/id_tv_lb2"
-                        android:layout_marginLeft="5dp"
-                        android:textSize="15dp"
-                        android:textStyle="bold" />
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/lfile_lightgray"/>
-
-                <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:id="@+id/id_tv_lb3"
-                        android:layout_marginLeft="5dp"
-                        android:textSize="15dp"
-                        android:text="@string/help"
-                        android:textStyle="bold"
-                        android:gravity="center" />
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/lfile_lightgray"/>
-
-                <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/questions"
-                        android:gravity="center"
-
-                        android:id="@+id/id_tv_lb4"
-                        android:layout_marginLeft="5dp"
-                        android:textSize="15dp"
-                        android:textStyle="bold" />
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/lfile_lightgray"/>
-
-                <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="其他"
-                        android:gravity="center"
-                        android:id="@+id/id_tv_lb5"
-                        android:layout_marginLeft="5dp"
-                        android:textSize="15dp"
-                        android:textStyle="bold" />
-
-            </LinearLayout>
-
-
-
-
-    </LinearLayout>
-
+        android:layout_height="40dp"
+        app:ts_normal_color="@color/xui_config_color_pure_black"
+        android:background="@color/xui_config_color_white"/>
     <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout
         android:id="@+id/id_swiperefresh"
         android:layout_width="match_parent"
@@ -111,11 +117,17 @@
         android:layout_marginRight="15sp"
         android:layout_height="0dp"
         android:layout_weight="1">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/id_recyclerview"
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/contentViewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </androidx.recyclerview.widget.RecyclerView>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fitsSystemWindows="true"/>
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/id_recyclerview"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent">-->
+<!--        </androidx.recyclerview.widget.RecyclerView>-->
     </com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout>
 
 

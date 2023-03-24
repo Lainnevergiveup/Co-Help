@@ -7,29 +7,42 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
+import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.wyt.searchbox.SearchFragment;
+import com.xuexiang.xui.utils.DensityUtils;
+import com.xuexiang.xui.utils.XToastUtils;
+import com.xuexiang.xui.widget.tabbar.TabSegment;
+
+import org.angmarch.views.NiceSpinner;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 /*
 问答中心
  */
@@ -40,8 +53,12 @@ public class HelpCenterActivity extends BaseActivity {
     LinearLayout HoleCenter;
     LinearLayout UserCenter;
     TextView lb1,lb2,lb3,lb4,lb5;
-
+    NiceSpinner niceSpinner;
+    String item;
     TextView title;
+    TabSegment mTabSegment;
+    ViewPager mContentViewPager;
+
     androidx.appcompat.widget.Toolbar toolbar;
     SearchFragment searchFragment = SearchFragment.newInstance();
     EditText searchedContent;
@@ -55,7 +72,10 @@ public class HelpCenterActivity extends BaseActivity {
     CardViewListAdapter cardViewListAdapter;
     OkHttpUtils okHttpUtils;
     String labelType = "全部";
-
+    private final int TAB_COUNT = 10;
+    private int mCurrentItemCount = TAB_COUNT;
+    String[] pages = MultiPage.getPageNames();
+    private MultiPage mDestPage = MultiPage.组团招人;
     public static final int GET_DATA_SUCCESS = 1;
     public static final int NETWORK_ERROR = 2;
     public static final int SERVER_ERROR = 3;
@@ -66,8 +86,8 @@ public class HelpCenterActivity extends BaseActivity {
                 case GET_DATA_SUCCESS:
                     helpList = (List<DetailResponse>) msg.obj;
                     cardViewListAdapter.setDetailResponseListList(helpList);
-                    eRecyclerView.setLayoutManager(new LinearLayoutManager(HelpCenterActivity.this));
-                    eRecyclerView.setAdapter(cardViewListAdapter);
+//                    eRecyclerView.setLayoutManager(new LinearLayoutManager(HelpCenterActivity.this));
+//                    eRecyclerView.setAdapter(cardViewListAdapter);
                     break;
                 case NETWORK_ERROR:
                     Toast.makeText(HelpCenterActivity.this,"网络连接失败",Toast.LENGTH_SHORT).show();
@@ -78,6 +98,80 @@ public class HelpCenterActivity extends BaseActivity {
             }
         }
     };
+    private Map<MultiPage, View> mPageMap = new HashMap<>();
+    private PagerAdapter mPagerAdapter = new PagerAdapter() {
+        @Override
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+            return view == object;
+        }
+
+        @Override
+        public int getCount() {
+            return mDestPage.size();
+        }
+
+        @Override
+        public Object instantiateItem(final ViewGroup container, int position) {
+            MultiPage page = MultiPage.getPage(position);
+
+            View view = getPageView(page);
+            view.setTag(page);
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            container.addView(view, params);
+            return view;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
+            container.removeView((View) object);
+        }
+
+        @Override
+        public int getItemPosition(@NonNull Object object) {
+            View view = (View) object;
+            Object page = view.getTag();
+            if (page instanceof MultiPage) {
+                int pos = ((MultiPage) page).getPosition();
+                if (pos >= mCurrentItemCount) {
+                    return POSITION_NONE;
+                }
+                return POSITION_UNCHANGED;
+            }
+            return POSITION_NONE;
+        }
+    };
+
+    private View getPageView(MultiPage page) {
+
+        View view = mPageMap.get(page);
+        if (view == null) {
+//            TextView textView = new TextView(HoleCenterActivity.this);
+//            textView.setTextAppearance(HoleCenterActivity.this, R.style.TextStyle_Content_Match);
+//            textView.setGravity(Gravity.CENTER);
+//            textView.setText(String.format("这个是%s页面的内容", semeterName));
+//            view = textView;
+//            view = initSubView();
+//            RecyclerView recyclerView = findViewById(R.id.id_recyclerview);
+//            SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.id_swiperefresh);
+//            SwipeRefreshLayout swipeRefreshLayout  = new SwipeRefreshLayout(HoleCenterActivity.this);
+            RecyclerView recyclerView = new RecyclerView(HelpCenterActivity.this,null);
+//            swipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
+//            swipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
+//            swipeRefreshLayout.addView(recyclerView);
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(cardViewListAdapter);
+//            swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
+//                @Override
+//                public void onRefresh() {
+//                    System.out.println("isrefreshing");
+//                }
+//            });
+            view = recyclerView;
+            mPageMap.put(page, view);
+        }
+        return view;
+    }
 
 
     @Override
@@ -86,6 +180,7 @@ public class HelpCenterActivity extends BaseActivity {
         setContentView(R.layout.activity_help_center);
         initTools();
         initView();
+        initTab();
         initToolbar();
         initEvent();
         setTitle("互助");
@@ -101,13 +196,7 @@ public class HelpCenterActivity extends BaseActivity {
     }
 
     private void initEvent() {
-//        setToolbar(R.drawable.common_add, new ClickListener() {
-//            @RequiresApi(api = Build.VERSION_CODES.O)
-//            @Override
-//            public void click() {
-//                toCreateNewHelpActivity();
-//            }
-//        });
+
 
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,55 +226,55 @@ public class HelpCenterActivity extends BaseActivity {
             }
         });
 
-        lb1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startLoadingProgress();
-                conditionState = 0;
-                refreshHelpListData();
-                stopLoadingProgress();
-            }
-        });
-
-        lb2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startLoadingProgress();
-                conditionState = 1;
-                refreshHelpListData();
-                stopLoadingProgress();
-            }
-        });
-
-        lb3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startLoadingProgress();
-                conditionState = 2;
-                refreshHelpListData();
-                stopLoadingProgress();
-            }
-        });
-
-        lb4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startLoadingProgress();
-                conditionState = 3;
-                refreshHelpListData();
-                stopLoadingProgress();
-            }
-        });
-
-        lb5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startLoadingProgress();
-                conditionState = 4;
-                refreshHelpListData();
-                stopLoadingProgress();
-            }
-        });
+//        lb1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startLoadingProgress();
+//                conditionState = 0;
+//                refreshHelpListData();
+//                stopLoadingProgress();
+//            }
+//        });
+//
+//        lb2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startLoadingProgress();
+//                conditionState = 1;
+//                refreshHelpListData();
+//                stopLoadingProgress();
+//            }
+//        });
+//
+//        lb3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startLoadingProgress();
+//                conditionState = 2;
+//                refreshHelpListData();
+//                stopLoadingProgress();
+//            }
+//        });
+//
+//        lb4.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startLoadingProgress();
+//                conditionState = 3;
+//                refreshHelpListData();
+//                stopLoadingProgress();
+//            }
+//        });
+//
+//        lb5.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startLoadingProgress();
+//                conditionState = 4;
+//                refreshHelpListData();
+//                stopLoadingProgress();
+//            }
+//        });
 
 
 
@@ -227,6 +316,13 @@ public class HelpCenterActivity extends BaseActivity {
                 refreshHelpListData();
             }
         });
+        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter() {
+            @Override
+            public void onItemClick(View view, int postion) {
+                toDetailActivity(postion);
+            }
+        });
+
 
     }
 
@@ -249,10 +345,15 @@ public class HelpCenterActivity extends BaseActivity {
 
 
     private synchronized void refreshHelpListData(){
+
+        int currentItem = mContentViewPager.getCurrentItem();
         getHelpList(conditionState);
+        cardViewListAdapter.setDetailResponseListList(helpList);
+        RecyclerView childAt = (RecyclerView) mContentViewPager.getChildAt(currentItem);
+        childAt.setAdapter(cardViewListAdapter);
 //        helpAdapter.setHelpList(helpList);
         cardViewListAdapter.setDetailResponseListList(helpList);
-        eRecyclerView.setAdapter(cardViewListAdapter);
+//        eRecyclerView.setAdapter(cardViewListAdapter);
         eSwipeRefreshLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -278,19 +379,14 @@ public class HelpCenterActivity extends BaseActivity {
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
-        lb1 = findViewById(R.id.id_tv_lb1);
-        lb2 = findViewById(R.id.id_tv_lb2);
-        lb3 = findViewById(R.id.id_tv_lb3);
-        lb4 = findViewById(R.id.id_tv_lb4);
-        lb5 = findViewById(R.id.id_tv_lb5);
-
         searchedContent = findViewById(R.id.id_et_search);
         searchBtn = findViewById(R.id.id_iv_search);
-
+        mTabSegment = findViewById(R.id.tabSegment);
+        mContentViewPager = findViewById(R.id.contentViewPager);
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
-        eRecyclerView = findViewById(R.id.id_recyclerview);
+//        eRecyclerView = findViewById(R.id.id_recyclerview);
 
-        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
+        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.PULL_FROM_START);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
         getHelpList(conditionState);
         cardViewListAdapter = new CardViewListAdapter(helpList);
@@ -304,8 +400,8 @@ public class HelpCenterActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        eRecyclerView.setAdapter(cardViewListAdapter);
+//        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        eRecyclerView.setAdapter(cardViewListAdapter);
 
     }
 
@@ -351,5 +447,53 @@ public class HelpCenterActivity extends BaseActivity {
         t1.start();
     }
 
+    private void toDetailActivity(int postion){
+        Intent intent = new Intent(HelpCenterActivity.this,DetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("detailResponse",helpList.get(postion));
+        intent.putExtras(bundle);
+        IdAndType idAndType = new IdAndType(helpList.get(postion).getIdByType(helpList.get(postion).getType()),1);
+        new Thread(()->{
+            System.out.println(okHttpUtils.getDetail(idAndType));
+        }).start();
+        startActivity(intent);
+    }
+
+    private void initTab(){
+
+        mTabSegment.reset();
+        mContentViewPager.setAdapter(mPagerAdapter);
+        mContentViewPager.setCurrentItem(mTabSegment.getSelectedIndex(), false);
+        for (int i = 0; i < 5; i++) {
+            mTabSegment.addTab(new TabSegment.Tab(pages[i]));
+        }
+        int space = DensityUtils.dp2px(HelpCenterActivity.this, 16);
+        mTabSegment.setHasIndicator(true);
+        mTabSegment.setMode(TabSegment.MODE_SCROLLABLE);
+        mTabSegment.setItemSpaceInScrollMode(space);
+        mTabSegment.setupWithViewPager(mContentViewPager, false);
+        mTabSegment.setPadding(space, 0, space, 0);
+        mTabSegment.addOnTabSelectedListener(new TabSegment.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(int index) {
+                XToastUtils.toast("select " + pages[index]);
+            }
+
+            @Override
+            public void onTabUnselected(int index) {
+                XToastUtils.toast("unSelect " +pages[index]);
+            }
+
+            @Override
+            public void onTabReselected(int index) {
+                XToastUtils.toast("reSelect " + pages[index]);
+            }
+
+            @Override
+            public void onDoubleTap(int index) {
+                XToastUtils.toast("double tap " +pages[index]);
+            }
+        });
+    }
 
 }

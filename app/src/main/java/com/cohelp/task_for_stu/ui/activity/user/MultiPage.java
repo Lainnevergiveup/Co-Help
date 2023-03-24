@@ -22,16 +22,16 @@ package com.cohelp.task_for_stu.ui.activity.user;
  */
 public enum MultiPage {
 
-    新闻(0),
-    教育(1),
-    体育(2),
-    娱乐(3),
-    八卦(4),
-    母婴(5),
-    音乐(6),
-    健康(7),
-    旅游(8),
-    文化(9);
+    组团招人(0),
+    寻物启事(1),
+    跑腿代取(2),
+    问题求助(3),
+    其他(4);
+//    母婴(5),
+//    音乐(6),
+//    健康(7),
+//    旅游(8),
+//    文化(9);
 
     private final int position;
 
