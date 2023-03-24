@@ -96,22 +96,6 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
     @SuppressLint("ResourceType")
     private void initEvent() {
 
-//        mTvSwitch.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (mAdapter == null) {
-//                    return;
-//                }
-//                mAdapter.switchManageMode();
-//                refreshManageMode();
-//            }
-//        });
-//        btn_delete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showSimpleConfirmDialog();
-//            }
-//        });
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -15,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -35,20 +31,14 @@ import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.xuexiang.xui.utils.DensityUtils;
-import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.utils.XToastUtils;
 import com.xuexiang.xui.widget.tabbar.TabSegment;
 
 import org.angmarch.views.NiceSpinner;
 import org.angmarch.views.OnSpinnerItemSelectedListener;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -67,22 +57,21 @@ public class HoleCenterActivity extends BaseActivity {
     Switch aSwitch;
     NiceSpinner niceSpinner;
     String item;
-    TabSegment mTabSegment1;
+
     TabSegment mTabSegment;
     ViewPager mContentViewPager;
     OkHttpUtils okHttpUtils;
     List<DetailResponse> holeList;
     List<CourseVO> courseList;
-    Integer conditionType = 0;
-    Spinner mSpinnerFitOffset;
-//    HoleAdapter holeAdapter;
+
+
     CardViewListAdapter cardViewListAdapter;
 
     String[] pages = MultiPage.getPageNames();
     List<String> semesterList;
     private final int TAB_COUNT = 10;
     private int mCurrentItemCount = TAB_COUNT;
-    private MultiPage mDestPage = MultiPage.教育;
+//    private MultiPage mDestPage = MultiPage.教育;
     private Map<String, View> mPageMap = new HashMap<>();
     private PagerAdapter mPagerAdapter = new PagerAdapter() {
         @Override
@@ -275,7 +264,7 @@ public class HoleCenterActivity extends BaseActivity {
         niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
 //        eRecyclerView = findViewById(R.id.id_recyclerview);
-        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
+        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.PULL_FROM_START);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
         mTabSegment = findViewById(R.id.tabSegment);
         mContentViewPager = findViewById(R.id.contentViewPager);
