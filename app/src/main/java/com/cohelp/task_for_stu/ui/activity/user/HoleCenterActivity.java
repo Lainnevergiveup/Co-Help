@@ -87,7 +87,6 @@ public class HoleCenterActivity extends BaseActivity {
         @Override
         public Object instantiateItem(final ViewGroup container, int position) {
             CourseVO courseVO = courseList.get(position);
-
             View view = getPageView(courseVO.getName());
             view.setTag(courseVO.getName());
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -132,7 +131,6 @@ public class HoleCenterActivity extends BaseActivity {
 //            swipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
 //            swipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
 //            swipeRefreshLayout.addView(recyclerView);
-
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(cardViewListAdapter);
 //            swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {

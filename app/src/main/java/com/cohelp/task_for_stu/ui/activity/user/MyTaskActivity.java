@@ -205,10 +205,6 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
         mTvSwitch = findViewById(R.id.id_tv_manager);
         mViewPager = findViewById(R.id.view_pager);
         title = findViewById(R.id.tv_title);
-//        mtabview1 = findViewById(R.id.tab_main_pic);
-//        mtabview2 = findViewById(R.id.tab_ac_pic);
-//        mtabview3 = findViewById(R.id.tab_help_pic);
-//        mtabview4 = findViewById(R.id.tab_dis);
         ll_all = findViewById(R.id.ll_all);
         ll_ac = findViewById(R.id.ll_tab_activity);
         ll_help = findViewById(R.id.ll_tab_help);

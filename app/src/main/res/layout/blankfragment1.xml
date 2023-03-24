@@ -12,6 +12,9 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
+        android:layout_marginTop="15sp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
         android:fadingEdge="vertical">
 
         <LinearLayout
@@ -24,6 +27,7 @@
             <com.cohelp.task_for_stu.ui.view.MyListViewForScrollView
                 android:id="@+id/lv_task_list"
                 android:divider="@null"
+                android:layout_marginTop="1dp"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"/>
 
