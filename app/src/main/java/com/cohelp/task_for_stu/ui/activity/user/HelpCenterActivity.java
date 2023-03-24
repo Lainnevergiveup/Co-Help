@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +32,7 @@ import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
+import com.cohelp.task_for_stu.utils.T;
 import com.wyt.searchbox.SearchFragment;
 import com.xuexiang.xui.utils.DensityUtils;
 import com.xuexiang.xui.utils.XToastUtils;
@@ -42,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /*
 问答中心
@@ -69,6 +72,7 @@ public class HelpCenterActivity extends BaseActivity {
     List<DetailResponse> helpList = new ArrayList<>();
 
 //    HelpAdapter helpAdapter;
+    List<CardViewListAdapter> cardViewListAdapterList;
     CardViewListAdapter cardViewListAdapter = new CardViewListAdapter();
     OkHttpUtils okHttpUtils;
     String helpTag = "组团招人";
@@ -90,8 +94,6 @@ public class HelpCenterActivity extends BaseActivity {
                 case GET_DATA_SUCCESS:
                     helpList = (List<DetailResponse>) msg.obj;
 
-                    cardViewListAdapter.setDetailResponseListList(helpList);
-                    System.out.println("handler's working");
 
 //                    eRecyclerView.setLayoutManager(new LinearLayoutManager(HelpCenterActivity.this));
 //                    eRecyclerView.setAdapter(cardViewListAdapter);
@@ -297,8 +299,16 @@ public class HelpCenterActivity extends BaseActivity {
         mTabSegment.addOnTabSelectedListener(new TabSegment.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int index) {
+                System.out.println(mPageMap);
                 helpTag = pages[index];
-                refreshHelpListData();
+                System.out.println(helpTag);
+//                cardViewListAdapter.setDetailResponseListList(null);
+                cardViewListAdapter.setDetailResponseListList(changeTag());
+//                RecyclerView childAt = (RecyclerView) mContentViewPager.getChildAt(index);
+//                int currentItem = mContentViewPager.getCurrentItem();
+//                RecyclerView view = (RecyclerView)mPagerAdapter.instantiateItem(mContentViewPager, currentItem);
+//                view.setAdapter(cardViewListAdapter);
+
             }
 
             @Override
@@ -313,7 +323,7 @@ public class HelpCenterActivity extends BaseActivity {
 
             @Override
             public void onDoubleTap(int index) {
-
+                refreshHelpListData();
             }
         });
     }
@@ -336,12 +346,22 @@ public class HelpCenterActivity extends BaseActivity {
 
 
 
-    private synchronized void refreshHelpListData(){
+    private  void refreshHelpListData(){
 
         int currentItem = mContentViewPager.getCurrentItem();
-        getHelpList();
+//        System.out.println(currentItem);
+        Thread thread = new Thread(()->{
+
+            Message msg = Message.obtain();
+            msg.obj = okHttpUtils.helpListByTag(helpTag);
+            msg.what = GET_DATA_SUCCESS;
+            handler.sendMessage(msg);
+        });
+        thread.start();
+
 //        cardViewListAdapter.setDetailResponseListList(helpList);
         RecyclerView childAt = (RecyclerView) mContentViewPager.getChildAt(currentItem);
+        cardViewListAdapter.setDetailResponseListList(helpList);
         childAt.setAdapter(cardViewListAdapter);
 //        helpAdapter.setHelpList(helpList);
 //        cardViewListAdapter.setDetailResponseListList(helpList);
@@ -354,7 +374,10 @@ public class HelpCenterActivity extends BaseActivity {
             }
         },1000);
     }
+    private  List<DetailResponse> changeTag(){
 
+        return helpList.stream().filter(x->x.getHelpVO().getHelpLabel().equals(helpTag)).collect(Collectors.toList());
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -380,6 +403,7 @@ public class HelpCenterActivity extends BaseActivity {
 
         eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.PULL_FROM_START);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
+        cardViewListAdapterList = new ArrayList<>();
         getHelpList();
 //        cardViewListAdapter = new CardViewListAdapter(helpList);
 
@@ -421,7 +445,8 @@ public class HelpCenterActivity extends BaseActivity {
     }
     private synchronized void getHelpList(){
         Thread t1 = new Thread(()->{
-            helpList = okHttpUtils.helpListByTag(helpTag);
+//            helpList = okHttpUtils.helpListByTag(helpTag);
+            helpList = okHttpUtils.helpList(0);
 //            Message msg = Message.obtain();
 //            msg.obj = helpList;
 //            msg.what = GET_DATA_SUCCESS;
