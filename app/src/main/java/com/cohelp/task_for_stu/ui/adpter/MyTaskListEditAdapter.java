@@ -26,10 +26,10 @@ import androidx.annotation.NonNull;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
+import com.cohelp.task_for_stu.net.model.domain.PublishDeleteRequest;
 import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
 import com.cohelp.task_for_stu.net.model.vo.HelpVO;
 import com.cohelp.task_for_stu.net.model.vo.HoleVO;
-import com.cohelp.task_for_stu.net.model.vo.ResultVO;
 import com.cohelp.task_for_stu.ui.adpter.base.broccoli.BroccoliRecyclerAdapter;
 import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
 import com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder;
@@ -50,7 +50,7 @@ import me.samlss.broccoli.Broccoli;
  * @author xuexiang
  * @since 2019/4/7 下午12:06
  */
-public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
+public class MyTaskListEditAdapter extends BroccoliRecyclerAdapter<DetailResponse> {
 
     private static final String KEY_SELECT_STATUS = "key_select_status";
     public static final int GET_DATA_SUCCESS = 1;
@@ -86,7 +86,7 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
         this.mItemClickListener = mItemClickListener;
     }
 
-    public NewsListEditAdapter(OnAllSelectStatusChangedListener listener,List<ResultVO> detailResponseList){
+    public MyTaskListEditAdapter(OnAllSelectStatusChangedListener listener, List<DetailResponse> detailResponseList){
         super(detailResponseList);
         mListener = listener;
 
@@ -104,9 +104,9 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
     }
 
     @Override
-    protected void onBindData(RecyclerViewHolder holder, ResultVO modelData, int position) {
+    protected void onBindData(RecyclerViewHolder holder, DetailResponse model, int position) {
 
-        DetailResponse model = modelData.getDetailResponse();
+
         ActivityVO activityVO = model.getActivityVO();
         HelpVO helpVO = model.getHelpVO();
         HoleVO holeVO = model.getHoleVO();
@@ -163,7 +163,19 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
             holder.text(R.id.cardView_collectNumber, holeVO.getHoleCollect().toString());
 
         }
-
+//        HoleVO h = model.getHoleVO();
+//        System.out.println(h);
+//        if (null != h){
+//            holder.text(R.id.cardView_author_name, h.getUserName());
+//            holder.text(R.id.cardView_tag, h.getHoleLabel());
+//            holder.text(R.id.cardView_title, h.getHoleTitle());
+//            holder.text(R.id.cardView_summary, h.getHoleDetail());
+//            holder.text(R.id.cardView_praiseNumber, h.getHoleLike().toString());
+//            holder.text(R.id.cardView_commentNumber, h.getHoleComment().toString());
+//            holder.text(R.id.cardView_readNumber, "阅读量 " +h.getReadNum().toString());
+//        }
+//        else {
+//        }
 
 
 
@@ -257,7 +269,7 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
 
 
     @Override
-    public XRecyclerAdapter refresh(Collection<ResultVO> collection) {
+    public XRecyclerAdapter refresh(Collection<DetailResponse> collection) {
         // 刷新时清除选中状态
         mSparseArray.clear();
         onAllSelectStatusChanged(false);
@@ -265,7 +277,7 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
     }
 
     @Override
-    public XRecyclerAdapter loadMore(Collection<ResultVO> collection) {
+    public XRecyclerAdapter loadMore(Collection<DetailResponse> collection) {
         onAllSelectStatusChanged(false);
         return super.loadMore(collection);
     }
@@ -344,8 +356,8 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
         return list;
     }
 
-    public List<ResultVO> getSelectedDetailResponseList() {
-        List<ResultVO> list = new ArrayList<>();
+    public List<DetailResponse> getSelectedDetailResponseList() {
+        List<DetailResponse> list = new ArrayList<>();
         for (int i = 0; i < getItemCount(); i++) {
             if (mSparseArray.get(i)) {
                 list.add(getItem(i));
@@ -354,17 +366,18 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
         return list;
     }
 
-//    public List<PublishDeleteRequest> getDeleteList() {
-//        List<PublishDeleteRequest> list = new ArrayList<>();
-//        for (int i = 0; i < getItemCount(); i++) {
-//            if (mSparseArray.get(i)) {
-//                ResultVO item =  getItem(i);
-//                Integer type = item.getDetailResponse().getType();
-//                list.add(new PublishDeleteRequest(item.getIdByType(type),item.getOwnerIdByType(type),type));
-//            }
-//        }
-//        return list;
-//    }
+    public List<PublishDeleteRequest> getDeleteList() {
+        List<PublishDeleteRequest> list = new ArrayList<>();
+        for (int i = 0; i < getItemCount(); i++) {
+            if (mSparseArray.get(i)) {
+                DetailResponse item =  getItem(i);
+                Integer type = item.getType();
+                list.add(new PublishDeleteRequest(item.getIdByType(type),item.getOwnerIdByType(type),type));
+
+            }
+        }
+        return list;
+    }
 
     public interface OnAllSelectStatusChangedListener {
 

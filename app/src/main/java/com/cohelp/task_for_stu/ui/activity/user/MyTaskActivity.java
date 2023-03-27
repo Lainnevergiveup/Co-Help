@@ -62,7 +62,7 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
     TaskAdapter taskAdapter;
     CardViewListAdapter cardViewListAdapter;
     Button btn_delete;
-    List<DetailResponse> taskList;
+    List<DetailResponse> involvedList;
     OkHttpUtils okHttpUtils = new OkHttpUtils();
 
     private List<ViewPagerFragment> list = new ArrayList<>();
@@ -213,7 +213,7 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
         ll_all.setSelected(true);
         ll_current = ll_ac;
 
-        getTaskList();
+        getInvolvedList();
 
     }
 
@@ -379,19 +379,17 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
     private void toDetailActivity(int postion){
         Intent intent = new Intent(MyTaskActivity.this,DetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("detailResponse",taskList.get(postion));
+        bundle.putSerializable("detailResponse",involvedList.get(postion));
         intent.putExtras(bundle);
-        IdAndType idAndType = new IdAndType(taskList.get(postion).getActivityVO().getId(),1);
+        IdAndType idAndType = new IdAndType(involvedList.get(postion).getActivityVO().getId(),1);
         new Thread(()->{
             System.out.println(okHttpUtils.getDetail(idAndType));
         }).start();
         startActivity(intent);
     }
-
-    private synchronized void getTaskList(){
+    private synchronized void getInvolvedList(){
         Thread t1 = new Thread(()->{
-            taskList = okHttpUtils.searchPublic();
-            System.out.println(taskList);
+            involvedList = okHttpUtils.getInvolvedList();
         });
         t1.start();
         try {
@@ -400,9 +398,10 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
             e.printStackTrace();
         }
     }
+
     private synchronized void refreshCollectListData(){
-        getTaskList();
-        cardViewListAdapter.setDetailResponseListList(taskList);
+        getInvolvedList();
+        cardViewListAdapter.setDetailResponseListList(involvedList);
         eRecyclerView.setAdapter(cardViewListAdapter);
         eSwipeRefreshLayout.postDelayed(new Runnable() {
             @Override

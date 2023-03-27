@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PublishDeleteRequest {
+public class PublishDeleteRequest  {
 
     private int id;
 
