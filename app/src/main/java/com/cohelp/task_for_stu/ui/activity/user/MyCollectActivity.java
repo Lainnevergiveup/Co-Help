@@ -9,6 +9,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +18,7 @@ import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
+import com.cohelp.task_for_stu.net.model.vo.ResultVO;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.NewsListEditAdapter;
 import com.cohelp.task_for_stu.ui.adpter.TaskAdapter;
@@ -25,9 +28,12 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.utils.ViewUtils;
 import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
+import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MyCollectActivity extends BasicInfoActivity {
 
@@ -51,7 +57,8 @@ public class MyCollectActivity extends BasicInfoActivity {
 
 
     CardViewListAdapter cardViewListAdapter;
-    List<DetailResponse> collectList;
+    List<ResultVO> collectList;
+    String delCollectList;
     OkHttpUtils okHttpUtils;
     Intent intent;
     @Override
@@ -128,6 +135,14 @@ public class MyCollectActivity extends BasicInfoActivity {
 //            }
 //        });
 
+        mTvSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAdapter.switchManageMode();
+                refreshManageMode();
+            }
+        });
+
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,23 +152,20 @@ public class MyCollectActivity extends BasicInfoActivity {
 
         WidgetUtils.initRecyclerView(recyclerView, 0);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
-            if (scbSelectAll != null) {
-                scbSelectAll.setCheckedSilent(isSelectAll);
-            }
-        },collectList));
+        recyclerView.setAdapter(mAdapter);
         scbSelectAll.setOnCheckedChangeListener((checkBox, isChecked) -> mAdapter.setSelectAll(isChecked));
 
         //下拉刷新
         refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
+            getCollectList();
             mAdapter.refresh(collectList);
             refreshLayout.finishRefresh();
         }, 1000));
         //上拉加载
-        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-            mAdapter.loadMore(collectList);
-            refreshLayout.finishLoadMore();
-        }, 1000));
+//        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
+//            mAdapter.loadMore(collectList);
+//            refreshLayout.finishLoadMore();
+//        }, 1000));
         refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
 
         mAdapter.setOnItemClickListener((itemView, item, position) -> {
@@ -191,7 +203,11 @@ public class MyCollectActivity extends BasicInfoActivity {
         btn_delete = findViewById(R.id.btn_delete);
         mTvSwitch = findViewById(R.id.id_tv_manager);
 
-
+        mAdapter = new NewsListEditAdapter(isSelectAll -> {
+            if (scbSelectAll != null) {
+                scbSelectAll.setCheckedSilent(isSelectAll);
+            }
+        },collectList);
         getCollectList();
 //        cardViewListAdapter = new CardViewListAdapter(collectList);
 
@@ -227,9 +243,13 @@ public class MyCollectActivity extends BasicInfoActivity {
     private void toDetailActivity(int postion){
         Intent intent = new Intent(MyCollectActivity.this,DetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("detailResponse",collectList.get(postion));
+        bundle.putSerializable("detailResponse",collectList.get(postion).getDetailResponse());
         intent.putExtras(bundle);
-        IdAndType idAndType = new IdAndType(collectList.get(postion).getActivityVO().getId(),1);
+
+        ResultVO resultVO = collectList.get(postion);
+        DetailResponse detailResponse = resultVO.getDetailResponse();
+        Integer type = detailResponse.getType();
+        IdAndType idAndType = new IdAndType(detailResponse.getIdByType(type),type);
         new Thread(()->{
             System.out.println(okHttpUtils.getDetail(idAndType));
         }).start();
@@ -257,9 +277,30 @@ public class MyCollectActivity extends BasicInfoActivity {
             e.printStackTrace();
         }
     }
+    private synchronized void delCollectList(){
+        Thread t1 = new Thread(()->{
+            List<ResultVO> selectedDetailResponseList = mAdapter.getSelectedDetailResponseList();
+            List<Integer> deleteIdList=new ArrayList<>();
+            for (ResultVO i:selectedDetailResponseList){
+
+                deleteIdList.add(i.getId());
+            }
+
+
+            System.out.println(deleteIdList);
+            delCollectList = okHttpUtils.delCollectList(deleteIdList);
+        });
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private synchronized void refreshCollectListData(){
         getCollectList();
-        cardViewListAdapter.setDetailResponseListList(collectList);
+        cardViewListAdapter.setDetailResponseListList(collectList.stream().map(i->i.getDetailResponse()).collect(Collectors.toList()));
         eRecyclerView.setAdapter(cardViewListAdapter);
         eSwipeRefreshLayout.postDelayed(new Runnable() {
             @Override
@@ -278,6 +319,35 @@ public class MyCollectActivity extends BasicInfoActivity {
                 .content("是否确认删除")
                 .positiveText(R.string.lab_yes)
                 .negativeText(R.string.lab_no)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//                        XToastUtils.toast("sssssss");
+                        System.out.println("List"+mAdapter.getSelectedIndexList());
+                        delCollectList();
+
+//                        refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
+//
+//                        }, 1000));
+                        getCollectList();
+                        mAdapter.refresh(collectList);
+                        refreshLayout.finishRefresh();
+//                        refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
+//                            mAdapter.refresh(collectList);
+//                            refreshLayout.finishRefresh();
+//                        }, 1000));
+//                        refreshLayout.autoRefresh();
+//                        recyclerView.setAdapter(new NewsListEditAdapter(isSelectAll -> {
+//                            if (scbSelectAll != null) {
+//                                scbSelectAll.setCheckedSilent(isSelectAll);
+//                            }
+//                        },collectList));
+                        mAdapter.switchManageMode();
+                        refreshManageMode();
+//                        refreshCollectListData();
+//                        System.out.println(delCollectList);
+                    }
+                })
                 .show();
     }
 }

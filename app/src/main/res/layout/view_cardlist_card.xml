@@ -7,11 +7,12 @@ android:layout_height="wrap_content"
 android:layout_marginTop="10dp"
 android:layout_marginBottom="3dp"
 app:cardBackgroundColor="@color/xui_config_color_white"
-app:cardCornerRadius="8dp"
-app:cardElevation="4dp"
+app:cardCornerRadius="15dp"
+app:cardElevation="0dp"
 app:cardPreventCornerOverlap="true"
 app:contentPaddingBottom="5dp"
 app:contentPaddingLeft="@dimen/activity_horizontal_margin"
+
 app:contentPaddingRight="@dimen/activity_horizontal_margin"
 app:contentPaddingTop="5dp">
     >
