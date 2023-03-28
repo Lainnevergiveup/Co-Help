@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
  * @author zgy
  * @create 2023-03-20 18:40
  */
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class ResultVO {
     /**
      * 收藏记录/浏览记录id
@@ -34,13 +37,5 @@ public class ResultVO {
 
     public void setDetailResponse(DetailResponse detailResponse) {
         this.detailResponse = detailResponse;
-    }
-
-    public ResultVO(Integer id, DetailResponse detailResponse) {
-        this.id = id;
-        this.detailResponse = detailResponse;
-    }
-
-    public ResultVO() {
     }
 }

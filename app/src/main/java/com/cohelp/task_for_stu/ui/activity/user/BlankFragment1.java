@@ -110,6 +110,8 @@ public class BlankFragment1 extends Fragment implements View.OnClickListener {
 
     }
 
+
+
     private synchronized void getTaskList(){
         Thread t1 = new Thread(()->{
             taskList = okHttpUtils.searchPublic();

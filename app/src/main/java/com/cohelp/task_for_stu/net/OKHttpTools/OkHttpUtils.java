@@ -24,6 +24,7 @@ import com.cohelp.task_for_stu.net.model.entity.Team;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.net.model.vo.CourseVO;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
+import com.cohelp.task_for_stu.net.model.vo.ResultVO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -385,7 +386,7 @@ public class OkHttpUtils {
         }
         System.out.println(res);
     }
-    public List<DetailResponse> getCollectList(){
+    public List<ResultVO> getCollectList(){
         okHttp.sendGetRequest(baseURL+"/collect/getcollectlist/1/5",cookie);
         String res = null;
         try {
@@ -395,7 +396,7 @@ public class OkHttpUtils {
         }
 //        Gson gson = new Gson();
 //        //这个类型写啥？list有1,2,3这里知识查了activity的
-        Result<List<DetailResponse>> userResult = gson.fromJson(res,new TypeToken<Result<List<DetailResponse>>>(){}.getType());
+        Result<List<ResultVO>> userResult = gson.fromJson(res,new TypeToken<Result<List<ResultVO>>>(){}.getType());
         return userResult.getData();
     }
 
@@ -501,5 +502,18 @@ public class OkHttpUtils {
         }
         Result<List<String>> result = gson.fromJson(res,new TypeToken<Result<List<String>>>(){}.getType());
         return result.getData();
+    }
+
+    public String delCollectList(List<Integer> list){
+        String json = gson.toJson(list);
+        okHttp.sendRequest(baseURL+"/collect/deletecollectrecords",json,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(res);
+        return res;
     }
 }

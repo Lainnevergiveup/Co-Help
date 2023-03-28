@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,7 +30,6 @@ import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.utils.ViewUtils;
-import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xui.widget.tabbar.EasyIndicator;
@@ -46,17 +44,15 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
     LinearLayout TaskCenter;
     LinearLayout UserCenter;
     LinearLayout ll_all,ll_ac,ll_help,ll_dis,ll_current;
-    TextView all;
-    TextView taskSolved;
+
     TextView taskPosted,title;
-    ImageView mtabview1,mtabview2,mtabview3,mtabview4;
+
     RecyclerView eRecyclerView;
     SwipeRefreshLayout eSwipeRefreshLayout;
     Button delbutton;
     EasyIndicator mEasyIndicator;
     ViewPager2 mViewPager;
 
-    LinearLayout linearLayout;
     private TextView mTvSwitch;
     SmartRefreshLayout refreshLayout;
     RecyclerView recyclerView;
@@ -66,7 +62,7 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
     TaskAdapter taskAdapter;
     CardViewListAdapter cardViewListAdapter;
     Button btn_delete;
-    List<DetailResponse> taskList;
+    List<DetailResponse> involvedList;
     OkHttpUtils okHttpUtils = new OkHttpUtils();
 
     private List<ViewPagerFragment> list = new ArrayList<>();
@@ -217,55 +213,55 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
         ll_all.setSelected(true);
         ll_current = ll_ac;
 
-        getTaskList();
+        getInvolvedList();
 
     }
 
 
 
-    private  void initCardView(){
-
-        WidgetUtils.initRecyclerView(recyclerView, 0);
-        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
-            if (scbSelectAll != null) {
-                scbSelectAll.setCheckedSilent(isSelectAll);
-            }
-        },taskList));
-        scbSelectAll.setOnCheckedChangeListener((checkBox, isChecked) -> mAdapter.setSelectAll(isChecked));
-
-        //下拉刷新
-        refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-            mAdapter.refresh(taskList);
-            refreshLayout.finishRefresh();
-        }, 1000));
-        //上拉加载
-        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-            mAdapter.loadMore(taskList);
-            refreshLayout.finishLoadMore();
-        }, 1000));
-        refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
-
-        mAdapter.setOnItemClickListener((itemView, item, position) -> {
-            if (mAdapter.isManageMode()) {
-                mAdapter.updateSelectStatus(position);
-            } else {
-                toDetailActivity(position);
-//                Utils.goWeb(getContext(), item.getDetailUrl());
-            }
-        });
-        mAdapter.setOnItemClickListener(new NewsListEditAdapter.OnItemListenter() {
-            @Override
-            public void onItemClick(View view, int postion) {
-                toDetailActivity(postion);
-            }
-        });
-        mAdapter.setOnItemLongClickListener((itemView, item, position) -> {
-            if (!mAdapter.isManageMode()) {
-                mAdapter.enterManageMode(position);
-                refreshManageMode();
-            }
-        });
-    }
+//    private  void initCardView(){
+//
+//        WidgetUtils.initRecyclerView(recyclerView, 0);
+//        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
+//            if (scbSelectAll != null) {
+//                scbSelectAll.setCheckedSilent(isSelectAll);
+//            }
+//        },taskList));
+//        scbSelectAll.setOnCheckedChangeListener((checkBox, isChecked) -> mAdapter.setSelectAll(isChecked));
+//
+//        //下拉刷新
+//        refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
+//            mAdapter.refresh(taskList);
+//            refreshLayout.finishRefresh();
+//        }, 1000));
+//        //上拉加载
+//        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
+//            mAdapter.loadMore(taskList);
+//            refreshLayout.finishLoadMore();
+//        }, 1000));
+//        refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
+//
+//        mAdapter.setOnItemClickListener((itemView, item, position) -> {
+//            if (mAdapter.isManageMode()) {
+//                mAdapter.updateSelectStatus(position);
+//            } else {
+//                toDetailActivity(position);
+////                Utils.goWeb(getContext(), item.getDetailUrl());
+//            }
+//        });
+//        mAdapter.setOnItemClickListener(new NewsListEditAdapter.OnItemListenter() {
+//            @Override
+//            public void onItemClick(View view, int postion) {
+//                toDetailActivity(postion);
+//            }
+//        });
+//        mAdapter.setOnItemLongClickListener((itemView, item, position) -> {
+//            if (!mAdapter.isManageMode()) {
+//                mAdapter.enterManageMode(position);
+//                refreshManageMode();
+//            }
+//        });
+//    }
 
     private void initPager(){
         mViewPager = findViewById(R.id.id_viewpaper);
@@ -383,19 +379,17 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
     private void toDetailActivity(int postion){
         Intent intent = new Intent(MyTaskActivity.this,DetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("detailResponse",taskList.get(postion));
+        bundle.putSerializable("detailResponse",involvedList.get(postion));
         intent.putExtras(bundle);
-        IdAndType idAndType = new IdAndType(taskList.get(postion).getActivityVO().getId(),1);
+        IdAndType idAndType = new IdAndType(involvedList.get(postion).getActivityVO().getId(),1);
         new Thread(()->{
             System.out.println(okHttpUtils.getDetail(idAndType));
         }).start();
         startActivity(intent);
     }
-
-    private synchronized void getTaskList(){
+    private synchronized void getInvolvedList(){
         Thread t1 = new Thread(()->{
-            taskList = okHttpUtils.searchPublic();
-            System.out.println(taskList);
+            involvedList = okHttpUtils.getInvolvedList();
         });
         t1.start();
         try {
@@ -404,9 +398,10 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
             e.printStackTrace();
         }
     }
+
     private synchronized void refreshCollectListData(){
-        getTaskList();
-        cardViewListAdapter.setDetailResponseListList(taskList);
+        getInvolvedList();
+        cardViewListAdapter.setDetailResponseListList(involvedList);
         eRecyclerView.setAdapter(cardViewListAdapter);
         eSwipeRefreshLayout.postDelayed(new Runnable() {
             @Override
