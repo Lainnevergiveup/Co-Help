@@ -286,7 +286,6 @@ public class HelpCenterActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-
         mTabSegment.addOnTabSelectedListener(new TabSegment.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int index) {
@@ -294,7 +293,12 @@ public class HelpCenterActivity extends BaseActivity {
                 helpTag = pages[index];
                 System.out.println("tag"+helpTag);
 //                getHelpList();
-                cardViewListAdapter.setDetailResponseListList(changeTag());
+                List<DetailResponse> list = changeTag();
+                System.out.println(list);
+                for (DetailResponse i:list){
+                    System.out.println(i.getHelpVO().getHelpLabel());
+                }
+                cardViewListAdapter.setDetailResponseListList(list);
                 RecyclerView primaryItem = mPagerAdapter.getPrimaryItem();
                 primaryItem.setAdapter(cardViewListAdapter);
 //                int currentItem = mContentViewPager.getCurrentItem();
