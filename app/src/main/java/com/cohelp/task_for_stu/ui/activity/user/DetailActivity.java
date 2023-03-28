@@ -1,69 +1,63 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
+import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_EMPTY;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.PopupWindow;
-import android.widget.ScrollView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.domain.RemarkRequest;
 import com.cohelp.task_for_stu.net.model.entity.Collect;
+import com.cohelp.task_for_stu.net.model.entity.CommentMoreBean;
+import com.cohelp.task_for_stu.net.model.entity.FirstLevelBean;
 import com.cohelp.task_for_stu.net.model.entity.RemarkActivity;
 import com.cohelp.task_for_stu.net.model.entity.RemarkHelp;
-import com.cohelp.task_for_stu.net.model.entity.User;
+import com.cohelp.task_for_stu.net.model.entity.SecondLevelBean;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
-import com.cohelp.task_for_stu.ui.adpter.CommentAdapter;
+import com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter;
 import com.cohelp.task_for_stu.ui.adpter.CommentExpandableListAdapter;
+import com.cohelp.task_for_stu.ui.listener.SoftKeyBoardListener;
 import com.cohelp.task_for_stu.ui.view.AvatorImageView;
 import com.cohelp.task_for_stu.ui.view.InputTextMsgDialog;
-import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
-import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
+import com.cohelp.task_for_stu.utils.RecyclerViewUtil;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.xuexiang.xui.widget.textview.ExpandableTextView;
-import com.xuexiang.xutil.tip.ToastUtils;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements BaseQuickAdapter.RequestLoadMoreListener{
 
     Button returnButton;
     Button reportButton;
@@ -72,6 +66,7 @@ public class DetailActivity extends AppCompatActivity {
     TextView topicTime;
     TextView topicDetail;
     AvatorImageView avatorPic;
+    private RecyclerView rv_dialog_lists;
     ImageButton likeButton;
     ImageButton collectButton;
     ImageButton commentButton;
@@ -80,6 +75,7 @@ public class DetailActivity extends AppCompatActivity {
     EditText editText;
     View view;
     ExpandableListView commentListView;
+//    private CommentDialogMutiAdapter bottomSheetAdapter;
 
     BottomSheetDialog bottomSheetDialog;
 
@@ -88,6 +84,9 @@ public class DetailActivity extends AppCompatActivity {
     InputTextMsgDialog inputTextMsgDialog;
 
     CommentExpandableListAdapter commentExpandableListAdapter;
+
+    private SoftKeyBoardListener mKeyBoardListener;
+
     OkHttpUtils okHttpUtils;
     Intent intent;
 
@@ -105,19 +104,33 @@ public class DetailActivity extends AppCompatActivity {
 
     Integer detailType;
 
+    private float slideOffset = 0;
+    private int offsetY;
+
+    private List<MultiItemEntity> data = new ArrayList<>();
+    private List<FirstLevelBean> datas = new ArrayList<>();
+    private String content = "我听见你的声音，有种特别的感觉。让我不断想，不敢再忘记你。如果真的有一天，爱情理想会实现，我会加倍努力好好对你，永远不改变";
+
+    private RecyclerViewUtil mRecyclerViewUtil;
+    private CommentDialogMutiAdapter bottomSheetAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_detail);
+//        initTools();
+//        initView();
+//        initData();
+//        initEvent();
+//        setTitle("话题详情");
+        //以上为最终代码
+        //以下为测试代码
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
-
-        initTools();
-        initView();
+        setContentView(R.layout.activity_comment_multi);
+        mRecyclerViewUtil = new RecyclerViewUtil();
         initData();
-        initEvent();
-
-
-
-        setTitle("话题详情");
+        dataSort(0);
+        showSheetDialog();
     }
 
     private void initTools(){
@@ -138,31 +151,17 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initView(){
         view = LayoutInflater.from(this).inflate(R.layout.view_comment_bottomsheet, null, false);
-//        view2 = LayoutInflater.from(this).inflate(R.layout.view_comment_bottomsheet, null, false);
-//
-//        reportButton = (Button)findViewById(R.id.button_MutRelease);
-//        returnButton = (Button) findViewById(R.id.button_Cancel);
-//
-//        avatorPic = (AvatorImageView) findViewById(R.id.image_UserIcon);
-//
+
         likeButton = (ImageButton) findViewById(R.id.imageButton_Like);
         collectButton = (ImageButton) findViewById(R.id.imageButton_Collect);
         commentButton =  findViewById(R.id.imageButton_Comment);
 
-
-//
-//        topicTitle = (TextView) findViewById(R.id.text_MessageTitle);
-//        topicTime = (TextView) findViewById(R.id.text_TopicCreateTime);
-//        topicDetail = (TextView) findViewById(R.id.text_TopicDetail);
-//        avatorName = (TextView) findViewById(R.id.text_UserId);
-//
-//        commentRecycleView = (RecyclerView) view.findViewById(R.id.dialog_bottomsheet_rv_lists);
         commentText = view.findViewById(R.id.edit_comment);
         commentCommitButton = view.findViewById(R.id.btn_send_comment);
         commentListView = (ExpandableListView) view.findViewById(R.id.comment_item_list);
-        bottomSheetDialog = new BottomSheetDialog(this,R.style.BottomSheetDialogStyle1);
-//
-//        bottomSheetDialog2 = new BottomSheetDialog(this,R.style.BottomSheetDialog);
+//        bottomSheetDialog = new BottomSheetDialog(this,R.style.BottomSheetDialogStyle1);
+//        inputTextMsgDialog = new InputTextMsgDialog(this,R.style.dialog);
+
 
 
         setBottomSheet();
@@ -181,9 +180,7 @@ public class DetailActivity extends AppCompatActivity {
     private void initData(){
 
         getComment();
-        for (RemarkVO remarkVO:remarkList){
-            System.out.println(remarkVO.getRemarkTargetName());
-        }
+
         sortCommentList();
 
         initCommentTarget();
@@ -192,21 +189,6 @@ public class DetailActivity extends AppCompatActivity {
 
     }
     private void initEvent(){
-
-
-
-//        returnButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
-//        reportButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
 
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,6 +211,26 @@ public class DetailActivity extends AppCompatActivity {
                     bottomSheetDialog.show();
 //                    bottomSheetDialog2.show();
                 }
+                if (inputTextMsgDialog!=null){
+                    System.out.println(1111);
+                    inputTextMsgDialog.show();
+
+                }
+                if (inputTextMsgDialog == null) {
+            inputTextMsgDialog = new InputTextMsgDialog(DetailActivity.this, R.style.dialog);
+            inputTextMsgDialog.setmOnTextSendListener(new InputTextMsgDialog.OnTextSendListener() {
+                @Override
+                public void onTextSend(String msg) {
+//                    addComment(isReply, item, position, msg);
+                }
+
+                @Override
+                public void dismiss() {
+                    //item滑动到原位
+                    scrollLocation(-offsetY);
+                }
+            });
+        }
             }
         });
         collectButton.setOnClickListener(new View.OnClickListener() {
@@ -266,145 +268,211 @@ public class DetailActivity extends AppCompatActivity {
 //                return true;
 //            }
 //        });
-        commentListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
-
-                commentTopID = firstList.get(groupPosition).getId();
-                commentTargetID = orderRemarkVO.get(groupPosition).get(childPosition).getId();
-                System.out.println(orderRemarkVO.get(groupPosition).get(childPosition).getRemarkOwnerName());
-                commentRootType = 0;
-//                getFocusForEditText(commentText);
-//                commentText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//                commentText.setHint("Enter text");
+//        commentListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+//            @Override
+//            public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
 //
-                // 计算 EditText 在屏幕中的位置
-                int[] location = new int[2];
-                view.getLocationOnScreen(location);
-                int x = location[0];
-                int y = location[1] + view.getHeight();
+//                commentTopID = firstList.get(groupPosition).getId();
+//                commentTargetID = orderRemarkVO.get(groupPosition).get(childPosition).getId();
+//                System.out.println(orderRemarkVO.get(groupPosition).get(childPosition).getRemarkOwnerName());
+//                commentRootType = 0;
+////                getFocusForEditText(commentText);
+////                commentText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+////                commentText.setHint("Enter text");
+////
+//                // 计算 EditText 在屏幕中的位置
+//                int[] location = new int[2];
+//                view.getLocationOnScreen(location);
+//                int x = location[0];
+//                int y = location[1] + view.getHeight();
+////
+////                // 创建 PopupWindow
+////                PopupWindow popupWindow = new PopupWindow(commentText,
+////                        ViewGroup.LayoutParams.MATCH_PARENT,
+////                        ViewGroup.LayoutParams.WRAP_CONTENT);
+////                popupWindow.showAtLocation(expandableListView, Gravity.NO_GRAVITY, x, y);
+//                editText = new EditText(DetailActivity.this);
+//                editText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                editText.setHint("Enter text");
+//                getFocusForEditText(editText);
+//
+////
+////                ScrollView frameLayout = (ScrollView)LayoutInflater.from(DetailActivity.this).inflate(R.layout.view_input_text_with_button, (ViewGroup) view).findViewById(R.id.layout_frame);
+////                frameLayout.removeAllViews();
+////                frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+////frameLayout.setVisibility(1);
+//                // 计算 EditText 在屏幕中的位置
+////                int[] location = new int[2];
+////                view.getLocationOnScreen(location);
+////                int x = location[0];
+////                int y = location[1] + view.getHeight();
 //
 //                // 创建 PopupWindow
 //                PopupWindow popupWindow = new PopupWindow(commentText,
 //                        ViewGroup.LayoutParams.MATCH_PARENT,
 //                        ViewGroup.LayoutParams.WRAP_CONTENT);
-//                popupWindow.showAtLocation(expandableListView, Gravity.NO_GRAVITY, x, y);
-                editText = new EditText(DetailActivity.this);
-                editText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                editText.setHint("Enter text");
-                getFocusForEditText(editText);
-
+//                popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//                popupWindow.setFocusable(true);
 //
-//                ScrollView frameLayout = (ScrollView)LayoutInflater.from(DetailActivity.this).inflate(R.layout.view_input_text_with_button, (ViewGroup) view).findViewById(R.id.layout_frame);
-//                frameLayout.removeAllViews();
-//                frameLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//frameLayout.setVisibility(1);
-                // 计算 EditText 在屏幕中的位置
-//                int[] location = new int[2];
-//                view.getLocationOnScreen(location);
-//                int x = location[0];
-//                int y = location[1] + view.getHeight();
-
-                // 创建 PopupWindow
-                PopupWindow popupWindow = new PopupWindow(commentText,
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT);
-                popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                popupWindow.setFocusable(true);
-
+////
+//                popupWindow.showAtLocation(editText, Gravity.BOTTOM,0,0);
 //
-                popupWindow.showAtLocation(editText, Gravity.BOTTOM,0,0);
-
-
-//                // 获取屏幕高度
-//                DisplayMetrics displayMetrics = new DisplayMetrics();
-//                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//                int screenHeight = displayMetrics.heightPixels;
 //
-//// 获取键盘高度
-//                final int keyboardHeight = screenHeight - getStatusBarHeight() - getActionBarHeight() - 0;
+////                // 获取屏幕高度
+////                DisplayMetrics displayMetrics = new DisplayMetrics();
+////                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+////                int screenHeight = displayMetrics.heightPixels;
+////
+////// 获取键盘高度
+////                final int keyboardHeight = screenHeight - getStatusBarHeight() - getActionBarHeight() - 0;
+////
+////// 设置布局的位置
+////                frameLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+////                    @Override
+////                    public void onGlobalLayout() {
+////                        Rect rect = new Rect();
+////                        frameLayout.getWindowVisibleDisplayFrame(rect);
+////                        int scrollViewBottom = rect.bottom;
+////                        int scrollViewHeight = frameLayout.getHeight();
+////                        int keyboardTop = screenHeight - keyboardHeight;
+////                        if (scrollViewBottom > keyboardTop) {
+////                            int delta = scrollViewBottom - keyboardTop + scrollViewHeight;
+////                            frameLayout.smoothScrollBy(0, delta);
+////                        }
+////                    }
+////                });
 //
-//// 设置布局的位置
-//                frameLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//                    @Override
-//                    public void onGlobalLayout() {
-//                        Rect rect = new Rect();
-//                        frameLayout.getWindowVisibleDisplayFrame(rect);
-//                        int scrollViewBottom = rect.bottom;
-//                        int scrollViewHeight = frameLayout.getHeight();
-//                        int keyboardTop = screenHeight - keyboardHeight;
-//                        if (scrollViewBottom > keyboardTop) {
-//                            int delta = scrollViewBottom - keyboardTop + scrollViewHeight;
-//                            frameLayout.smoothScrollBy(0, delta);
-//                        }
-//                    }
-//                });
+//                return true;
+//            }
+//        });
+//        commentListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+//            @Override
+//            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+//
+//                return false;
+//            }
+//        });
+//        commentListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                commentTopID = firstList.get(i).getId();
+//                commentTargetID = firstList.get(i).getId();
+//                System.out.println(firstList.get(i).getRemarkOwnerName());
+//                commentRootType = 0;
+//                getFocusForEditText(commentText);
+//                return true;
+//            }
+//        });
+//        commentListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+//            int previousGroup = -1;
+//            @Override
+//            public void onGroupExpand(int groupPosition) {
+//                if (previousGroup != groupPosition) {
+//                    commentListView.collapseGroup(previousGroup);
+//                }
+//                previousGroup = groupPosition;
+//                setListViewHeight(commentListView, groupPosition);
+//            }
+//        });
+//        commentListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+//            @Override
+//            public void onGroupCollapse(int i) {
+//                //Do Nothing
+//            }
+//        });
 
-                return true;
-            }
-        });
-        commentListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+        mKeyBoardListener = new SoftKeyBoardListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
-            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+            public void keyBoardShow(int height) {
+            }
 
-                return false;
-            }
-        });
-        commentListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                commentTopID = firstList.get(i).getId();
-                commentTargetID = firstList.get(i).getId();
-                System.out.println(firstList.get(i).getRemarkOwnerName());
-                commentRootType = 0;
-                getFocusForEditText(commentText);
-                return true;
+            public void keyBoardHide(int height) {
+                dismissInputDialog();
             }
         });
-        commentListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-            int previousGroup = -1;
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                if (previousGroup != groupPosition) {
-                    commentListView.collapseGroup(previousGroup);
-                }
-                previousGroup = groupPosition;
-                setListViewHeight(commentListView, groupPosition);
-            }
-        });
-        commentListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-            @Override
-            public void onGroupCollapse(int i) {
-                //Do Nothing
-            }
-        });
-
-
     }
 
     private void setBottomSheet(){
-        bottomSheetDialog.setCanceledOnTouchOutside(true);
-        bottomSheetDialog.getWindow().setDimAmount(0f);
-        bottomSheetDialog.setContentView(view);
-        //用户行为
-        bottomSheetBehavior = BottomSheetBehavior.from((View) view.getParent());
-        //dialog的高度
+        if (inputTextMsgDialog==null){
+            return;
+        }
+
+        View view2 = View.inflate(this, R.layout.dialog_bottomsheet, null);
+        ImageView iv_dialog_close = (ImageView) view2.findViewById(R.id.dialog_bottomsheet_iv_close);
+        rv_dialog_lists = (RecyclerView) view2.findViewById(R.id.dialog_bottomsheet_rv_lists);
+        RelativeLayout rl_comment = view2.findViewById(R.id.rl_comment);
+        iv_dialog_close.setOnClickListener(v -> bottomSheetDialog.dismiss());
+        rl_comment.setOnClickListener(v -> {
+            //添加二级评论
+            initInputTextMsgDialog(null, false, null, -1);
+        });
+
+//        bottomSheetAdapter = new CommentDialogMutiAdapter(data);
+        rv_dialog_lists.setHasFixedSize(true);
+        rv_dialog_lists.setLayoutManager(new LinearLayoutManager(this));
+        closeDefaultAnimator(rv_dialog_lists);
+//        bottomSheetAdapter.setOnLoadMoreListener(this, rv_dialog_lists);
+//        rv_dialog_lists.setAdapter(bottomSheetAdapter);
+
+        inputTextMsgDialog = new InputTextMsgDialog(this,R.style.dialog);
+        inputTextMsgDialog.setContentView(view);
+        inputTextMsgDialog.setCanceledOnTouchOutside(true);
+
+        bottomSheetBehavior = BottomSheetBehavior.from((View) view2.getParent());
         bottomSheetBehavior.setPeekHeight(getWindowHeight());
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-                    bottomSheetBehavior.setDraggable(true);
-                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    bottomSheetBehavior.setDraggable(true);
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                } else if (newState == BottomSheetBehavior.STATE_SETTLING) {
+                    if (slideOffset <= -0.28) {
+                        //当向下滑动时 值为负数
+                        bottomSheetDialog.dismiss();
+                    }
                 }
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
+                DetailActivity.this.slideOffset = slideOffset;//记录滑动值
             }
         });
+//        bottomSheetDialog.setCanceledOnTouchOutside(true);
+//        bottomSheetDialog.getWindow().setDimAmount(0f);
+//        bottomSheetDialog.setContentView(view);
+//        inputTextMsgDialog.getWindow().setDimAmount(0f);
+//        inputTextMsgDialog.setmOnTextSendListener(new InputTextMsgDialog.OnTextSendListener() {
+//            @Override
+//            public void onTextSend(String msg) {
+//                addComment(isReply, item, position, msg);
+//            }
+//
+//            @Override
+//            public void dismiss() {
+//                //item滑动到原位
+//                scrollLocation(-offsetY);
+//            }
+//        });
+//        //用户行为
+//        BottomSheetBehavior inputTextMsgDialogBehavior = BottomSheetBehavior.from((View) view.getParent());
+//        //dialog的高度
+//        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+//            @Override
+//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+//                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+//                    bottomSheetBehavior.setDraggable(true);
+//                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+//                    bottomSheetBehavior.setDraggable(true);
+//                }
+//            }
+//
+//            @Override
+//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+//
+//            }
+//        });
     }
 
     private void initCommentListView(){
@@ -617,37 +685,202 @@ public class DetailActivity extends AppCompatActivity {
             collectButton.setImageResource(R.drawable.icon_collect_undo);
         }
     }
-
-
-    // 获取状态栏高度
-    private int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
+    public void closeDefaultAnimator(RecyclerView mRvCustomer) {
+        if (null == mRvCustomer) return;
+        mRvCustomer.getItemAnimator().setAddDuration(0);
+        mRvCustomer.getItemAnimator().setChangeDuration(0);
+        mRvCustomer.getItemAnimator().setMoveDuration(0);
+        mRvCustomer.getItemAnimator().setRemoveDuration(0);
+        ((SimpleItemAnimator) mRvCustomer.getItemAnimator()).setSupportsChangeAnimations(false);
+    }
+    private void initInputTextMsgDialog(View view, final boolean isReply, final MultiItemEntity item, final int position) {
+        dismissInputDialog();
+        if (view != null) {
+            offsetY = view.getTop();
+            scrollLocation(offsetY);
         }
-        return result;
+        if (inputTextMsgDialog == null) {
+            inputTextMsgDialog = new InputTextMsgDialog(this, R.style.dialog);
+            inputTextMsgDialog.setmOnTextSendListener(new InputTextMsgDialog.OnTextSendListener() {
+                @Override
+                public void onTextSend(String msg) {
+//                    addComment(isReply, item, position, msg);
+                }
+
+                @Override
+                public void dismiss() {
+                    //item滑动到原位
+                    scrollLocation(-offsetY);
+                }
+            });
+        }
+//        showInputTextMsgDialog();
+    }
+    private void dismissInputDialog() {
+        if (inputTextMsgDialog != null) {
+            if (inputTextMsgDialog.isShowing()) inputTextMsgDialog.dismiss();
+            inputTextMsgDialog.cancel();
+            inputTextMsgDialog = null;
+        }
+    }
+    // item滑动
+    public void scrollLocation(int offsetY) {
+        try {
+            rv_dialog_lists.smoothScrollBy(0, offsetY);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    //原始数据 一般是从服务器接口请求过来的
+    private void initData2() {
+        int size = 10;
+        for (int i = 0; i < size; i++) {
+            FirstLevelBean firstLevelBean = new FirstLevelBean();
+            firstLevelBean.setContent("第" + (i + 1) + "人评论内容" + (i % 3 == 0 ? content + (i + 1) + "次" : ""));
+            firstLevelBean.setCreateTime(System.currentTimeMillis());
+            firstLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3370302115,85956606&fm=26&gp=0.jpg");
+            firstLevelBean.setId(i + "");
+            firstLevelBean.setIsLike(0);
+            firstLevelBean.setLikeCount(i);
+            firstLevelBean.setUserName("星梦缘" + (i + 1));
+            firstLevelBean.setTotalCount(i + size);
+
+            List<SecondLevelBean> beans = new ArrayList<>();
+            for (int j = 0; j < 10; j++) {
+                SecondLevelBean secondLevelBean = new SecondLevelBean();
+                secondLevelBean.setContent("一级第" + (i + 1) + "人 二级第" + (j + 1) + "人评论内容" + (j % 3 == 0 ? content + (j + 1) + "次" : ""));
+                secondLevelBean.setCreateTime(System.currentTimeMillis());
+                secondLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1918451189,3095768332&fm=26&gp=0.jpg");
+                secondLevelBean.setId(j + "");
+                secondLevelBean.setIsLike(0);
+                secondLevelBean.setLikeCount(j);
+                secondLevelBean.setUserName("星梦缘" + (i + 1) + "  " + (j + 1));
+                secondLevelBean.setIsReply(j % 5 == 0 ? 1 : 0);
+                secondLevelBean.setReplyUserName(j % 5 == 0 ? "闭嘴家族" + j : "");
+                secondLevelBean.setTotalCount(firstLevelBean.getTotalCount());
+                beans.add(secondLevelBean);
+                firstLevelBean.setSecondLevelBeans(beans);
+            }
+            datas.add(firstLevelBean);
+        }
+    }
+    private void dataSort(int position) {
+        if (datas.isEmpty()) {
+            data.add(new MultiItemEntity() {
+                @Override
+                public int getItemType() {
+                    return TYPE_COMMENT_EMPTY;
+                }
+            });
+            return;
+        }
+
+        if (position <= 0) data.clear();
+        int posCount = data.size();
+        int count = datas.size();
+        for (int i = 0; i < count; i++) {
+            if (i < position) continue;
+
+            //一级评论
+            FirstLevelBean firstLevelBean = datas.get(i);
+            if (firstLevelBean == null) continue;
+            firstLevelBean.setPosition(i);
+            posCount += 2;
+            List<SecondLevelBean> secondLevelBeans = firstLevelBean.getSecondLevelBeans();
+            if (secondLevelBeans == null || secondLevelBeans.isEmpty()) {
+                firstLevelBean.setPositionCount(posCount);
+                data.add(firstLevelBean);
+                continue;
+            }
+            int beanSize = secondLevelBeans.size();
+            posCount += beanSize;
+            firstLevelBean.setPositionCount(posCount);
+            data.add(firstLevelBean);
+
+            //二级评论
+            for (int j = 0; j < beanSize; j++) {
+                SecondLevelBean secondLevelBean = secondLevelBeans.get(j);
+                secondLevelBean.setChildPosition(j);
+                secondLevelBean.setPosition(i);
+                secondLevelBean.setPositionCount(posCount);
+                data.add(secondLevelBean);
+            }
+
+            //展示更多的item
+            if (beanSize <= 18) {
+                CommentMoreBean moreBean = new CommentMoreBean();
+                moreBean.setPosition(i);
+                moreBean.setPositionCount(posCount);
+                moreBean.setTotalCount(firstLevelBean.getTotalCount());
+                data.add(moreBean);
+            }
+
+        }
+    }
+    public void show(View view) {
+        bottomSheetAdapter.notifyDataSetChanged();
+        slideOffset = 0;
+        bottomSheetDialog.show();
+    }
+    private void showSheetDialog() {
+        if (bottomSheetDialog != null) {
+            return;
+        }
+
+        //view
+        View view = View.inflate(this, R.layout.dialog_bottomsheet, null);
+        ImageView iv_dialog_close = (ImageView) view.findViewById(R.id.dialog_bottomsheet_iv_close);
+        rv_dialog_lists = (RecyclerView) view.findViewById(R.id.dialog_bottomsheet_rv_lists);
+        RelativeLayout rl_comment = view.findViewById(R.id.rl_comment);
+        iv_dialog_close.setOnClickListener(v -> bottomSheetDialog.dismiss());
+        rl_comment.setOnClickListener(v -> {
+            //添加二级评论
+            initInputTextMsgDialog(null, false, null, -1);
+        });
+
+        //adapter
+        bottomSheetAdapter = new CommentDialogMutiAdapter(data);
+        rv_dialog_lists.setHasFixedSize(true);
+        rv_dialog_lists.setLayoutManager(new LinearLayoutManager(this));
+        closeDefaultAnimator(rv_dialog_lists);
+        bottomSheetAdapter.setOnLoadMoreListener(this, rv_dialog_lists);
+        rv_dialog_lists.setAdapter(bottomSheetAdapter);
+
+        //dialog
+        bottomSheetDialog = new BottomSheetDialog(this, R.style.dialog);
+        bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
+        BottomSheetBehavior mDialogBehavior = BottomSheetBehavior.from((View) view.getParent());
+        mDialogBehavior.setPeekHeight(getWindowHeight());
+        //dialog滑动监听
+        mDialogBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    mDialogBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                } else if (newState == BottomSheetBehavior.STATE_SETTLING) {
+                    if (slideOffset <= -0.28) {
+                        //当向下滑动时 值为负数
+                        bottomSheetDialog.dismiss();
+                    }
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                DetailActivity.this.slideOffset = slideOffset;//记录滑动值
+            }
+        });
+
     }
 
-    // 获取 ActionBar 高度
-    private int getActionBarHeight() {
-        int actionBarHeight = 0;
-        TypedValue tv = new TypedValue();
-        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
-        }
-        return actionBarHeight;
+    @Override
+    public void onLoadMoreRequested() {
+
     }
 
-    // 获取键盘高度
-    private int getKeyboardHeight() {
-        int height = 0;
-        View decorView = getWindow().getDecorView();
-        Rect rect = new Rect();
-        decorView.getWindowVisibleDisplayFrame(rect);
-        int displayHeight = rect.bottom - rect.top;
-        int screenHeight = decorView.getHeight();
-        height = screenHeight - displayHeight;
-        return height;
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
     }
 }

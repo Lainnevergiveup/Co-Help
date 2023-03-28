@@ -17,7 +17,7 @@
     android:outlineAmbientShadowColor="@color/gray_9b"
     android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/dialog_bottomsheet_rv_lists"
         android:layout_width="match_parent"
         android:layout_height="450dp"

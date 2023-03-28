@@ -56,7 +56,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:padding="5dp"
-            android:src="@drawable/icon_send" />
+            android:src="@mipmap/ic_send_comment" />
 
         <View
             android:layout_width="match_parent"
