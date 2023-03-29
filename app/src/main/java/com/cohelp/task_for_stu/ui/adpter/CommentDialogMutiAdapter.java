@@ -136,7 +136,6 @@ public class CommentDialogMutiAdapter extends BaseMultiItemQuickAdapter<MultiIte
         helper.setText(R.id.tv_time, time);
         helper.setText(R.id.tv_user_name, TextUtils.isEmpty(item.getUserName()) ? " " : item.getUserName());
 
-
     }
 
     private void bindCommonMore(BaseViewHolder helper, MultiItemEntity item) {

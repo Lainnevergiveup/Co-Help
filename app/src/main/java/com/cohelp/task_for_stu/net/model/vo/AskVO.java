@@ -40,6 +40,7 @@ public class AskVO implements Serializable {
     /**
      * 发布时间
      */
+
     private Date publishTime;
 
     /**
