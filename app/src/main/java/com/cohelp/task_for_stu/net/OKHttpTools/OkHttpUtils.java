@@ -12,6 +12,7 @@ import com.cohelp.task_for_stu.net.model.domain.HelpTagRequest;
 import com.cohelp.task_for_stu.net.model.domain.HoleListRequest;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
+import com.cohelp.task_for_stu.net.model.domain.PublishDeleteRequest;
 import com.cohelp.task_for_stu.net.model.domain.RemarkRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.domain.SearchRequest;
@@ -507,6 +508,18 @@ public class OkHttpUtils {
     public String delCollectList(List<Integer> list){
         String json = gson.toJson(list);
         okHttp.sendRequest(baseURL+"/collect/deletecollectrecords",json,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(res);
+        return res;
+    }
+    public String delPublishList(List<PublishDeleteRequest> list){
+        String json = gson.toJson(list);
+        okHttp.sendRequest(baseURL+"/collect/deletepubs",json,cookie);
         String res = null;
         try {
             res = okHttp.getResponse().body().string();

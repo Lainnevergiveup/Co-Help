@@ -133,10 +133,8 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         initTools();
         initView();
         initData();
-        initData2();
-        initEvent();
 
-        dataSort(0);
+        initEvent();
         showSheetDialog();
     }
 
@@ -187,7 +185,8 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         getComment();
 
         sortCommentList();
-
+        initData2();
+        System.out.println(datas);
         initCommentTarget();
 
         updateButtonState();
@@ -653,87 +652,41 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
     //原始数据 一般是从服务器接口请求过来的
     private void initData2() {
         int size = 10;
-        for (int i = 0; i < size; i++) {
+        for (RemarkVO i : firstList) {
             FirstLevelBean firstLevelBean = new FirstLevelBean();
-            firstLevelBean.setContent("第" + (i + 1) + "人评论内容" + (i % 3 == 0 ? content + (i + 1) + "次" : ""));
-            firstLevelBean.setCreateTime(System.currentTimeMillis());
-            firstLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3370302115,85956606&fm=26&gp=0.jpg");
-            firstLevelBean.setId(i + "");
-            firstLevelBean.setIsLike(0);
-            firstLevelBean.setLikeCount(i);
-            firstLevelBean.setUserName("星梦缘" + (i + 1));
-            firstLevelBean.setTotalCount(i + size);
+            firstLevelBean.setContent(i.getRemarkContent());
+            firstLevelBean.setCreateTime(i.getRemarkTime().getTime());
+            firstLevelBean.setHeadImg(i.getRemarkOwnerAvatar());
+            firstLevelBean.setId(i.getId().toString());
+            firstLevelBean.setIsLike(i.getIsLiked());
+            firstLevelBean.setLikeCount(i.getRemarkLike());
+            firstLevelBean.setUserName(i.getRemarkOwnerName());
+//            firstLevelBean.setTotalCount(i + size);
 
             List<SecondLevelBean> beans = new ArrayList<>();
-            for (int j = 0; j < 10; j++) {
-                SecondLevelBean secondLevelBean = new SecondLevelBean();
-                secondLevelBean.setContent("一级第" + (i + 1) + "人 二级第" + (j + 1) + "人评论内容" + (j % 3 == 0 ? content + (j + 1) + "次" : ""));
-                secondLevelBean.setCreateTime(System.currentTimeMillis());
-                secondLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1918451189,3095768332&fm=26&gp=0.jpg");
-                secondLevelBean.setId(j + "");
-                secondLevelBean.setIsLike(0);
-                secondLevelBean.setLikeCount(j);
-                secondLevelBean.setUserName("星梦缘" + (i + 1) + "  " + (j + 1));
-                secondLevelBean.setIsReply(j % 5 == 0 ? 1 : 0);
-                secondLevelBean.setReplyUserName(j % 5 == 0 ? "闭嘴家族" + j : "");
-                secondLevelBean.setTotalCount(firstLevelBean.getTotalCount());
-                beans.add(secondLevelBean);
-                firstLevelBean.setSecondLevelBeans(beans);
-            }
-            datas.add(firstLevelBean);
-        }
-    }
-    private void dataSort(int position) {
-        if (datas.isEmpty()) {
-            data.add(new MultiItemEntity() {
-                @Override
-                public int getItemType() {
-                    return TYPE_COMMENT_EMPTY;
+            for (List<RemarkVO> j : orderRemarkVO) {
+                if (j.size()>0&&j.get(0)== i){
+                    j.remove(0);
+                    for (RemarkVO k:j){
+                        SecondLevelBean secondLevelBean = new SecondLevelBean();
+                        secondLevelBean.setContent(k.getRemarkContent());
+                        secondLevelBean.setCreateTime(k.getRemarkTime().getTime());
+                        secondLevelBean.setHeadImg(k.getRemarkOwnerAvatar());
+                        secondLevelBean.setId(k.getId().toString());
+                        secondLevelBean.setIsLike(k.getIsLiked());
+                        secondLevelBean.setLikeCount(k.getRemarkLike());
+                        secondLevelBean.setUserName(k.getRemarkOwnerName());
+                        secondLevelBean.setIsReply(k.getTargetIsTopic()^1);
+                        secondLevelBean.setReplyUserName(k.getRemarkTargetName());
+                        secondLevelBean.setTotalCount(j.size()+1);
+                        beans.add(secondLevelBean);
+                    }
                 }
-            });
-            return;
-        }
 
-        if (position <= 0) data.clear();
-        int posCount = data.size();
-        int count = datas.size();
-        for (int i = 0; i < count; i++) {
-            if (i < position) continue;
-
-            //一级评论
-            FirstLevelBean firstLevelBean = datas.get(i);
-            if (firstLevelBean == null) continue;
-            firstLevelBean.setPosition(i);
-            posCount += 2;
-            List<SecondLevelBean> secondLevelBeans = firstLevelBean.getSecondLevelBeans();
-            if (secondLevelBeans == null || secondLevelBeans.isEmpty()) {
-                firstLevelBean.setPositionCount(posCount);
-                data.add(firstLevelBean);
-                continue;
             }
-            int beanSize = secondLevelBeans.size();
-            posCount += beanSize;
-            firstLevelBean.setPositionCount(posCount);
-            data.add(firstLevelBean);
-
-            //二级评论
-            for (int j = 0; j < beanSize; j++) {
-                SecondLevelBean secondLevelBean = secondLevelBeans.get(j);
-                secondLevelBean.setChildPosition(j);
-                secondLevelBean.setPosition(i);
-                secondLevelBean.setPositionCount(posCount);
-                data.add(secondLevelBean);
-            }
-
-            //展示更多的item
-            if (beanSize <= 18) {
-                CommentMoreBean moreBean = new CommentMoreBean();
-                moreBean.setPosition(i);
-                moreBean.setPositionCount(posCount);
-                moreBean.setTotalCount(firstLevelBean.getTotalCount());
-                data.add(moreBean);
-            }
-
+            firstLevelBean.setTotalCount(1+(firstLevelBean.getSecondLevelBeans()==null?0:firstLevelBean.getSecondLevelBeans().size()));
+            firstLevelBean.setSecondLevelBeans(beans);
+            datas.add(firstLevelBean);
         }
     }
     public void show(View view) {
@@ -747,6 +700,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         }
 
         //view
+        System.out.println(datas);
         View view = View.inflate(this, R.layout.dialog_bottomsheet, null);
         ImageView iv_dialog_close = (ImageView) view.findViewById(R.id.dialog_bottomsheet_iv_close);
         rv_dialog_lists = (RecyclerView) view.findViewById(R.id.dialog_bottomsheet_rv_lists);
@@ -808,7 +762,6 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         firstLevelBean.setLikeCount(0);
         firstLevelBean.setSecondLevelBeans(new ArrayList<SecondLevelBean>());
         datas.add(firstLevelBean);
-        dataSort(datas.size() - 1);
         bottomSheetAdapter.notifyDataSetChanged();
         bottomSheetAdapter.loadMoreComplete();
 
