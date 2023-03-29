@@ -1,6 +1,9 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
+import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_CHILD;
 import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_EMPTY;
+import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_MORE;
+import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_PARENT;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -58,9 +61,9 @@ import java.util.List;
 import java.util.Stack;
 
 public class DetailActivity extends AppCompatActivity implements BaseQuickAdapter.RequestLoadMoreListener{
-
-    private long totalCount = 22;
-
+    private  int INITBEANNUM = 5;
+    private long totalCount = 5;
+    private float slideOffset = 0;
 
     Button returnButton;
     Button reportButton;
@@ -107,7 +110,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
 
     Integer detailType;
 
-    private float slideOffset = 0;
+
     private int offsetY;
 
     private List<MultiItemEntity> data = new ArrayList<>();
@@ -133,9 +136,9 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         initTools();
         initView();
         initData();
-
-        initEvent();
         showSheetDialog();
+        initEvent();
+
     }
 
     private void initTools(){
@@ -185,8 +188,8 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         getComment();
 
         sortCommentList();
-        initData2();
-        System.out.println(datas);
+        toCommentBeanList();
+        dataSort(0);
         initCommentTarget();
 
         updateButtonState();
@@ -208,32 +211,10 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println(2);
                 if (bottomSheetDialog!=null){
-//                    initCommentListView();
-//                    System.out.println("1"+remarkList);
+                    bottomSheetAdapter.notifyDataSetChanged();
+                    slideOffset = 0;
                     bottomSheetDialog.show();
-//                    bottomSheetDialog2.show();
-                }
-                if (inputTextMsgDialog!=null){
-//                    System.out.println(1111);
-                    inputTextMsgDialog.show();
-
-                }
-                if (inputTextMsgDialog == null) {
-                    inputTextMsgDialog = new InputTextMsgDialog(DetailActivity.this, R.style.dialog);
-                    inputTextMsgDialog.setmOnTextSendListener(new InputTextMsgDialog.OnTextSendListener() {
-                @Override
-                public void onTextSend(String msg) {
-//                    addComment(isReply, item, position, msg);
-                }
-
-                @Override
-                public void dismiss() {
-                    //item滑动到原位
-                    scrollLocation(-offsetY);
-                }
-            });
                 }
             }
         });
@@ -249,6 +230,79 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
                 new Thread(()->{
                     okHttpUtils.insertCollection(collect);
                 }).start();
+            }
+        });
+        // 点击事件
+        bottomSheetAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view1, int position) {
+                switch ((int) view1.getTag()) {
+                    case TYPE_COMMENT_PARENT:
+                        if (view1.getId() == R.id.rl_group) {
+                            //添加二级评论
+                            initInputTextMsgDialog((View) view1.getParent(), false, bottomSheetAdapter.getData().get(position), position);
+                        } else if (view1.getId() == R.id.ll_like) {
+                            //一级评论点赞 项目中还得通知服务器 成功才可以修改
+                            FirstLevelBean bean = (FirstLevelBean) bottomSheetAdapter.getData().get(position);
+                            bean.setLikeCount(bean.getLikeCount() + (bean.getIsLike() == 0 ? 1 : -1));
+                            bean.setIsLike(bean.getIsLike() == 0 ? 1 : 0);
+                            datas.set(bean.getPosition(), bean);
+                            initData();
+                            bottomSheetAdapter.notifyDataSetChanged();
+                        }
+                        break;
+                    case TYPE_COMMENT_CHILD:
+
+                        if (view1.getId() == R.id.rl_group) {
+                            //添加二级评论（回复）
+                            initInputTextMsgDialog(view1, true, bottomSheetAdapter.getData().get(position), position);
+                        } else if (view1.getId() == R.id.ll_like) {
+                            //二级评论点赞 项目中还得通知服务器 成功才可以修改
+                            SecondLevelBean bean = (SecondLevelBean) bottomSheetAdapter.getData().get(position);
+                            bean.setLikeCount(bean.getLikeCount() + (bean.getIsLike() == 0 ? 1 : -1));
+                            bean.setIsLike(bean.getIsLike() == 0 ? 1 : 0);
+
+                            List<SecondLevelBean> secondLevelBeans = datas.get((int) bean.getPosition()).getSecondLevelBeans();
+                            secondLevelBeans.set(bean.getChildPosition(), bean);
+//                            CommentMultiActivity.this.dataSort(0);
+                            bottomSheetAdapter.notifyDataSetChanged();
+                        }
+
+                        break;
+                    case TYPE_COMMENT_MORE:
+                        //在项目中是从服务器获取数据，其实就是二级评论分页获取
+                        CommentMoreBean moreBean = (CommentMoreBean) bottomSheetAdapter.getData().get(position);
+                        long beanPosition = moreBean.getPosition();
+                        FirstLevelBean firstLevelBean = datas.get((int)beanPosition);
+                        int showingSecondCount = firstLevelBean.getShowingSecondCount();
+                        SecondLevelBean secondLevelBean = firstLevelBean.getSecondLevelBeans().get(showingSecondCount);
+                        firstLevelBean.setShowingSecondCount(showingSecondCount+1);
+                        datas.get((int) moreBean.getPosition()).getSecondLevelBeans().add(secondLevelBean);
+
+                        System.out.println(secondLevelBean);
+                        dataSort(0);
+
+                        bottomSheetAdapter.notifyDataSetChanged();
+                        break;
+                    case TYPE_COMMENT_EMPTY:
+//                        initRefresh();
+                        break;
+
+                }
+
+            }
+        });
+        //滚动事件
+        if (mRecyclerViewUtil != null) mRecyclerViewUtil.initScrollListener(rv_dialog_lists);
+
+        mKeyBoardListener = new SoftKeyBoardListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+            }
+
+            @Override
+            public void keyBoardHide(int height) {
+                dismissInputDialog();
             }
         });
 //        commentCommitButton.setOnClickListener(new View.OnClickListener() {
@@ -382,36 +436,16 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
 //                //Do Nothing
 //            }
 //        });
-
-        mKeyBoardListener = new SoftKeyBoardListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
-            @Override
-            public void keyBoardShow(int height) {
-            }
-
-            @Override
-            public void keyBoardHide(int height) {
-                dismissInputDialog();
-            }
-        });
     }
 
 
-    private void initCommentListView(){
-        commentExpandableListAdapter = new CommentExpandableListAdapter(orderRemarkVO,firstList,this);
-        commentListView.setAdapter(commentExpandableListAdapter);
-    }
-    /**
-     * 计算高度(初始化可以设置默认高度)
-     *
-     * @return
-     */
+
     private int getWindowHeight() {
-        Resources res = this.getResources();
+        Resources res = getResources();
         DisplayMetrics displayMetrics = res.getDisplayMetrics();
-        int heightPixels = displayMetrics.heightPixels;
-        //设置弹窗高度为屏幕高度的3/4
-        return  heightPixels-heightPixels /4;
+        return displayMetrics.heightPixels;
     }
+    //获取评论并排序
     private synchronized void getComment(){
 
         try {
@@ -431,7 +465,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         for (List<RemarkVO> voList:orderRemarkVO){
             RemarkVO vo = voList.get(0);
             firstList.add(vo);
-            voList.remove(0);
+//            voList.remove(0);
         }
     }
     public List<List<RemarkVO>> orderRemarkVO(List<RemarkVO> data){
@@ -548,30 +582,30 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         }
 
     }
-    private static void setListViewHeight(ExpandableListView listView, int group) {
-        ExpandableListAdapter listAdapter = listView.getExpandableListAdapter();
-        int totalHeight = 0;
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.EXACTLY);
-        for (int i = 0; i < listAdapter.getGroupCount(); i++) {
-            View groupItem = listAdapter.getGroupView(i, false, null, listView);
-            groupItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += groupItem.getMeasuredHeight();
-            if (((listView.isGroupExpanded(i)) && (i != group))
-                    || ((!listView.isGroupExpanded(i)) && (i == group))) {
-                for (int j = 0; j < listAdapter.getChildrenCount(i); j++) {
-                    View listItem = listAdapter.getChildView(i, j, false, null, listView);
-                    listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-                    totalHeight += listItem.getMeasuredHeight();
-                }
-            }
-        }
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        int height = totalHeight + (listView.getDividerHeight() * (listAdapter.getGroupCount() - 1));
-        if (height < 10) height = 160;
-        params.height = height;
-        listView.setLayoutParams(params);
-        listView.requestLayout();
-    }
+//    private static void setListViewHeight(ExpandableListView listView, int group) {
+//        ExpandableListAdapter listAdapter = listView.getExpandableListAdapter();
+//        int totalHeight = 0;
+//        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.EXACTLY);
+//        for (int i = 0; i < listAdapter.getGroupCount(); i++) {
+//            View groupItem = listAdapter.getGroupView(i, false, null, listView);
+//            groupItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+//            totalHeight += groupItem.getMeasuredHeight();
+//            if (((listView.isGroupExpanded(i)) && (i != group))
+//                    || ((!listView.isGroupExpanded(i)) && (i == group))) {
+//                for (int j = 0; j < listAdapter.getChildrenCount(i); j++) {
+//                    View listItem = listAdapter.getChildView(i, j, false, null, listView);
+//                    listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+//                    totalHeight += listItem.getMeasuredHeight();
+//                }
+//            }
+//        }
+//        ViewGroup.LayoutParams params = listView.getLayoutParams();
+//        int height = totalHeight + (listView.getDividerHeight() * (listAdapter.getGroupCount() - 1));
+//        if (height < 10) height = 160;
+//        params.height = height;
+//        listView.setLayoutParams(params);
+//        listView.requestLayout();
+//    }
     private void initCommentTarget(){
         detailType = detail.getType();
         commentRootType = 1;
@@ -579,16 +613,17 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         commentTopID = 0;
         return;
     }
-    private void getFocusForEditText(EditText editText){
-        if (editText!=null){
-            editText.setFocusable(true);
-            editText.setFocusableInTouchMode(true);
-            editText.requestFocus();
-            InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            in.showSoftInput(editText,0);
-        }
-        return;
-    }
+//    private void getFocusForEditText(EditText editText){
+//        if (editText!=null){
+//            editText.setFocusable(true);
+//            editText.setFocusableInTouchMode(true);
+//            editText.requestFocus();
+//            InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//            in.showSoftInput(editText,0);
+//        }
+//        return;
+//    }
+    //更新按钮状态
     private void updateButtonState(){
         if (detail.getIsLiked() == 0) {
             likeButton.setImageResource(R.drawable.icon_dianzan_undo);
@@ -634,6 +669,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         }
 //        showInputTextMsgDialog();
     }
+    //隐藏输入会话框
     private void dismissInputDialog() {
         if (inputTextMsgDialog != null) {
             if (inputTextMsgDialog.isShowing()) inputTextMsgDialog.dismiss();
@@ -650,9 +686,9 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         }
     }
     //原始数据 一般是从服务器接口请求过来的
-    private void initData2() {
-        int size = 10;
+    private void toCommentBeanList() {
         for (RemarkVO i : firstList) {
+            int childPos = 0;
             FirstLevelBean firstLevelBean = new FirstLevelBean();
             firstLevelBean.setContent(i.getRemarkContent());
             firstLevelBean.setCreateTime(i.getRemarkTime().getTime());
@@ -662,11 +698,18 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
             firstLevelBean.setLikeCount(i.getRemarkLike());
             firstLevelBean.setUserName(i.getRemarkOwnerName());
 //            firstLevelBean.setTotalCount(i + size);
+//            firstLevelBean.setPosition(position);
+
 
             List<SecondLevelBean> beans = new ArrayList<>();
+            int beanSize = 0;
             for (List<RemarkVO> j : orderRemarkVO) {
+//                posCount += 2;
                 if (j.size()>0&&j.get(0)== i){
-                    j.remove(0);
+                    j.remove(i);
+                    beanSize = j.size();
+//                    posCount += beanSize;
+//                    firstLevelBean.setPositionCount(posCount);
                     for (RemarkVO k:j){
                         SecondLevelBean secondLevelBean = new SecondLevelBean();
                         secondLevelBean.setContent(k.getRemarkContent());
@@ -679,14 +722,93 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
                         secondLevelBean.setIsReply(k.getTargetIsTopic()^1);
                         secondLevelBean.setReplyUserName(k.getRemarkTargetName());
                         secondLevelBean.setTotalCount(j.size()+1);
+//                        secondLevelBean.setPosition(position);
+//                        secondLevelBean.setPositionCount(posCount);
+                        secondLevelBean.setChildPosition(childPos++);
+//                        data.add(secondLevelBean);
                         beans.add(secondLevelBean);
                     }
                 }
-
             }
+//            if (beanSize <= 10) {
+////                posCount+=2;
+//                CommentMoreBean moreBean = new CommentMoreBean();
+////                moreBean.setPosition(position);
+////                moreBean.setPositionCount(posCount);
+//                moreBean.setTotalCount(firstLevelBean.getTotalCount());
+//                data.add(moreBean);
+//            }
             firstLevelBean.setTotalCount(1+(firstLevelBean.getSecondLevelBeans()==null?0:firstLevelBean.getSecondLevelBeans().size()));
             firstLevelBean.setSecondLevelBeans(beans);
             datas.add(firstLevelBean);
+//            data.add(firstLevelBean);
+
+//            position++;
+        }
+
+    }
+    /**
+     * 对数据重新进行排列
+     * 目的是为了让一级评论和二级评论同为item
+     * 解决滑动卡顿问题
+     *
+     * @param position
+     */
+    private void dataSort(int position) {
+        if (datas.isEmpty()) {
+            data.add(new MultiItemEntity() {
+                @Override
+                public int getItemType() {
+                    return TYPE_COMMENT_EMPTY;
+                }
+            });
+            return;
+        }
+        int beanNum = 0;
+        if (position <= 0) data.clear();
+        int posCount = data.size();
+        int count = datas.size();
+        for (int i = 0; i < count; i++) {
+            if (i < position) continue;
+
+            //一级评论
+            FirstLevelBean firstLevelBean = datas.get(i);
+            if (firstLevelBean == null) continue;
+            firstLevelBean.setPosition(i);
+            posCount += 2;
+            List<SecondLevelBean> secondLevelBeans = firstLevelBean.getSecondLevelBeans();
+            if (secondLevelBeans == null || secondLevelBeans.isEmpty()) {
+                firstLevelBean.setPositionCount(posCount);
+                data.add(firstLevelBean);
+                continue;
+            }
+            int beanSize = secondLevelBeans.size();
+            posCount += beanSize;
+            firstLevelBean.setPositionCount(posCount);
+            data.add(firstLevelBean);
+
+            //二级评论
+            for (int j = 0; j < INITBEANNUM&&j<beanSize ; j++) {
+                SecondLevelBean secondLevelBean = secondLevelBeans.get(j);
+                secondLevelBean.setChildPosition(j);
+                secondLevelBean.setPosition(i);
+                secondLevelBean.setPositionCount(posCount);
+                data.add(secondLevelBean);
+
+            }
+
+            //展示更多的item
+            if (beanNum<beanSize) {
+//                SecondLevelBean moreBean = secondLevelBeans.get(++beanNum);
+                CommentMoreBean moreBean = new CommentMoreBean();
+                moreBean.setPosition(i);
+                moreBean.setPositionCount(posCount);
+                moreBean.setTotalCount(firstLevelBean.getTotalCount());
+//                System.out.println(beanNum++);
+                data.add(moreBean);
+                INITBEANNUM++;
+            }
+
         }
     }
     public void show(View view) {
@@ -700,8 +822,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         }
 
         //view
-        System.out.println(datas);
-        View view = View.inflate(this, R.layout.dialog_bottomsheet, null);
+        view = View.inflate(this, R.layout.dialog_bottomsheet, null);
         ImageView iv_dialog_close = (ImageView) view.findViewById(R.id.dialog_bottomsheet_iv_close);
         rv_dialog_lists = (RecyclerView) view.findViewById(R.id.dialog_bottomsheet_rv_lists);
         RelativeLayout rl_comment = view.findViewById(R.id.rl_comment);
@@ -741,10 +862,18 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                DetailActivity.this.slideOffset = slideOffset;//记录滑动值
+                DetailActivity.this.slideOffset = slideOffset;
             }
         });
 
+    }
+    private void initRefresh() {
+        datas.clear();
+        initData();
+        bottomSheetAdapter.setNewData(data);
+    }
+    private void showInputTextMsgDialog() {
+        inputTextMsgDialog.show();
     }
 
     @Override

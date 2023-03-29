@@ -39,6 +39,16 @@ public class FirstLevelBean implements MultiItemEntity {
     //当前一级评论所在的位置(下标)
     private int positionCount;
 
+    private int showingSecondCount = 0;
+
+    public int getShowingSecondCount() {
+        return showingSecondCount;
+    }
+
+    public void setShowingSecondCount(int showingSecondCount) {
+        this.showingSecondCount = showingSecondCount;
+    }
+
     public String getUserId() {
         return userId;
     }
