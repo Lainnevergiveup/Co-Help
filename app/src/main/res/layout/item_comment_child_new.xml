@@ -11,7 +11,7 @@
     android:paddingLeft="57dp"
     android:paddingBottom="6dp">
 
-    <com.makeramen.roundedimageview.RoundedImageView
+    <com.cohelp.task_for_stu.ui.view.NetRadiusImageView
         android:id="@+id/iv_header"
         android:layout_width="20dp"
         android:layout_height="20dp"

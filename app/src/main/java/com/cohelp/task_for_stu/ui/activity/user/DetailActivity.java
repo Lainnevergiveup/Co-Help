@@ -59,6 +59,9 @@ import java.util.Stack;
 
 public class DetailActivity extends AppCompatActivity implements BaseQuickAdapter.RequestLoadMoreListener{
 
+    private long totalCount = 22;
+
+
     Button returnButton;
     Button reportButton;
     TextView topicTitle;
@@ -119,16 +122,20 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
 //        super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_detail);
 //        initTools();
-//        initView();
+
 //        initData();
-//        initEvent();
+
 //        setTitle("话题详情");
         //以上为最终代码
         //以下为测试代码
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comment_multi);
-        mRecyclerViewUtil = new RecyclerViewUtil();
+        setContentView(R.layout.activity_detail);
+        initTools();
+        initView();
         initData();
+        initData2();
+        initEvent();
+
         dataSort(0);
         showSheetDialog();
     }
@@ -147,24 +154,22 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         }
         okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
         idAndType = new IdAndType(detail.getIdByType(detail.getType()),1);
+        mRecyclerViewUtil = new RecyclerViewUtil();
+
     }
 
     private void initView(){
-        view = LayoutInflater.from(this).inflate(R.layout.view_comment_bottomsheet, null, false);
-
+        view = LayoutInflater.from(this).inflate(R.layout.dialog_bottomsheet, null, false);
         likeButton = (ImageButton) findViewById(R.id.imageButton_Like);
         collectButton = (ImageButton) findViewById(R.id.imageButton_Collect);
         commentButton =  findViewById(R.id.imageButton_Comment);
-
-        commentText = view.findViewById(R.id.edit_comment);
-        commentCommitButton = view.findViewById(R.id.btn_send_comment);
-        commentListView = (ExpandableListView) view.findViewById(R.id.comment_item_list);
+//        commentText = view.findViewById(R.id.text_input_comment);
+//        commentCommitButton = view.findViewById(R.id.btn_send_comment);
+//        commentListView = (ExpandableListView) view.findViewById(R.id.comment_item_list);
 //        bottomSheetDialog = new BottomSheetDialog(this,R.style.BottomSheetDialogStyle1);
 //        inputTextMsgDialog = new InputTextMsgDialog(this,R.style.dialog);
+//        showSheetDialog();
 
-
-
-        setBottomSheet();
 //        initCommentRecycleView();
 //        ExpandableTextView mExpandableTextView = findViewById(R.id.expand_text_view);
 //        mExpandableTextView.setText("getString(R.string.etv_content_demo1daawsdd\n\n\nnu\n\nde\n\nre");
@@ -206,19 +211,19 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
             public void onClick(View view) {
                 System.out.println(2);
                 if (bottomSheetDialog!=null){
-                    initCommentListView();
-                    System.out.println("1"+remarkList);
+//                    initCommentListView();
+//                    System.out.println("1"+remarkList);
                     bottomSheetDialog.show();
 //                    bottomSheetDialog2.show();
                 }
                 if (inputTextMsgDialog!=null){
-                    System.out.println(1111);
+//                    System.out.println(1111);
                     inputTextMsgDialog.show();
 
                 }
                 if (inputTextMsgDialog == null) {
-            inputTextMsgDialog = new InputTextMsgDialog(DetailActivity.this, R.style.dialog);
-            inputTextMsgDialog.setmOnTextSendListener(new InputTextMsgDialog.OnTextSendListener() {
+                    inputTextMsgDialog = new InputTextMsgDialog(DetailActivity.this, R.style.dialog);
+                    inputTextMsgDialog.setmOnTextSendListener(new InputTextMsgDialog.OnTextSendListener() {
                 @Override
                 public void onTextSend(String msg) {
 //                    addComment(isReply, item, position, msg);
@@ -230,7 +235,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
                     scrollLocation(-offsetY);
                 }
             });
-        }
+                }
             }
         });
         collectButton.setOnClickListener(new View.OnClickListener() {
@@ -245,19 +250,17 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
                 new Thread(()->{
                     okHttpUtils.insertCollection(collect);
                 }).start();
-
-            }
-
-        });
-        commentCommitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RemarkRequest remarkRequest = remarkRequestBuilder();
-                remarkRequest.setType(detailType);
-                sendRemark(remarkRequest);
-                commentText.setText("");
             }
         });
+//        commentCommitButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                RemarkRequest remarkRequest = remarkRequestBuilder();
+//                remarkRequest.setType(detailType);
+//                sendRemark(remarkRequest);
+//                commentText.setText("");
+//            }
+//        });
 //        commentListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 //            @Override
 //            public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
@@ -393,94 +396,10 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         });
     }
 
-    private void setBottomSheet(){
-        if (inputTextMsgDialog==null){
-            return;
-        }
-
-        View view2 = View.inflate(this, R.layout.dialog_bottomsheet, null);
-        ImageView iv_dialog_close = (ImageView) view2.findViewById(R.id.dialog_bottomsheet_iv_close);
-        rv_dialog_lists = (RecyclerView) view2.findViewById(R.id.dialog_bottomsheet_rv_lists);
-        RelativeLayout rl_comment = view2.findViewById(R.id.rl_comment);
-        iv_dialog_close.setOnClickListener(v -> bottomSheetDialog.dismiss());
-        rl_comment.setOnClickListener(v -> {
-            //添加二级评论
-            initInputTextMsgDialog(null, false, null, -1);
-        });
-
-//        bottomSheetAdapter = new CommentDialogMutiAdapter(data);
-        rv_dialog_lists.setHasFixedSize(true);
-        rv_dialog_lists.setLayoutManager(new LinearLayoutManager(this));
-        closeDefaultAnimator(rv_dialog_lists);
-//        bottomSheetAdapter.setOnLoadMoreListener(this, rv_dialog_lists);
-//        rv_dialog_lists.setAdapter(bottomSheetAdapter);
-
-        inputTextMsgDialog = new InputTextMsgDialog(this,R.style.dialog);
-        inputTextMsgDialog.setContentView(view);
-        inputTextMsgDialog.setCanceledOnTouchOutside(true);
-
-        bottomSheetBehavior = BottomSheetBehavior.from((View) view2.getParent());
-        bottomSheetBehavior.setPeekHeight(getWindowHeight());
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                } else if (newState == BottomSheetBehavior.STATE_SETTLING) {
-                    if (slideOffset <= -0.28) {
-                        //当向下滑动时 值为负数
-                        bottomSheetDialog.dismiss();
-                    }
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                DetailActivity.this.slideOffset = slideOffset;//记录滑动值
-            }
-        });
-//        bottomSheetDialog.setCanceledOnTouchOutside(true);
-//        bottomSheetDialog.getWindow().setDimAmount(0f);
-//        bottomSheetDialog.setContentView(view);
-//        inputTextMsgDialog.getWindow().setDimAmount(0f);
-//        inputTextMsgDialog.setmOnTextSendListener(new InputTextMsgDialog.OnTextSendListener() {
-//            @Override
-//            public void onTextSend(String msg) {
-//                addComment(isReply, item, position, msg);
-//            }
-//
-//            @Override
-//            public void dismiss() {
-//                //item滑动到原位
-//                scrollLocation(-offsetY);
-//            }
-//        });
-//        //用户行为
-//        BottomSheetBehavior inputTextMsgDialogBehavior = BottomSheetBehavior.from((View) view.getParent());
-//        //dialog的高度
-//        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-//            @Override
-//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-//                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-//                    bottomSheetBehavior.setDraggable(true);
-//                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-//                    bottomSheetBehavior.setDraggable(true);
-//                }
-//            }
-//
-//            @Override
-//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-//
-//            }
-//        });
-    }
 
     private void initCommentListView(){
-
-
         commentExpandableListAdapter = new CommentExpandableListAdapter(orderRemarkVO,firstList,this);
         commentListView.setAdapter(commentExpandableListAdapter);
-
     }
     /**
      * 计算高度(初始化可以设置默认高度)
@@ -876,11 +795,40 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
 
     @Override
     public void onLoadMoreRequested() {
+        if (datas.size() >= totalCount) {
+            bottomSheetAdapter.loadMoreEnd(false);
+            return;
+        }
+        FirstLevelBean firstLevelBean = new FirstLevelBean();
+        firstLevelBean.setUserName("hui");
+        firstLevelBean.setId((datas.size() + 1) + "");
+        firstLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1918451189,3095768332&fm=26&gp=0.jpg");
+        firstLevelBean.setCreateTime(System.currentTimeMillis());
+        firstLevelBean.setContent("add loadmore comment");
+        firstLevelBean.setLikeCount(0);
+        firstLevelBean.setSecondLevelBeans(new ArrayList<SecondLevelBean>());
+        datas.add(firstLevelBean);
+        dataSort(datas.size() - 1);
+        bottomSheetAdapter.notifyDataSetChanged();
+        bottomSheetAdapter.loadMoreComplete();
 
     }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
+    }
+    @Override
+    protected void onDestroy() {
+        if (mRecyclerViewUtil != null){
+            mRecyclerViewUtil.destroy();
+            mRecyclerViewUtil = null;
+        }
+        if (mKeyBoardListener != null) {
+            mKeyBoardListener.setOnSoftKeyBoardChangeListener(null);
+            mKeyBoardListener = null;
+        }
+        bottomSheetAdapter = null;
+        super.onDestroy();
     }
 }

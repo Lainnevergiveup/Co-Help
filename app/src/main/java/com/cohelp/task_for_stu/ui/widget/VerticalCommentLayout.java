@@ -5,6 +5,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,7 +21,6 @@ import com.bumptech.glide.Glide;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.model.entity.SecondLevelBean;
 import com.cohelp.task_for_stu.ui.CommentApplication;
-import com.cohelp.task_for_stu.utils.SizeUtils;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -60,7 +60,7 @@ public class VerticalCommentLayout extends LinearLayout implements
 
     private void init() {
         setOrientation(VERTICAL);
-        mCommentVerticalSpace = SizeUtils.dp2px(2f);
+        mCommentVerticalSpace = (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2f, this.getContext().getResources().getDisplayMetrics()) + 0.5f);
         COMMENT_TEXT_POOL = new SimpleWeakObjectPool<>();
         setOnHierarchyChangeListener(this);
     }

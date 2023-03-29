@@ -18,7 +18,7 @@
         android:paddingBottom="8dp">
 
         <!--头像-->
-        <com.makeramen.roundedimageview.RoundedImageView
+        <com.cohelp.task_for_stu.ui.view.NetRadiusImageView
             android:id="@+id/iv_header"
             android:layout_width="32dp"
             android:layout_height="32dp"
