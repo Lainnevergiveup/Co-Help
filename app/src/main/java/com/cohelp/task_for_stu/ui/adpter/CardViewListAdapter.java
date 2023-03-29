@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
+import com.cohelp.task_for_stu.net.model.vo.AskVO;
 import com.cohelp.task_for_stu.net.model.vo.HelpVO;
-import com.cohelp.task_for_stu.net.model.vo.HoleVO;
 import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
 
 import java.util.List;
@@ -97,7 +97,7 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
 
         ActivityVO activityVO = detailResponse.getActivityVO();
         HelpVO helpVO = detailResponse.getHelpVO();
-        HoleVO holeVO = detailResponse.getHoleVO();
+        AskVO askVO = detailResponse.getAskVO();
 
         holder.authorAvator.setImageURL(detailResponse.getPublisherAvatarUrl());
         List<String> imageList = detailResponse.getImagesUrl();
@@ -133,15 +133,15 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
             else holder.tag.setText("有偿");
 
         }
-        if (holeVO!=null){
+        if (askVO!=null){
 //            System.out.println("id="+holeVO.getId());
-            holder.authorName.setText(holeVO.getUserName());
-            holder.title.setText(holeVO.getHoleTitle());
-            holder.summary.setText(holeVO.getHoleDetail());
-            holder.commentNumber.setText(holeVO.getHoleComment().toString());
-            holder.praiseNumber.setText(holeVO.getHoleLike().toString());
-            holder.collectNumber.setText(holeVO.getHoleCollect().toString());
-            holder.tag.setText(holeVO.getHoleLabel());
+            holder.authorName.setText(askVO.getUserName());
+            holder.title.setText(askVO.getQuestion());
+            holder.summary.setText("");
+            holder.commentNumber.setText(askVO.getAnswerCount().toString());
+            holder.praiseNumber.setText(askVO.getLikeCount().toString());
+            holder.collectNumber.setText(askVO.getCollectCount().toString());
+            holder.tag.setText(askVO.getSemester());
         }
 //        holder.authorAvator.setimage;
         holder.itemView.setOnClickListener(new View.OnClickListener() {

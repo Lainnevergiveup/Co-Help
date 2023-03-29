@@ -3,6 +3,7 @@ package com.cohelp.task_for_stu.net.model.domain;
 import androidx.annotation.NonNull;
 
 import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
+import com.cohelp.task_for_stu.net.model.vo.AskVO;
 import com.cohelp.task_for_stu.net.model.vo.HelpVO;
 import com.cohelp.task_for_stu.net.model.vo.HoleVO;
 
@@ -32,7 +33,8 @@ public class DetailResponse implements Serializable,Cloneable {
     /**
      * 树洞视图体，封装树洞基本信息(不包括发布者头像及话题相关图片)
      */
-    private HoleVO holeVO;
+    private AskVO askVO;
+
     /**
      * 发布者头像Url
      */
@@ -85,7 +87,7 @@ public class DetailResponse implements Serializable,Cloneable {
         return "DetailResponse{" +
                 "activityVO=" + activityVO +
                 ", helpVO=" + helpVO +
-                ", holeVO=" + holeVO +
+                ", holeVO=" + askVO +
                 ", publisherAvatarUrl='" + publisherAvatarUrl + '\'' +
                 ", imagesUrl=" + imagesUrl +
                 ", isLiked=" + isLiked +
@@ -122,12 +124,12 @@ public class DetailResponse implements Serializable,Cloneable {
         this.helpVO = helpVO;
     }
 
-    public HoleVO getHoleVO() {
-        return holeVO;
+    public AskVO getAskVO() {
+        return askVO;
     }
 
-    public void setHoleVO(HoleVO holeVO) {
-        this.holeVO = holeVO;
+    public void setHoleVO(AskVO askVO) {
+        this.askVO = askVO;
     }
 
     public String getPublisherAvatarUrl() {
@@ -176,14 +178,14 @@ public class DetailResponse implements Serializable,Cloneable {
     public Integer getIdByType(Integer type){
         if (type==1)    return this.getActivityVO().getId();
         if (type==2)    return this.getHelpVO().getId();
-        if (type==3)    return this.getHoleVO().getId();
+        if (type==7)    return this.getAskVO().getId();
         return null;
     }
 
     public Integer getOwnerIdByType(Integer type){
         if (type==1)    return this.getActivityVO().getActivityOwnerId();
         if (type==2)    return this.getHelpVO().getHelpOwnerId();
-        if (type==3)    return this.getHoleVO().getHoleOwnerId();
+        if (type==7)    return this.getAskVO().getPublisherId();
         return null;
     }
 }

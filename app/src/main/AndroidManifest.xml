@@ -48,7 +48,7 @@
         android:allowBackup="true"
         android:fitsSystemWindows="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="CO-help"
+        android:label=""
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"

@@ -160,7 +160,7 @@ public class MyCollectActivity extends BasicInfoActivity {
             getCollectList();
             mAdapter.refresh(collectList);
             refreshLayout.finishRefresh();
-        }, 1000));
+        }, 300));
         //上拉加载
 //        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
 //            mAdapter.loadMore(collectList);
@@ -209,6 +209,7 @@ public class MyCollectActivity extends BasicInfoActivity {
             }
         },collectList);
         getCollectList();
+        System.out.println("collect"+collectList);
 //        cardViewListAdapter = new CardViewListAdapter(collectList);
 
 //        eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
@@ -325,27 +326,13 @@ public class MyCollectActivity extends BasicInfoActivity {
 //                        XToastUtils.toast("sssssss");
                         System.out.println("List"+mAdapter.getSelectedIndexList());
                         delCollectList();
-
-//                        refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-//
-//                        }, 1000));
                         getCollectList();
                         mAdapter.refresh(collectList);
                         refreshLayout.finishRefresh();
-//                        refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-//                            mAdapter.refresh(collectList);
-//                            refreshLayout.finishRefresh();
-//                        }, 1000));
-//                        refreshLayout.autoRefresh();
-//                        recyclerView.setAdapter(new NewsListEditAdapter(isSelectAll -> {
-//                            if (scbSelectAll != null) {
-//                                scbSelectAll.setCheckedSilent(isSelectAll);
-//                            }
-//                        },collectList));
+
                         mAdapter.switchManageMode();
                         refreshManageMode();
-//                        refreshCollectListData();
-//                        System.out.println(delCollectList);
+
                     }
                 })
                 .show();

@@ -27,8 +27,8 @@ import androidx.annotation.NonNull;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
+import com.cohelp.task_for_stu.net.model.vo.AskVO;
 import com.cohelp.task_for_stu.net.model.vo.HelpVO;
-import com.cohelp.task_for_stu.net.model.vo.HoleVO;
 import com.cohelp.task_for_stu.net.model.vo.ResultVO;
 import com.cohelp.task_for_stu.ui.adpter.base.broccoli.BroccoliRecyclerAdapter;
 import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
@@ -109,10 +109,10 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
         DetailResponse model = modelData.getDetailResponse();
         ActivityVO activityVO = model.getActivityVO();
         HelpVO helpVO = model.getHelpVO();
-        HoleVO holeVO = model.getHoleVO();
+        AskVO askVO = model.getAskVO();
         System.out.println("help"+helpVO);
-        System.out.println("help"+activityVO);
-        System.out.println("help"+holeVO);
+        System.out.println("ac"+activityVO);
+        System.out.println("ask"+askVO);
         NetRadiusImageView imageView = holder.findViewById(R.id.cardView_author_pic);
         ImageLoader.get().loadImage(imageView, model.getPublisherAvatarUrl());
 
@@ -153,14 +153,16 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
 
 
         }
-        if (holeVO!=null){
-            holder.text(R.id.cardView_author_name, holeVO.getUserName());
-            holder.text(R.id.cardView_tag, holeVO.getHoleLabel());
-            holder.text(R.id.cardView_title, holeVO.getHoleTitle());
-            holder.text(R.id.cardView_summary, holeVO.getHoleDetail());
-            holder.text(R.id.cardView_praiseNumber, holeVO.getHoleLike().toString());
-            holder.text(R.id.cardView_commentNumber, holeVO.getHoleComment().toString());
-            holder.text(R.id.cardView_collectNumber, holeVO.getHoleCollect().toString());
+        if (askVO!=null){
+            holder.text(R.id.cardView_author_name, askVO.getUserName());
+            holder.text(R.id.cardView_tag, askVO.getSemester());
+            holder.text(R.id.cardView_title, askVO.getQuestion());
+            holder.text(R.id.cardView_summary, "");
+            holder.text(R.id.cardView_praiseNumber, askVO.getLikeCount().toString());
+            holder.text(R.id.cardView_commentNumber, askVO.getAnswerCount().toString());
+            holder.text(R.id.cardView_collectNumber, askVO.getCollectCount().toString());
+
+
 
         }
 

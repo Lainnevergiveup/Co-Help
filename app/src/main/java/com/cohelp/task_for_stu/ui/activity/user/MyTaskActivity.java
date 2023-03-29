@@ -73,12 +73,12 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_task);
-
+        setUpToolBar();
         initTools();
         initView();
         initEvent();
         initPager();
-        title.setText("我的发布");
+        title.setText("我的参与");
 
     }
 

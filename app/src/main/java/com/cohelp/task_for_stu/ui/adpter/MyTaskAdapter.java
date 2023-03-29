@@ -13,8 +13,8 @@ import androidx.fragment.app.Fragment;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
+import com.cohelp.task_for_stu.net.model.vo.AskVO;
 import com.cohelp.task_for_stu.net.model.vo.HelpVO;
-import com.cohelp.task_for_stu.net.model.vo.HoleVO;
 import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
 
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class MyTaskAdapter extends BaseAdapter {
 
         ActivityVO activityVO = detailResponse.getActivityVO();
         HelpVO helpVO = detailResponse.getHelpVO();
-        HoleVO holeVO = detailResponse.getHoleVO();
+        AskVO askVO = detailResponse.getAskVO();
 
         if(view == null ) {
             view = LayoutInflater.from(context).inflate(R.layout.view_cardlist_card, parent, false);
@@ -115,15 +115,16 @@ public class MyTaskAdapter extends BaseAdapter {
             else tag.setText("有偿");
 
         }
-        if (holeVO!=null){
-            System.out.println("id="+holeVO.getId());
-            authorName.setText(holeVO.getUserName());
-            title.setText(holeVO.getHoleTitle());
-            summary.setText(holeVO.getHoleDetail());
-            commentNumber.setText(holeVO.getHoleComment().toString());
-            praiseNumber.setText(holeVO.getHoleLike().toString());
-            collectNumber.setText(holeVO.getHoleCollect().toString());
-            tag.setText(holeVO.getHoleLabel());
+        if (askVO!=null){
+            System.out.println("id="+askVO.getId());
+            authorName.setText(askVO.getUserName());
+            title.setText(askVO.getUserName());
+            summary.setText("");
+            commentNumber.setText(askVO.getAnswerCount().toString());
+            praiseNumber.setText(askVO.getLikeCount().toString());
+            collectNumber.setText(askVO.getCollectCount().toString());
+            tag.setText(askVO.getSemester());
+
         }
 
 
