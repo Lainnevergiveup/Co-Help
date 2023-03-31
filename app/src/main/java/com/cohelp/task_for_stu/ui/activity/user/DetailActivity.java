@@ -64,6 +64,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
     private  int INITBEANNUM = 5;
     private long totalCount = 5;
     private float slideOffset = 0;
+    private int positionCount = 0;
 
     Button returnButton;
     Button reportButton;
@@ -468,6 +469,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
 //            voList.remove(0);
         }
     }
+
     public List<List<RemarkVO>> orderRemarkVO(List<RemarkVO> data){
         if(data==null){
             return null;
@@ -657,7 +659,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
             inputTextMsgDialog.setmOnTextSendListener(new InputTextMsgDialog.OnTextSendListener() {
                 @Override
                 public void onTextSend(String msg) {
-//                    addComment(isReply, item, position, msg);
+                    addComment(isReply, item, position, msg);
                 }
 
                 @Override
@@ -667,7 +669,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
                 }
             });
         }
-//        showInputTextMsgDialog();
+        showInputTextMsgDialog();
     }
     //隐藏输入会话框
     private void dismissInputDialog() {
@@ -875,7 +877,63 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
     private void showInputTextMsgDialog() {
         inputTextMsgDialog.show();
     }
+    private void addComment(boolean isReply, MultiItemEntity item, final int position, String msg) {
+        final String userName = "hui";
+        if (position >= 0) {
+            //添加二级评论
+            int pos = 0;
+            String replyUserName = "未知";
+            if (item instanceof FirstLevelBean) {
+                FirstLevelBean firstLevelBean = (FirstLevelBean) item;
+                positionCount = (int) (firstLevelBean.getPositionCount() + 1);
+                pos = (int) firstLevelBean.getPosition();
+                replyUserName = firstLevelBean.getUserName();
+            } else if (item instanceof SecondLevelBean) {
+                SecondLevelBean secondLevelBean = (SecondLevelBean) item;
+                positionCount = (int) (secondLevelBean.getPositionCount() + 1);
+                pos = (int) secondLevelBean.getPosition();
+                replyUserName = secondLevelBean.getUserName();
+            }
 
+            SecondLevelBean secondLevelBean = new SecondLevelBean();
+            secondLevelBean.setReplyUserName(replyUserName);
+            secondLevelBean.setIsReply(isReply ? 1 : 0);
+            secondLevelBean.setContent(msg);
+            secondLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3370302115,85956606&fm=26&gp=0.jpg");
+            secondLevelBean.setCreateTime(System.currentTimeMillis());
+            secondLevelBean.setIsLike(0);
+            secondLevelBean.setUserName(userName);
+            secondLevelBean.setId("");
+            secondLevelBean.setPosition(positionCount);
+
+            datas.get(pos).getSecondLevelBeans().add(secondLevelBean);
+            DetailActivity.this.dataSort(0);
+            bottomSheetAdapter.notifyDataSetChanged();
+            rv_dialog_lists.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ((LinearLayoutManager) rv_dialog_lists.getLayoutManager())
+                            .scrollToPositionWithOffset(positionCount >= data.size() - 1 ? data.size() - 1
+                                    : positionCount, positionCount >= data.size() - 1 ? Integer.MIN_VALUE : rv_dialog_lists.getHeight());
+                }
+            }, 100);
+
+        } else {
+            //添加一级评论
+            FirstLevelBean firstLevelBean = new FirstLevelBean();
+            firstLevelBean.setUserName(userName);
+            firstLevelBean.setId(bottomSheetAdapter.getItemCount() + 1 + "");
+            firstLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1918451189,3095768332&fm=26&gp=0.jpg");
+            firstLevelBean.setCreateTime(System.currentTimeMillis());
+            firstLevelBean.setContent(msg);
+            firstLevelBean.setLikeCount(0);
+            firstLevelBean.setSecondLevelBeans(new ArrayList<SecondLevelBean>());
+            datas.add(0, firstLevelBean);
+            DetailActivity.this.dataSort(0);
+            bottomSheetAdapter.notifyDataSetChanged();
+            rv_dialog_lists.scrollToPosition(0);
+        }
+    }
     @Override
     public void onLoadMoreRequested() {
         if (datas.size() >= totalCount) {
