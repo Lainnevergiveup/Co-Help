@@ -43,16 +43,23 @@ import com.cohelp.task_for_stu.net.model.entity.FirstLevelBean;
 import com.cohelp.task_for_stu.net.model.entity.RemarkActivity;
 import com.cohelp.task_for_stu.net.model.entity.RemarkHelp;
 import com.cohelp.task_for_stu.net.model.entity.SecondLevelBean;
+import com.cohelp.task_for_stu.net.model.entity.User;
+import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
+import com.cohelp.task_for_stu.net.model.vo.AskVO;
+import com.cohelp.task_for_stu.net.model.vo.HelpVO;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter;
 import com.cohelp.task_for_stu.ui.adpter.CommentExpandableListAdapter;
 import com.cohelp.task_for_stu.ui.listener.SoftKeyBoardListener;
 import com.cohelp.task_for_stu.ui.view.AvatorImageView;
 import com.cohelp.task_for_stu.ui.view.InputTextMsgDialog;
+import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
 import com.cohelp.task_for_stu.utils.RecyclerViewUtil;
 import com.cohelp.task_for_stu.utils.SessionUtils;
+import com.cohelp.task_for_stu.utils.T;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.xuexiang.xui.widget.actionbar.TitleBar;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -72,17 +79,14 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
     TextView avatorName;
     TextView topicTime;
     TextView topicDetail;
-    AvatorImageView avatorPic;
+    TitleBar titleBar;
+    NetRadiusImageView avatorPic;
     private RecyclerView rv_dialog_lists;
     ImageButton likeButton;
     ImageButton collectButton;
     ImageButton commentButton;
     EditText commentText;
-    Button commentCommitButton;
-    EditText editText;
     View view;
-    ExpandableListView commentListView;
-//    private CommentDialogMutiAdapter bottomSheetAdapter;
 
     BottomSheetDialog bottomSheetDialog;
 
@@ -90,14 +94,13 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
 
     InputTextMsgDialog inputTextMsgDialog;
 
-    CommentExpandableListAdapter commentExpandableListAdapter;
 
     private SoftKeyBoardListener mKeyBoardListener;
 
     OkHttpUtils okHttpUtils;
     Intent intent;
 
-
+    User user;
 
     DetailResponse detail;
     List<RemarkVO> remarkList;
@@ -116,22 +119,12 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
 
     private List<MultiItemEntity> data = new ArrayList<>();
     private List<FirstLevelBean> datas = new ArrayList<>();
-    private String content = "我听见你的声音，有种特别的感觉。让我不断想，不敢再忘记你。如果真的有一天，爱情理想会实现，我会加倍努力好好对你，永远不改变";
 
     private RecyclerViewUtil mRecyclerViewUtil;
     private CommentDialogMutiAdapter bottomSheetAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_detail);
-//        initTools();
-
-//        initData();
-
-//        setTitle("话题详情");
-        //以上为最终代码
-        //以下为测试代码
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         initTools();
@@ -148,6 +141,8 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
             Bundle bundle = intent.getExtras();
             if (bundle!=null){
                 detail = (DetailResponse) bundle.getSerializable("detailResponse");
+                detailType = detail.getType();
+
             }
         }
 
@@ -165,33 +160,21 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         likeButton = (ImageButton) findViewById(R.id.imageButton_Like);
         collectButton = (ImageButton) findViewById(R.id.imageButton_Collect);
         commentButton =  findViewById(R.id.imageButton_Comment);
-//        commentText = view.findViewById(R.id.text_input_comment);
-//        commentCommitButton = view.findViewById(R.id.btn_send_comment);
-//        commentListView = (ExpandableListView) view.findViewById(R.id.comment_item_list);
-//        bottomSheetDialog = new BottomSheetDialog(this,R.style.BottomSheetDialogStyle1);
-//        inputTextMsgDialog = new InputTextMsgDialog(this,R.style.dialog);
-//        showSheetDialog();
 
-//        initCommentRecycleView();
-//        ExpandableTextView mExpandableTextView = findViewById(R.id.expand_text_view);
-//        mExpandableTextView.setText("getString(R.string.etv_content_demo1daawsdd\n\n\nnu\n\nde\n\nre");
-//        mExpandableTextView.setOnExpandStateChangeListener(new ExpandableTextView.OnExpandStateChangeListener() {
-//            @Override
-//            public void onExpandStateChanged(TextView textView, boolean isExpanded) {
-//                ToastUtils.toast(isExpanded ? "Expanded" : "Collapsed");
-//            }
-//        });
-
+        titleBar = (TitleBar) findViewById(R.id.tt_title);
+        avatorPic = (NetRadiusImageView) findViewById(R.id.image_UserIcon);
+        avatorName = (TextView) findViewById(R.id.text_UserId);
+        topicTime = (TextView) findViewById(R.id.text_TopicCreateTime);
+        topicTitle = (TextView) findViewById(R.id.text_MessageTitle);
+        topicDetail = (TextView) findViewById(R.id.text_TopicDetail);
     }
 
     private void initData(){
+        setDetailData();
 
-        getComment();
+        getUser();
 
-        sortCommentList();
-        toCommentBeanList();
-        dataSort(0);
-        initCommentTarget();
+        refreshComment();
 
         updateButtonState();
 
@@ -439,8 +422,46 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
 //        });
     }
 
+    private void refreshComment(){
+        if (remarkList!=null)remarkList.clear();
+        if (firstList!=null)firstList.clear();
+        if (orderRemarkVO!=null)orderRemarkVO.clear();
+        if (data!=null)data.clear();
+        if (datas!=null)datas.clear();
+        getComment();
+        sortCommentList();
+        toCommentBeanList();
+        dataSort(0);
+        initCommentTarget();
+    }
+    private void setDetailData(){
 
+        if (detail!=null){
+            avatorPic.setImageURL(detail.getPublisherAvatarUrl());
 
+            switch (detailType){
+                case 1:{
+                    ActivityVO activityVO = detail.getActivityVO();
+                    avatorName.setText(activityVO.getUserName());
+                    topicTime.setText(activityVO.getActivityTime().toString());
+                    titleBar.setTitle(activityVO.getActivityTitle());
+                    topicTitle.setText(activityVO.getActivityTitle());
+                    topicDetail.setText(activityVO.getActivityDetail());
+                    break;
+                }
+                case 2:{
+                    HelpVO helpVO = detail.getHelpVO();
+                    avatorName.setText(helpVO.getUserName());
+                    topicTime.setText(helpVO.getHelpCreateTime().toString());
+                    titleBar.setTitle(helpVO.getHelpTitle());
+                    topicTitle.setText(helpVO.getHelpTitle());
+                    topicDetail.setText(helpVO.getHelpDetail());
+                    break;
+                }
+                default:break;
+            }
+        }
+    }
     private int getWindowHeight() {
         Resources res = getResources();
         DisplayMetrics displayMetrics = res.getDisplayMetrics();
@@ -562,14 +583,11 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
                 remarkRequest.setRemarkHelp((remarkHelpBiulder()));
                 break;
             }
-            case 3:{
-
-            }
             default:{
                 break;
             }
         }
-        System.out.println(okHttpUtils.getGson().toJson(remarkRequest));
+//        System.out.println(okHttpUtils.getGson().toJson(remarkRequest));
         return remarkRequest;
     }
     private synchronized void sendRemark(RemarkRequest remarkRequest){
@@ -584,60 +602,27 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         }
 
     }
-//    private static void setListViewHeight(ExpandableListView listView, int group) {
-//        ExpandableListAdapter listAdapter = listView.getExpandableListAdapter();
-//        int totalHeight = 0;
-//        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.EXACTLY);
-//        for (int i = 0; i < listAdapter.getGroupCount(); i++) {
-//            View groupItem = listAdapter.getGroupView(i, false, null, listView);
-//            groupItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-//            totalHeight += groupItem.getMeasuredHeight();
-//            if (((listView.isGroupExpanded(i)) && (i != group))
-//                    || ((!listView.isGroupExpanded(i)) && (i == group))) {
-//                for (int j = 0; j < listAdapter.getChildrenCount(i); j++) {
-//                    View listItem = listAdapter.getChildView(i, j, false, null, listView);
-//                    listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-//                    totalHeight += listItem.getMeasuredHeight();
-//                }
-//            }
-//        }
-//        ViewGroup.LayoutParams params = listView.getLayoutParams();
-//        int height = totalHeight + (listView.getDividerHeight() * (listAdapter.getGroupCount() - 1));
-//        if (height < 10) height = 160;
-//        params.height = height;
-//        listView.setLayoutParams(params);
-//        listView.requestLayout();
-//    }
+
     private void initCommentTarget(){
-        detailType = detail.getType();
         commentRootType = 1;
         commentTargetID = detail.getIdByType(detailType);
         commentTopID = 0;
         return;
     }
-//    private void getFocusForEditText(EditText editText){
-//        if (editText!=null){
-//            editText.setFocusable(true);
-//            editText.setFocusableInTouchMode(true);
-//            editText.requestFocus();
-//            InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//            in.showSoftInput(editText,0);
-//        }
-//        return;
-//    }
+
     //更新按钮状态
     private void updateButtonState(){
         if (detail.getIsLiked() == 0) {
-            likeButton.setImageResource(R.drawable.icon_dianzan_undo);
+            likeButton.setImageResource(R.drawable.ic_dianzan_undo);
         } else {
-            likeButton.setImageResource(R.drawable.icon_dianzan_success);
+            likeButton.setImageResource(R.drawable.ic_dianzan_success);
         }
 
         if (detail.getIsCollected()==1){
             collectButton.setImageResource(R.drawable.icon_collect_success);
         }
         else {
-            collectButton.setImageResource(R.drawable.icon_collect_undo);
+            collectButton.setImageResource(R.drawable.ic_collect_undo);
         }
     }
     public void closeDefaultAnimator(RecyclerView mRvCustomer) {
@@ -656,6 +641,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         }
         if (inputTextMsgDialog == null) {
             inputTextMsgDialog = new InputTextMsgDialog(this, R.style.dialog);
+            commentText = inputTextMsgDialog.getMessageTextView();
             inputTextMsgDialog.setmOnTextSendListener(new InputTextMsgDialog.OnTextSendListener() {
                 @Override
                 public void onTextSend(String msg) {
@@ -766,7 +752,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
             });
             return;
         }
-        int beanNum = 0;
+        int beanNum = INITBEANNUM;
         if (position <= 0) data.clear();
         int posCount = data.size();
         int count = datas.size();
@@ -800,7 +786,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
             }
 
             //展示更多的item
-            if (beanNum<beanSize) {
+            if (beanNum<beanSize-1) {
 //                SecondLevelBean moreBean = secondLevelBeans.get(++beanNum);
                 CommentMoreBean moreBean = new CommentMoreBean();
                 moreBean.setPosition(i);
@@ -878,62 +864,90 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         inputTextMsgDialog.show();
     }
     private void addComment(boolean isReply, MultiItemEntity item, final int position, String msg) {
-        final String userName = "hui";
+        final String userName = user.getUserName();
         if (position >= 0) {
             //添加二级评论
             int pos = 0;
-            String replyUserName = "未知";
+            String replyUserName = "";
+
             if (item instanceof FirstLevelBean) {
                 FirstLevelBean firstLevelBean = (FirstLevelBean) item;
                 positionCount = (int) (firstLevelBean.getPositionCount() + 1);
                 pos = (int) firstLevelBean.getPosition();
                 replyUserName = firstLevelBean.getUserName();
+                commentTargetID = Integer.valueOf(firstLevelBean.getId());
+                commentText.setText(msg);
+                commentRootType = 0;
+                commentTopID = Integer.valueOf(datas.get(firstLevelBean.getPosition()).getId());
+
             } else if (item instanceof SecondLevelBean) {
                 SecondLevelBean secondLevelBean = (SecondLevelBean) item;
                 positionCount = (int) (secondLevelBean.getPositionCount() + 1);
                 pos = (int) secondLevelBean.getPosition();
                 replyUserName = secondLevelBean.getUserName();
+                commentTargetID = Integer.valueOf(secondLevelBean.getId());
+                commentText.setText(msg);
+                commentRootType = 0;
+                commentTopID = Integer.valueOf(datas.get(secondLevelBean.getPosition()).getId());
             }
 
-            SecondLevelBean secondLevelBean = new SecondLevelBean();
-            secondLevelBean.setReplyUserName(replyUserName);
-            secondLevelBean.setIsReply(isReply ? 1 : 0);
-            secondLevelBean.setContent(msg);
-            secondLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3370302115,85956606&fm=26&gp=0.jpg");
-            secondLevelBean.setCreateTime(System.currentTimeMillis());
-            secondLevelBean.setIsLike(0);
-            secondLevelBean.setUserName(userName);
-            secondLevelBean.setId("");
-            secondLevelBean.setPosition(positionCount);
-
-            datas.get(pos).getSecondLevelBeans().add(secondLevelBean);
-            DetailActivity.this.dataSort(0);
-            bottomSheetAdapter.notifyDataSetChanged();
-            rv_dialog_lists.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    ((LinearLayoutManager) rv_dialog_lists.getLayoutManager())
-                            .scrollToPositionWithOffset(positionCount >= data.size() - 1 ? data.size() - 1
-                                    : positionCount, positionCount >= data.size() - 1 ? Integer.MIN_VALUE : rv_dialog_lists.getHeight());
-                }
-            }, 100);
-
+//            SecondLevelBean secondLevelBean = new SecondLevelBean();
+//            secondLevelBean.setReplyUserName(replyUserName);
+//            secondLevelBean.setIsReply(isReply ? 1 : 0);
+//            secondLevelBean.setContent(msg);
+//            secondLevelBean.setHeadImg(this.user.);
+//            secondLevelBean.setCreateTime(System.currentTimeMillis());
+//            secondLevelBean.setIsLike(0);
+//            secondLevelBean.setUserName(userName);
+//            secondLevelBean.setId("");
+//            secondLevelBean.setPosition(positionCount);
+//
+//            datas.get(pos).getSecondLevelBeans().add(secondLevelBean);
+//            DetailActivity.this.dataSort(0);
         } else {
+            commentTargetID = Integer.valueOf(detail.getIdByType(detailType));
+//            commentText.setText(msg);
+            System.out.println(commentText.getText());
+            commentRootType = 1;
+            commentTopID = null;
             //添加一级评论
-            FirstLevelBean firstLevelBean = new FirstLevelBean();
-            firstLevelBean.setUserName(userName);
-            firstLevelBean.setId(bottomSheetAdapter.getItemCount() + 1 + "");
-            firstLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1918451189,3095768332&fm=26&gp=0.jpg");
-            firstLevelBean.setCreateTime(System.currentTimeMillis());
-            firstLevelBean.setContent(msg);
-            firstLevelBean.setLikeCount(0);
-            firstLevelBean.setSecondLevelBeans(new ArrayList<SecondLevelBean>());
-            datas.add(0, firstLevelBean);
-            DetailActivity.this.dataSort(0);
-            bottomSheetAdapter.notifyDataSetChanged();
-            rv_dialog_lists.scrollToPosition(0);
+//            FirstLevelBean firstLevelBean = new FirstLevelBean();
+//            firstLevelBean.setUserName(userName);
+//            firstLevelBean.setId(bottomSheetAdapter.getItemCount() + 1 + "");
+//            firstLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1918451189,3095768332&fm=26&gp=0.jpg");
+//            firstLevelBean.setCreateTime(System.currentTimeMillis());
+//            firstLevelBean.setContent(msg);
+//            firstLevelBean.setLikeCount(0);
+//            firstLevelBean.setSecondLevelBeans(new ArrayList<SecondLevelBean>());
+//            datas.add(0, firstLevelBean);
+//            DetailActivity.this.dataSort(0);
+//            bottomSheetAdapter.notifyDataSetChanged();
+//            rv_dialog_lists.scrollToPosition(0);
+        }
+        sendRemark(remarkRequestBuilder());
+        refreshComment();
+        bottomSheetAdapter.notifyDataSetChanged();
+        rv_dialog_lists.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ((LinearLayoutManager) rv_dialog_lists.getLayoutManager())
+                        .scrollToPositionWithOffset(positionCount >= data.size() - 1 ? data.size() - 1
+                                : positionCount, positionCount >= data.size() - 1 ? Integer.MIN_VALUE : rv_dialog_lists.getHeight());
+            }
+        }, 100);
+    }
+    private synchronized void getUser(){
+        Thread t1 = new Thread(()->{
+            user=okHttpUtils.getUser();
+        });
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
+
     @Override
     public void onLoadMoreRequested() {
         if (datas.size() >= totalCount) {

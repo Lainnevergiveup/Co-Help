@@ -210,4 +210,8 @@ public class InputTextMsgDialog extends AppCompatDialog {
     public void show() {
         super.show();
     }
+
+    public EditText getMessageTextView() {
+        return messageTextView;
+    }
 }

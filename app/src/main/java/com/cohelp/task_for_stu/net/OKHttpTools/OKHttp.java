@@ -1,5 +1,7 @@
 package com.cohelp.task_for_stu.net.OKHttpTools;
 
+import android.content.Context;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,9 +17,21 @@ import okhttp3.Response;
 
 public class OKHttp {
     OkHttpClient client;
+//    MyOKHTTPClient myOKHTTPClient;
+    Context context;
     Request request;
     Response response;
     RequestBody body;
+
+//    public OKHttp(Context context) {
+//        this.context = context;
+//        myOKHTTPClient = MyOKHTTPClient.getInstance(this.context);
+//        client = myOKHTTPClient.getClient();
+//    }
+
+    public OKHttp() {
+    }
+
     public Response getResponse() {
         return response;
     }
@@ -39,6 +53,13 @@ public class OKHttp {
     }
 
     public void sendRequest(String ip, String requestBody) {
+
+//        client = MyOKHTTPClient.getInstance(context).getClient();
+//        try {
+//            client.cache().remove$okhttp(request);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
          client = new OkHttpClient().newBuilder()
                 .build();
         MediaType mediaType = MediaType.parse("application/json");
