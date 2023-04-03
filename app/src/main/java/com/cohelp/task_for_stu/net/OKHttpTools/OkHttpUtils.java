@@ -23,6 +23,7 @@ import com.cohelp.task_for_stu.net.model.entity.Help;
 import com.cohelp.task_for_stu.net.model.entity.Hole;
 import com.cohelp.task_for_stu.net.model.entity.Team;
 import com.cohelp.task_for_stu.net.model.entity.User;
+import com.cohelp.task_for_stu.net.model.vo.AskVO;
 import com.cohelp.task_for_stu.net.model.vo.CourseVO;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.net.model.vo.ResultVO;
@@ -528,5 +529,21 @@ public class OkHttpUtils {
         }
         System.out.println(res);
         return res;
+    }
+
+    public List<AskVO > getAskList(Integer courseId,String semester){
+
+        System.out.println(baseURL+"/course/list/ask/1/5/"+courseId+"/"+semester+"/2");
+        okHttp.sendGetRequest(baseURL+"/course/list/ask/1/5/"+courseId+"/"+semester+"/2",cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("res"+res);
+        Result<List<AskVO>> result = gson.fromJson(res, new TypeToken<Result<List<AskVO>>>(){}.getType());
+        System.out.println(result);
+        return result.getData();
     }
 }

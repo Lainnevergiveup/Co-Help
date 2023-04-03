@@ -293,7 +293,7 @@ public class TaskCenterActivity extends BaseActivity {
         finish();
     }
     private void toHoleCenterActivity(){
-        Intent intent = new Intent(this, HelpCenterActivity.class);
+        Intent intent = new Intent(this, HoleCenterActivity.class);
         startActivity(intent);
         finish();
     }

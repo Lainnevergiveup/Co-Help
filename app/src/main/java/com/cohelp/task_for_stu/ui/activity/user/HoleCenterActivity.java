@@ -25,8 +25,10 @@ import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
+import com.cohelp.task_for_stu.net.model.vo.AskVO;
 import com.cohelp.task_for_stu.net.model.vo.CourseVO;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
+import com.cohelp.task_for_stu.ui.adpter.CardViewAskListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
@@ -57,15 +59,16 @@ public class HoleCenterActivity extends BaseActivity {
     Switch aSwitch;
     NiceSpinner niceSpinner;
     String item;
-
+    Integer currentCourse ;
+    String currentSemster;
     TabSegment mTabSegment;
     ViewPager mContentViewPager;
     OkHttpUtils okHttpUtils;
     List<DetailResponse> holeList;
     List<CourseVO> courseList;
+    List<AskVO> askList;
 
-
-    CardViewListAdapter cardViewListAdapter;
+    CardViewAskListAdapter cardViewListAdapter;
 
     String[] pages = MultiPage.getPageNames();
     List<String> semesterList;
@@ -155,6 +158,7 @@ public class HoleCenterActivity extends BaseActivity {
         setContentView(R.layout.activity_hole_center);
 
         initTools();
+        initData();
         initView();
         initEvent();
         setUpToolBar();
@@ -238,7 +242,7 @@ public class HoleCenterActivity extends BaseActivity {
 
             }
         });
-        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter() {
+        cardViewListAdapter.setOnItemClickListener(new CardViewAskListAdapter.OnItemListenter() {
             @Override
             public void onItemClick(View view, int postion) {
                 toDetailActivity(postion);
@@ -249,16 +253,20 @@ public class HoleCenterActivity extends BaseActivity {
 
     }
 
+    private void initData(){
+        getSemesterList();
+        getCourseList(currentSemster);
+        getAskList(currentCourse,currentSemster);
+    }
     private void initView(){
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
         searchBtn = findViewById(R.id.id_iv_search);
-        getHoleList();
+
         System.out.println(holeList);
-        cardViewListAdapter = new CardViewListAdapter();
-        cardViewListAdapter.setDetailResponseListList(holeList);
+
         niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
 //        eRecyclerView = findViewById(R.id.id_recyclerview);
@@ -268,6 +276,7 @@ public class HoleCenterActivity extends BaseActivity {
         mContentViewPager = findViewById(R.id.contentViewPager);
 //        mSpinnerFitOffset = findViewById(R.id.spinner_system_fit_offset);
         getSemesterList();
+
 //        List<String> dataset = new LinkedList<>(Arrays.asList("One", "Two", "Three", "Four", "Five"));
         niceSpinner.attachDataSource(semesterList);
 //        niceSpinner.setBackgroundDrawable();
@@ -288,17 +297,13 @@ public class HoleCenterActivity extends BaseActivity {
 //            }
 //        });
 
+
+        initTab();
+        System.out.println("asklist"+askList);
+        cardViewListAdapter = new CardViewAskListAdapter();
+        cardViewListAdapter.setAskVOList(askList);
 //        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 //        eRecyclerView.setAdapter(cardViewListAdapter);
-        initTab();
-
-
-
-
-
-
-//        WidgetUtils.setSpinnerDropDownVerticalOffset(mSpinnerFitOffset);
-
 
     }
 
@@ -330,9 +335,9 @@ public class HoleCenterActivity extends BaseActivity {
         Intent intent = new Intent(this,CreateNewHoleActivity.class);
         startActivity(intent);
     }
-    private synchronized void getHoleList(){
+    private synchronized void getAskList(Integer id , String semester){
         Thread t1 = new Thread(()->{
-            holeList = okHttpUtils.helpList(1);
+            askList = okHttpUtils.getAskList(id, semester);
         });
         t1.start();
         try {
@@ -355,6 +360,7 @@ public class HoleCenterActivity extends BaseActivity {
     private synchronized void getCourseList(String semeter){
         Thread thread = new Thread(() -> {
              courseList = okHttpUtils.getCourseList(semeter);
+             currentCourse = courseList==null&&!courseList.isEmpty()?0:courseList.get(0).getId();
             System.out.println("course"+courseList);
         });
         thread.start();
@@ -368,7 +374,7 @@ public class HoleCenterActivity extends BaseActivity {
 
     private synchronized void refreshHoleList(){
         getActivityList();
-        cardViewListAdapter.setDetailResponseListList(holeList);
+        cardViewListAdapter.setAskVOList(askList);
         int currentItem = mContentViewPager.getCurrentItem();
         RecyclerView childAt = (RecyclerView) mContentViewPager.getChildAt(currentItem);
         childAt.setAdapter(cardViewListAdapter);
@@ -379,7 +385,7 @@ public class HoleCenterActivity extends BaseActivity {
                 //关闭刷新
                 eSwipeRefreshLayout.setRefreshing(false);
             }
-        },1000);
+        },300);
     }
     private void initTab(){
 
@@ -398,12 +404,20 @@ public class HoleCenterActivity extends BaseActivity {
         mTabSegment.addOnTabSelectedListener(new TabSegment.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int index) {
+                currentCourse =courseList.get(index).getId();
+                getAskList(currentCourse,(String)niceSpinner.getSelectedItem());
+                System.out.println("asklist"+askList);
+                cardViewListAdapter = new CardViewAskListAdapter();
+                cardViewListAdapter.setAskVOList(askList);
+                View pageView = getPageView((String) niceSpinner.getSelectedItem());
+                RecyclerView pageView1 = (RecyclerView) pageView;
+                pageView1.setAdapter(cardViewListAdapter);
                 XToastUtils.toast("select " + courseList.get(index).getName());
             }
 
             @Override
             public void onTabUnselected(int index) {
-                XToastUtils.toast("unSelect " +courseList.get(index).getName());
+//                XToastUtils.toast("unSelect " +courseList.get(index).getName());
             }
 
             @Override
@@ -420,6 +434,7 @@ public class HoleCenterActivity extends BaseActivity {
     private synchronized void getSemesterList(){
         Thread thread = new Thread(()->{
             semesterList = okHttpUtils.getSemesterList();
+            currentSemster = semesterList==null&&!semesterList.isEmpty()?"":semesterList.get(0);
         });
         thread.start();
         try {
