@@ -18,15 +18,20 @@ import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.domain.SearchRequest;
 import com.cohelp.task_for_stu.net.model.domain.TeamUpdateRequest;
 import com.cohelp.task_for_stu.net.model.entity.Activity;
+import com.cohelp.task_for_stu.net.model.entity.Answer;
+import com.cohelp.task_for_stu.net.model.entity.Ask;
 import com.cohelp.task_for_stu.net.model.entity.Collect;
 import com.cohelp.task_for_stu.net.model.entity.Help;
 import com.cohelp.task_for_stu.net.model.entity.Hole;
 import com.cohelp.task_for_stu.net.model.entity.Team;
 import com.cohelp.task_for_stu.net.model.entity.User;
+import com.cohelp.task_for_stu.net.model.vo.AnswerVO;
 import com.cohelp.task_for_stu.net.model.vo.AskVO;
 import com.cohelp.task_for_stu.net.model.vo.CourseVO;
+import com.cohelp.task_for_stu.net.model.vo.QuestionBankVO;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.net.model.vo.ResultVO;
+import com.cohelp.task_for_stu.net.model.vo.ScoreVO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -158,10 +163,10 @@ public class OkHttpUtils {
     /*
     Help相关接口
      */
-    public void helpPublish(Help help,Map<String,String> nameAndPaht){
+    public void helpPublish(Help help,Map<String,String> nameAndPath){
         String act = gson.toJson(help);
         System.out.println(act);
-        okHttp.sendMediaRequest(baseURL+"/help/publish","help",act,nameAndPaht,cookie);
+        okHttp.sendMediaRequest(baseURL+"/help/publish","help",act,nameAndPath,cookie);
         String res = okHttp.getResponse().toString();
         System.out.println(res);
     }
@@ -533,7 +538,6 @@ public class OkHttpUtils {
 
     public List<AskVO > getAskList(Integer courseId,String semester){
 
-        System.out.println(baseURL+"/course/list/ask/1/5/"+courseId+"/"+semester+"/2");
         okHttp.sendGetRequest(baseURL+"/course/list/ask/1/5/"+courseId+"/"+semester+"/2",cookie);
         String res = null;
         try {
@@ -541,9 +545,144 @@ public class OkHttpUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("res"+res);
         Result<List<AskVO>> result = gson.fromJson(res, new TypeToken<Result<List<AskVO>>>(){}.getType());
-        System.out.println(result);
         return result.getData();
+    }
+    public List<CourseVO> getTeacherCourseList(){
+        okHttp.sendGetRequest(baseURL+"/teach/listcourse",cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<List<CourseVO>> result = gson.fromJson(res, new TypeToken<Result<List<CourseVO>>>(){}.getType());
+        return result.getData();
+    }
+    public List<AnswerVO> getTeacherAnswerList(Integer page,Integer limit,Integer askID){
+        okHttp.sendGetRequest(baseURL+"/teach/listanswer/"+page+'/'+limit+'/'+askID,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<List<AnswerVO>> result = gson.fromJson(res, new TypeToken<Result<List<AnswerVO>>>(){}.getType());
+        return result.getData();
+
+    }
+    public List<QuestionBankVO> getTeacherQuestionList(Integer page,Integer limit,Integer courseID){
+        okHttp.sendGetRequest(baseURL+"/teach/listquestion/"+page+'/'+limit+'/'+courseID,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<List<QuestionBankVO>> result = gson.fromJson(res, new TypeToken<Result<List<QuestionBankVO>>>(){}.getType());
+        return result.getData();
+
+    }
+    public String teacherAddQuestion(Integer askID,Integer level){
+        okHttp.sendGetRequest(baseURL+"/teach/addquestion/"+askID+'/'+level,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<List<Object>> result = gson.fromJson(res, new TypeToken<Result<List<Object>>>(){}.getType());
+        return result.getMessage();
+    }
+    public String teacherAddAnswer(Integer answerID,Integer recommendedDegree){
+        okHttp.sendGetRequest(baseURL+"/teach/addanswer/"+answerID+'/'+recommendedDegree,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<List<Object>> result = gson.fromJson(res, new TypeToken<Result<List<Object>>>(){}.getType());
+        return result.getMessage();
+    }
+    public String teacherPublishQuestion(List<Integer> questionBankIds){
+        String s = "";
+        boolean isFirst = false;
+        for (Integer c : questionBankIds){
+            if (isFirst){
+                s+=","+c.toString();
+            }
+            else {
+                s+=c.toString();
+                isFirst = true;
+            }
+        }
+        okHttp.sendGetRequest(baseURL+"/teach/publishquestion/"+s,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<List<Object>> result = gson.fromJson(res, new TypeToken<Result<List<Object>>>(){}.getType());
+        return result.getMessage();
+    }
+    public List<AnswerVO> teacherGetAnswerFromBank(Integer askID,Integer page,Integer limit){
+        okHttp.sendGetRequest(baseURL+"/teach/listanswerfrombank/"+askID+'/'+page+'/'+limit,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<List<AnswerVO>> result = gson.fromJson(res, new TypeToken<Result<List<AnswerVO>>>(){}.getType());
+        return result.getData();
+    }
+    public List<AnswerVO> teacherGetAnswerListByQuestionID(Integer questionID){
+        okHttp.sendGetRequest(baseURL+"/teach/listanswerbankbyquestionbankid/"+questionID,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<List<AnswerVO>> result = gson.fromJson(res, new TypeToken<Result<List<AnswerVO>>>(){}.getType());
+        return result.getData();
+    }
+    public List<ScoreVO> teacherGetScoreByCourseID(Integer courseID){
+        okHttp.sendGetRequest(baseURL+"/teach/listscore/"+courseID,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<List<ScoreVO>> result = gson.fromJson(res, new TypeToken<Result<List<ScoreVO>>>(){}.getType());
+        return result.getData();
+    }
+    public List<AskVO> getQuestionsBySemesterAndCourse(Integer page,Integer limit,Integer courseID,Integer semester,Integer condition){
+        okHttp.sendGetRequest(baseURL+"/course/list/ask/"+page+"/"+limit+"/"+courseID+"/"+semester+"/"+condition,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<List<AskVO>> result = gson.fromJson(res, new TypeToken<Result<List<AskVO>>>(){}.getType());
+        return result.getData();
+    }
+    public Boolean answerPublish(Answer answer,Map<String,String> nameAndPath){
+        String ans = gson.toJson(answer);
+        okHttp.sendMediaRequest(baseURL+"/course/answer","help",ans,nameAndPath,cookie);
+        String res = okHttp.getResponse().toString();
+        Result<List<Object>> result = gson.fromJson(res, new TypeToken<Result<List<Object>>>(){}.getType());
+        return result.getData()==null?false:true;
+    }
+    public Boolean askPublish(Ask ask, Map<String,String> nameAndPath){
+        String askJson = gson.toJson(ask);
+        okHttp.sendMediaRequest(baseURL+"/course/ask","help",askJson,nameAndPath,cookie);
+        String res = okHttp.getResponse().toString();
+        Result<List<Object>> result = gson.fromJson(res, new TypeToken<Result<List<Object>>>(){}.getType());
+        return result.getData()==null?false:true;
     }
 }

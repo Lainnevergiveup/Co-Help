@@ -6,6 +6,7 @@ import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_CO
 import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_PARENT;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -57,10 +58,12 @@ import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
 import com.cohelp.task_for_stu.utils.RecyclerViewUtil;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
+import com.cohelp.task_for_stu.utils.TimeUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
 
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -169,6 +172,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         topicDetail = (TextView) findViewById(R.id.text_TopicDetail);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void initData(){
         setDetailData();
 
@@ -304,6 +308,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         dataSort(0);
         initCommentTarget();
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void setDetailData(){
 
         if (detail!=null){
@@ -313,7 +318,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
                 case 1:{
                     ActivityVO activityVO = detail.getActivityVO();
                     avatorName.setText(activityVO.getUserName());
-                    topicTime.setText(activityVO.getActivityTime().toString());
+                    topicTime.setText(TimeUtils.getRecentTimeSpanByNow(activityVO.getActivityTime().toInstant(ZoneOffset.UTC).toEpochMilli()));
                     titleBar.setTitle(activityVO.getActivityTitle());
                     topicTitle.setText(activityVO.getActivityTitle());
                     topicDetail.setText(activityVO.getActivityDetail());
@@ -322,7 +327,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
                 case 2:{
                     HelpVO helpVO = detail.getHelpVO();
                     avatorName.setText(helpVO.getUserName());
-                    topicTime.setText(helpVO.getHelpCreateTime().toString());
+                    topicTime.setText(TimeUtils.getRecentTimeSpanByNow(helpVO.getHelpCreateTime().getTime()));
                     titleBar.setTitle(helpVO.getHelpTitle());
                     topicTitle.setText(helpVO.getHelpTitle());
                     topicDetail.setText(helpVO.getHelpDetail());
