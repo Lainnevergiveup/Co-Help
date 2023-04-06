@@ -31,7 +31,6 @@ import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.utils.ViewUtils;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
-import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xui.widget.tabbar.EasyIndicator;
 
 import java.util.ArrayList;
@@ -209,7 +208,6 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
         ll_ac.setOnClickListener(this);
         ll_help.setOnClickListener(this);
         ll_dis.setOnClickListener(this);
-        //选择默认界面
         ll_all.setSelected(true);
         ll_current = ll_ac;
 
@@ -219,57 +217,14 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
 
 
 
-//    private  void initCardView(){
-//
-//        WidgetUtils.initRecyclerView(recyclerView, 0);
-//        recyclerView.setAdapter(mAdapter = new NewsListEditAdapter(isSelectAll -> {
-//            if (scbSelectAll != null) {
-//                scbSelectAll.setCheckedSilent(isSelectAll);
-//            }
-//        },taskList));
-//        scbSelectAll.setOnCheckedChangeListener((checkBox, isChecked) -> mAdapter.setSelectAll(isChecked));
-//
-//        //下拉刷新
-//        refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-//            mAdapter.refresh(taskList);
-//            refreshLayout.finishRefresh();
-//        }, 1000));
-//        //上拉加载
-//        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-//            mAdapter.loadMore(taskList);
-//            refreshLayout.finishLoadMore();
-//        }, 1000));
-//        refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
-//
-//        mAdapter.setOnItemClickListener((itemView, item, position) -> {
-//            if (mAdapter.isManageMode()) {
-//                mAdapter.updateSelectStatus(position);
-//            } else {
-//                toDetailActivity(position);
-////                Utils.goWeb(getContext(), item.getDetailUrl());
-//            }
-//        });
-//        mAdapter.setOnItemClickListener(new NewsListEditAdapter.OnItemListenter() {
-//            @Override
-//            public void onItemClick(View view, int postion) {
-//                toDetailActivity(postion);
-//            }
-//        });
-//        mAdapter.setOnItemLongClickListener((itemView, item, position) -> {
-//            if (!mAdapter.isManageMode()) {
-//                mAdapter.enterManageMode(position);
-//                refreshManageMode();
-//            }
-//        });
-//    }
 
     private void initPager(){
         mViewPager = findViewById(R.id.id_viewpaper);
         ArrayList<Fragment> list = new ArrayList<>();
         list.add(new BlankFragment1(this));
-        list.add(new BlankFragment2(this));
-        list.add(new BlankFragment3(this));
-        list.add(new BlankFragment4(this));
+        list.add(new BlankFragment1(this));
+        list.add(new BlankFragment1(this));
+        list.add(new BlankFragment1(this));
         MyFragmentPagerAdapter pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),getLifecycle(),list);
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -300,26 +255,19 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
                 ll_all.setSelected(true);
                 ll_current = ll_all;
                 System.out.println("ll_all");
-
-//                ChangeTabColor.setStatusBarColor(this, Color.parseColor("#32CD32"),true);
                 break;
             case 1:
                 ll_ac.setSelected(true);
                 ll_current = ll_ac;
                 System.out.println("ll_ac");
-
-//                ChangeTabColor.setStatusBarColor(this,Color.parseColor("#f0f0f0"),false);
                 break;
             case 2:
                 ll_help.setSelected(true);
                 ll_current = ll_help;
-
-//                ChangeTabColor.setStatusBarColor(this,Color.parseColor("#f0f0f0"),false);
                 break;
             case 3:
                 ll_dis.setSelected(true);
                 ll_current = ll_dis;
-//                ChangeTabColor.setStatusBarColor(this,Color.parseColor("#f0f0f0"),false);
                 break;
         }
 
@@ -412,17 +360,6 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
         },1000);
     }
 
-    /**
-     * 简单的确认对话框
-     */
-    private void showSimpleConfirmDialog() {
-        new MaterialDialog.Builder(MyTaskActivity.this)
-                .content("是否确认删除")
-                .positiveText(R.string.lab_yes)
-                .negativeText(R.string.lab_no)
-                .show();
-    }
-
 
     public interface MyOnTouchListener {
         public boolean onTouch(MotionEvent ev);
@@ -438,12 +375,6 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
             }
         }
         return super.dispatchTouchEvent(ev);
-    }
-    public void registerMyOnTouchListener(MyOnTouchListener myOnTouchListener) {
-        onTouchListeners.add(myOnTouchListener);
-    }
-    public void unregisterMyOnTouchListener(MyOnTouchListener myOnTouchListener) {
-        onTouchListeners.remove(myOnTouchListener) ;
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

@@ -1,7 +1,6 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,16 +19,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
-import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
-import com.cohelp.task_for_stu.net.model.domain.IdAndType;
-import com.cohelp.task_for_stu.ui.adpter.MyTaskAdapter;
+import com.cohelp.task_for_stu.net.model.vo.AskVO;
+import com.cohelp.task_for_stu.ui.adpter.MyAskAdapter;
 import com.cohelp.task_for_stu.ui.view.MyListViewForScrollView;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class BlankFragment2 extends Fragment implements View.OnClickListener{
@@ -45,10 +42,12 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
     SmoothCheckBox scbSelectAll;
     Button btn_delete;
     OkHttpUtils okHttpUtils = new OkHttpUtils();
-    List<DetailResponse> taskList;
+    List<AskVO> askList;
+    Integer id;
+    String semester;
     MyListViewForScrollView scrollView;
     private TextView mTvSwitch;
-    MyTaskAdapter myTaskAdapter = new MyTaskAdapter();
+    MyAskAdapter myTaskAdapter = new MyAskAdapter();
     private void initTools(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             okHttpUtils = new OkHttpUtils();
@@ -57,8 +56,10 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
     }
 
 
-    public BlankFragment2(Context context){
+    public BlankFragment2(Context context ,Integer id , String semester){
         this.context = context;
+        this.id = id;
+        this.semester = semester;
     }
     public BlankFragment2(){
 
@@ -70,8 +71,9 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
+        super.onCreate(savedInstanceState);
+        getAskList(id,semester);
     }
 
     @Nullable
@@ -82,15 +84,13 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
         }
         initTools();
         initView();
-        getTaskList();
+
         initEvent();
 
         return root;
     }
 
     private void initView(){
-        flEdit = root.findViewById(R.id.fl_edit);
-        scbSelectAll = root.findViewById(R.id.scb_select_all);
         recyclerView = root.findViewById(R.id.recyclerView);
         refreshLayout = root.findViewById(R.id.refreshLayout);
         btn_delete = root.findViewById(R.id.btn_delete);
@@ -100,22 +100,21 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
     }
 
     private void initEvent(){
-        System.out.println(taskList.stream().filter(i->i.getType()==1).collect(Collectors.toList()));
-        myTaskAdapter = new MyTaskAdapter(getContext(),this,taskList.stream().filter(i->i.getType().equals(1)).collect(Collectors.toList()));
+        myTaskAdapter = new MyAskAdapter(getContext(),this,askList);
         scrollView.setAdapter(myTaskAdapter);
         scrollView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                toDetailActivity(position);
+//                toDetailActivity(position);
             }
         });
     }
-    private synchronized void getTaskList(){
+    private synchronized void getAskList(Integer id , String semester){
         Thread t1 = new Thread(()->{
-            taskList = okHttpUtils.searchPublic();
-            System.out.println(taskList);
+            askList = okHttpUtils.getAskList(id, semester);
         });
+        System.out.println("ask_list"+askList);
         t1.start();
         try {
             t1.join();
@@ -124,15 +123,15 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
         }
     }
 
-    private void toDetailActivity(int postion){
-        Intent intent = new Intent(context,DetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("detailResponse",taskList.get(postion));
-        intent.putExtras(bundle);
-        IdAndType idAndType = new IdAndType(taskList.get(postion).getActivityVO().getId(),1);
-        new Thread(()->{
-            System.out.println(okHttpUtils.getDetail(idAndType));
-        }).start();
-        startActivity(intent);
-    }
+//    private void toDetailActivity(int postion){
+//        Intent intent = new Intent(HoleCenterActivity.this,DetailActivity.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putSerializable("detailResponse",holeList.get(postion));
+//        intent.putExtras(bundle);
+//        IdAndType idAndType = new IdAndType(holeList.get(postion).getIdByType(holeList.get(postion).getType()),1);
+//        new Thread(()->{
+//            System.out.println(okHttpUtils.getDetail(idAndType));
+//        }).start();
+//        startActivity(intent);
+//    }
 }

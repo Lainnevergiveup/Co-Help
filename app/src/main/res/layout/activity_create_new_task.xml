@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".ui.activity.user.CreateNewTaskActivity">
-    <include layout="@layout/common_toolbar" />
+    <include layout="@layout/common_toolbar_publish2" />
     <!--    Integer reward;-->
 <!--        String title;-->
     <!--    String desc;-->
@@ -20,15 +21,15 @@
         android:layout_marginTop="20sp"
         android:layout_marginRight="20sp"
         android:gravity="center"
-        android:textSize="15sp"
-        android:background="@drawable/info_solid"
+        android:textSize="18sp"
+        android:background="@null"
         android:hint="输入您的标题"
         android:inputType="textLongMessage"
         android:paddingLeft="5dp"
        />
 
     <LinearLayout
-        android:layout_marginTop="20sp"
+        android:layout_marginTop="0sp"
         android:layout_marginLeft="20sp"
         android:layout_marginRight="20sp"
         android:layout_width="match_parent"
@@ -37,27 +38,31 @@
         <EditText
             android:focusable="false"
             android:id="@+id/id_et_startDate"
-            android:background="@drawable/info_solid"
+            android:background="@null"
 
             android:paddingLeft="5dp"
             android:textSize="15sp"
             android:gravity="center"
-            android:hint="输入开始时间"
-            android:layout_width="150sp"
+            android:hint="活动时间"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
             android:inputType="datetime"/>
 
     </LinearLayout>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="20sp"
 
+    <EditText
         android:id="@+id/id_et_content"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20dp"
         android:gravity="top"
-        android:textSize="15sp"
+        android:background="@null"
         android:hint="活动详情描述..."
-        android:maxLines="5" />
+        android:maxLines="5"
+        android:textSize="15sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="170dp"
@@ -75,20 +80,20 @@
 
 
 
-    <com.xuexiang.xui.widget.button.shadowbutton.ShadowButton
-        android:id="@+id/id_btn_submit"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="40sp"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20sp"
-        android:background="@android:color/transparent"
-        android:gravity="center"
-        android:text="发布"
-        android:textSize="20sp"
-        app:sb_radius="5dp"
-        android:textStyle="bold"
-        app:sb_alpha_pressed="40"
-        app:sb_color_pressed="#0303ff"
-        app:sb_color_unpressed="#8aacee" />
+<!--    <com.xuexiang.xui.widget.button.shadowbutton.ShadowButton-->
+<!--        android:id="@+id/id_btn_submit"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_marginTop="40sp"-->
+<!--        android:layout_marginLeft="20sp"-->
+<!--        android:layout_marginRight="20sp"-->
+<!--        android:background="@android:color/transparent"-->
+<!--        android:gravity="center"-->
+<!--        android:text="发布"-->
+<!--        android:textSize="20sp"-->
+<!--        app:sb_radius="5dp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:sb_alpha_pressed="40"-->
+<!--        app:sb_color_pressed="#0303ff"-->
+<!--        app:sb_color_unpressed="#8aacee" />-->
 </LinearLayout>
