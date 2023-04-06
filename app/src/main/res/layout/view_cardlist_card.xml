@@ -41,8 +41,8 @@ app:contentPaddingTop="5dp">
             <TextView
                 android:id="@+id/cardView_author_name"
                 style="@style/TextStyle.Explain"
-                android:layout_gravity="end|center_vertical"
-                android:layout_marginStart="4dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
                 android:text="xuexiangjys"
                 android:textColor="@color/xui_config_color_pure_black" />
         </LinearLayout>

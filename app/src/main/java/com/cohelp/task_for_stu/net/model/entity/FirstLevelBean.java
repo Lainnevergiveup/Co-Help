@@ -41,6 +41,8 @@ public class FirstLevelBean implements MultiItemEntity {
 
     private int showingSecondCount = 0;
 
+
+
     public int getShowingSecondCount() {
         return showingSecondCount;
     }
