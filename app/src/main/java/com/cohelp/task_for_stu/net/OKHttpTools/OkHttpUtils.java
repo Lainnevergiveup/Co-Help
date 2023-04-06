@@ -673,16 +673,17 @@ public class OkHttpUtils {
     }
     public Boolean answerPublish(Answer answer,Map<String,String> nameAndPath){
         String ans = gson.toJson(answer);
-        okHttp.sendMediaRequest(baseURL+"/course/answer","help",ans,nameAndPath,cookie);
+        okHttp.sendMediaRequest(baseURL+"/course/answer","answer",ans,nameAndPath,cookie);
         String res = okHttp.getResponse().toString();
         Result<List<Object>> result = gson.fromJson(res, new TypeToken<Result<List<Object>>>(){}.getType());
         return result.getData()==null?false:true;
     }
     public Boolean askPublish(Ask ask, Map<String,String> nameAndPath){
         String askJson = gson.toJson(ask);
-        okHttp.sendMediaRequest(baseURL+"/course/ask","help",askJson,nameAndPath,cookie);
+        okHttp.sendMediaRequest(baseURL+"/course/ask","ask",askJson,nameAndPath,cookie);
         String res = okHttp.getResponse().toString();
         Result<List<Object>> result = gson.fromJson(res, new TypeToken<Result<List<Object>>>(){}.getType());
         return result.getData()==null?false:true;
     }
+
 }

@@ -10,6 +10,7 @@ import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.entity.Activity;
+import com.cohelp.task_for_stu.net.model.entity.Ask;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -187,5 +188,10 @@ public class ActivityTest {
 //        }
         System.out.println(result.getData());
     }
+    @Test
+    public void askPubLish(){
+        Ask ask = new Ask();
+        ask
 
+    }
 }
