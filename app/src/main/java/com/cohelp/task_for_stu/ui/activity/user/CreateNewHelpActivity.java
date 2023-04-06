@@ -18,7 +18,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,13 +65,11 @@ public class CreateNewHelpActivity extends BaseActivity{
     EditText content;
     EditText startTime;
     EditText endTime;
-    RadioButton lb_money;
-    RadioButton lb_nomoney;
-    RadioGroup paid,label;
     int Paid=-1;
     String Label;
     RadioButton lb1,lb2,lb3,lb4,lb5;
     EditText lb_diy;
+
     Button publish;
     TaskBiz taskBiz;
     Task task;

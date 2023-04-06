@@ -19,23 +19,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="@integer/material_motion_duration_long_1">
-        <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout
-            android:id="@+id/id_swiperefresh"
+<!--        <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout-->
+<!--            android:id="@+id/id_swiperefresh"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_marginTop="15sp"-->
+<!--            android:layout_marginLeft="15sp"-->
+<!--            android:layout_marginRight="15sp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            >-->
+
+<!--          -->
+<!--        </com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout>-->
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/contentViewPager"
             android:layout_width="match_parent"
-            android:layout_marginTop="15sp"
-            android:layout_marginLeft="15sp"
-            android:layout_marginRight="15sp"
             android:layout_height="match_parent"
-            >
+            android:layout_weight="1"
+            android:fitsSystemWindows="true"/>
 
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/contentViewPager"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:fitsSystemWindows="true"/>
-
-        </com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout>
     </LinearLayout>
 
 

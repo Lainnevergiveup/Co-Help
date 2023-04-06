@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cohelp.task_for_stu.R;
@@ -117,12 +116,14 @@ public class BlankFragment1 extends Fragment implements View.OnClickListener {
             taskList = okHttpUtils.searchPublic();
             System.out.println(taskList);
         });
+
         t1.start();
         try {
             t1.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println("task_list111"+taskList);
     }
 
     private void toDetailActivity(int postion){

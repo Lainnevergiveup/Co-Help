@@ -123,7 +123,7 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
             ImageLoader.get().loadImage(firstImage, model.getImagesUrl().get(0));
         }
 //        System.out.println(detailResponse.getReadNum());
-        holder.text(R.id.cardView_readNumber, "阅读量 " +model.getReadNum().toString());
+
         if (activityVO!=null){
             System.out.println("id=22"+activityVO.getId());
             System.out.println(activityVO.getActivityComment());
@@ -135,6 +135,7 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
             holder.text(R.id.cardView_praiseNumber, activityVO.getActivityLike().toString());
             holder.text(R.id.cardView_commentNumber, activityVO.getActivityComment().toString());
             holder.text(R.id.cardView_collectNumber, activityVO.getActivityCollect().toString());
+            holder.text(R.id.cardView_readNumber, "阅读量 " +model.getReadNum().toString());
         }
         if (helpVO!=null){
             System.out.println("id="+helpVO.getId());
@@ -144,6 +145,7 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
             holder.text(R.id.cardView_praiseNumber, helpVO.getHelpLike().toString());
             holder.text(R.id.cardView_commentNumber, helpVO.getHelpComment().toString());
             holder.text(R.id.cardView_collectNumber, helpVO.getHelpCollect().toString());
+            holder.text(R.id.cardView_readNumber, "阅读量 " +model.getReadNum().toString());
             if (helpVO.getHelpPaid()==0){
                 holder.text(R.id.cardView_tag, "无偿");
             }

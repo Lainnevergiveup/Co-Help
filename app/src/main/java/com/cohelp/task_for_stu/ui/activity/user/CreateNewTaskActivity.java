@@ -66,8 +66,7 @@ public class CreateNewTaskActivity extends BaseActivity  {
     BaseTask baseTask;
     TimePickerView pickerView;
     OkHttpUtils okHttpUtils = new OkHttpUtils();
-
-
+    TextView title1;
     private int maxSelectNum = 9;
     private List<LocalMedia> selectList = new ArrayList<>();
     private GridImageAdapter adapter;
@@ -92,10 +91,11 @@ public class CreateNewTaskActivity extends BaseActivity  {
         askPermissions();
 
         setUpToolBar();
-        setTitle("创建活动");
+        setTitle("");
         initView();
         initEvent();
 //        takePhoto();
+        title1.setText("活动发布");
         initWidget();
 //        takePhoto();
     }
@@ -146,9 +146,10 @@ public class CreateNewTaskActivity extends BaseActivity  {
     }
 
     private void initView() {
+        title1 = findViewById(R.id.id_title2);
         title = findViewById(R.id.id_et_title);
         content = findViewById(R.id.id_et_content);
-        publish = findViewById(R.id.id_btn_submit);
+        publish = findViewById(R.id.id_btn_publish);
         startTime = findViewById(R.id.id_et_startDate);
 //        endTime = findViewById(R.id.id_et_endDate);
         gridView = findViewById(R.id.gridview);
@@ -183,13 +184,6 @@ public class CreateNewTaskActivity extends BaseActivity  {
                 .setRangDate(startDate, endDate)
                 .setDecorView(null)
                 .build();
-
-//        GridLayoutManager manager = new GridLayoutManager(this, 4, RecyclerView.VERTICAL, false);
-//        recyclerView.setLayoutManager(manager);
-//        recyclerView.setAdapter(mAdapter = new ImageSelectGridAdapter(this, this));
-//        mAdapter.setSelectList(mSelectList);
-//        mAdapter.setSelectMax(8);
-//        mAdapter.setOnItemClickListener((position, v) -> PictureSelector.create(CreateNewTaskActivity.this).themeStyle(R.style.XUIPictureStyle).openExternalPreview(position, mSelectList));
 
     }
 
