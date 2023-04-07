@@ -4,6 +4,8 @@ import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_CO
 import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_EMPTY;
 import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_MORE;
 import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_PARENT;
+import static com.google.android.material.internal.ContextUtils.getActivity;
+import static com.xuexiang.xutil.XUtil.getContext;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -12,9 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -26,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -51,6 +56,7 @@ import com.cohelp.task_for_stu.net.model.vo.HelpVO;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter;
 import com.cohelp.task_for_stu.ui.adpter.CommentExpandableListAdapter;
+import com.cohelp.task_for_stu.ui.adpter.GridViewImageAdapter;
 import com.cohelp.task_for_stu.ui.listener.SoftKeyBoardListener;
 import com.cohelp.task_for_stu.ui.view.AvatorImageView;
 import com.cohelp.task_for_stu.ui.view.InputTextMsgDialog;
@@ -85,6 +91,8 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
     TitleBar titleBar;
     NetRadiusImageView avatorPic;
     private RecyclerView rv_dialog_lists;
+    private GridView imageGridView;
+    GridViewImageAdapter gridViewImageAdapter;
     ImageButton likeButton;
     ImageButton collectButton;
     ImageButton commentButton;
@@ -170,6 +178,10 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         topicTime = (TextView) findViewById(R.id.text_TopicCreateTime);
         topicTitle = (TextView) findViewById(R.id.text_MessageTitle);
         topicDetail = (TextView) findViewById(R.id.text_TopicDetail);
+        imageGridView = (GridView) findViewById(R.id.grid_item_image);
+
+        imageGridView.setVerticalScrollBarEnabled(false);
+        imageGridView.setHorizontalScrollBarEnabled(false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -220,8 +232,11 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
                 }).start();
             }
         });
+        gridViewImageAdapter = new GridViewImageAdapter(this,detail.getImagesUrl());
+        imageGridView.setAdapter(gridViewImageAdapter);
         // 点击事件
         bottomSheetAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view1, int position) {
                 switch ((int) view1.getTag()) {
@@ -280,6 +295,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
 
             }
         });
+
         //滚动事件
         if (mRecyclerViewUtil != null) mRecyclerViewUtil.initScrollListener(rv_dialog_lists);
 
@@ -730,6 +746,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         });
 
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void initRefresh() {
         datas.clear();
         initData();
@@ -811,6 +828,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
             }
         }, 100);
     }
+
     private synchronized void getUser(){
         Thread t1 = new Thread(()->{
             user=okHttpUtils.getUser();
