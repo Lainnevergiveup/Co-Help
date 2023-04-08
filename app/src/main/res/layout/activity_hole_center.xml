@@ -9,13 +9,13 @@
 
     <include layout="@layout/common_toolbar_discussion" />
 
-    <com.xuexiang.xui.widget.tabbar.TabSegment
-        android:id="@+id/tabSegment"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        app:ts_normal_color="@color/xui_config_color_pure_black"
-        android:background="@color/xui_config_color_white"/>
-    <LinearLayout
+<!--    <com.xuexiang.xui.widget.tabbar.TabSegment-->
+<!--        android:id="@+id/tabSegment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="40dp"-->
+<!--        app:ts_normal_color="@color/xui_config_color_pure_black"-->
+<!--        android:background="@color/xui_config_color_white"/>-->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="@integer/material_motion_duration_long_1">
@@ -30,14 +30,63 @@
 
 <!--          -->
 <!--        </com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout>-->
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/contentViewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:fitsSystemWindows="true"/>
+<!--        <androidx.viewpager.widget.ViewPager-->
+<!--            android:id="@+id/contentViewPager"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            android:fitsSystemWindows="true"/>-->
 
-    </LinearLayout>
+        <com.cohelp.task_for_stu.ui.view.InterceptScrollView
+            android:id="@+id/interceptScrollView"
+            android:layout_width="match_parent"
+            android:fillViewport="true"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/container_normal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="beforeDescendants"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@android:color/white"
+                    app:tabMode="fixed"
+                    app:tabSelectedTextColor="@android:color/black" />
+
+                <View
+                    android:id="@+id/view_place"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:visibility="gone" />
+
+                <com.cohelp.task_for_stu.ui.view.AutofitViewPager
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
+            </LinearLayout>
+        </com.cohelp.task_for_stu.ui.view.InterceptScrollView>
+
+
+        <!-- 悬浮在屏幕上方的顶部空布局-->
+        <LinearLayout
+            android:id="@+id/container_top"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
 
 
 

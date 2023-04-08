@@ -53,7 +53,7 @@ public class CardViewAskListAdapter extends RecyclerView.Adapter<CardViewAskList
     public CardViewAskListAdapter(List<AskVO> AskVOListList, Context context) {
         this.AskVOListList = AskVOListList;
         this.context = context;
-        this.eInflater = LayoutInflater.from(context);
+
     }
 
     public CardViewAskListAdapter(List<AskVO> AskVOListList) {
@@ -65,6 +65,7 @@ public class CardViewAskListAdapter extends RecyclerView.Adapter<CardViewAskList
         this.context = context;
         this.fragment = fragment;
     }
+
 
     public CardViewAskListAdapter() {
     }
@@ -132,7 +133,7 @@ public class CardViewAskListAdapter extends RecyclerView.Adapter<CardViewAskList
         else return 0;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder{
         NetRadiusImageView authorAvator;
         NetRadiusImageView firstImage;
         AppCompatImageView praiseIcon;

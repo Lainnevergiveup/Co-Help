@@ -135,7 +135,7 @@ public class CreateNewTaskActivity extends BaseActivity  {
                     new Thread(()->{
                         okHttpUtils.activityPublish(activity,stringStringHashMap);
                     }).start();
-
+                    Toast.makeText(CreateNewTaskActivity.this, "发布成功~", Toast.LENGTH_LONG).show();
                     toTaskCenterActivity();
                 }
 

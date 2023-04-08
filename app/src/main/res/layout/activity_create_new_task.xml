@@ -60,6 +60,9 @@
         android:gravity="top"
         android:background="@null"
         android:hint="活动详情描述..."
+        android:singleLine="false"
+        android:inputType="textMultiLine"
+        android:scrollHorizontally="false"
         android:maxLines="5"
         android:textSize="15sp" />
 
