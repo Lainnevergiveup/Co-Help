@@ -103,18 +103,23 @@
                     <Space
                         android:layout_width="wrap_content"
                         android:layout_height="10dp"/>
-                    <GridView
-                        android:id="@+id/grid_item_image"
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:divider="#000000"
-                        android:dividerHeight="1dp"
-                        android:numColumns="3"
-                        android:scrollbars="none"
-                        android:overScrollMode="never"
-                        android:isScrollContainer="false"
-                        android:stretchMode="columnWidth">
-                    </GridView>
+                        android:layout_height="wrap_content">
+                        <GridView
+                            android:id="@+id/grid_item_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="400dp"
+                            android:divider="#000000"
+                            android:dividerHeight="1dp"
+                            android:numColumns="3"
+                            android:scrollbars="none"
+                            android:overScrollMode="never"
+                            android:isScrollContainer="false"
+                            android:stretchMode="columnWidth">
+                        </GridView>
+                    </FrameLayout>
+
                 </LinearLayout>
 
 
