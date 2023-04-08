@@ -30,8 +30,6 @@ import com.cohelp.task_for_stu.biz.TaskBiz;
 import com.cohelp.task_for_stu.config.Config;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.entity.Activity;
-import com.cohelp.task_for_stu.net.model.entity.Answer;
-import com.cohelp.task_for_stu.net.model.entity.Ask;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.FullyGridLayoutManager;
 import com.cohelp.task_for_stu.ui.adpter.GridImageAdapter;

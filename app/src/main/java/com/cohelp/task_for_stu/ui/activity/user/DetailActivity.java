@@ -4,37 +4,28 @@ import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_CO
 import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_EMPTY;
 import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_MORE;
 import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_PARENT;
-import static com.google.android.material.internal.ContextUtils.getActivity;
-import static com.xuexiang.xutil.XUtil.getContext;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
-
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
@@ -51,19 +42,16 @@ import com.cohelp.task_for_stu.net.model.entity.RemarkHelp;
 import com.cohelp.task_for_stu.net.model.entity.SecondLevelBean;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
-import com.cohelp.task_for_stu.net.model.vo.AskVO;
 import com.cohelp.task_for_stu.net.model.vo.HelpVO;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
+import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter;
-import com.cohelp.task_for_stu.ui.adpter.CommentExpandableListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.GridViewImageAdapter;
 import com.cohelp.task_for_stu.ui.listener.SoftKeyBoardListener;
-import com.cohelp.task_for_stu.ui.view.AvatorImageView;
 import com.cohelp.task_for_stu.ui.view.InputTextMsgDialog;
 import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
 import com.cohelp.task_for_stu.utils.RecyclerViewUtil;
 import com.cohelp.task_for_stu.utils.SessionUtils;
-import com.cohelp.task_for_stu.utils.T;
 import com.cohelp.task_for_stu.utils.TimeUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -76,19 +64,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
-public class DetailActivity extends AppCompatActivity implements BaseQuickAdapter.RequestLoadMoreListener{
+public class DetailActivity extends BaseActivity implements BaseQuickAdapter.RequestLoadMoreListener{
     private  int INITBEANNUM = 5;
     private long totalCount = 5;
     private float slideOffset = 0;
     private int positionCount = 0;
-
+    Toolbar toolbar;
     Button returnButton;
     Button reportButton;
     TextView topicTitle;
     TextView avatorName;
     TextView topicTime;
     TextView topicDetail;
-    TitleBar titleBar;
+    TextView titleBar;
     NetRadiusImageView avatorPic;
     private RecyclerView rv_dialog_lists;
     private GridView imageGridView;
@@ -139,6 +127,8 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         initTools();
+
+        setUpToolBar();
         initView();
         initData();
         showSheetDialog();
@@ -171,8 +161,8 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
         likeButton = (ImageButton) findViewById(R.id.imageButton_Like);
         collectButton = (ImageButton) findViewById(R.id.imageButton_Collect);
         commentButton =  findViewById(R.id.imageButton_Comment);
-
-        titleBar = (TitleBar) findViewById(R.id.tt_title);
+        toolbar = findViewById(R.id.id_toolbar);
+        titleBar = findViewById(R.id.id_title);
         avatorPic = (NetRadiusImageView) findViewById(R.id.image_UserIcon);
         avatorName = (TextView) findViewById(R.id.text_UserId);
         topicTime = (TextView) findViewById(R.id.text_TopicCreateTime);
@@ -196,6 +186,16 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
 
     }
     private void initEvent(){
+
+//        setSupportActionBar(toolbar);
+//        toolbar.setNavigationOnClickListener(
+//                new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        onBackPressed();
+//                    }
+//                }
+//        );
 
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -335,7 +335,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
                     ActivityVO activityVO = detail.getActivityVO();
                     avatorName.setText(activityVO.getUserName());
                     topicTime.setText(TimeUtils.getRecentTimeSpanByNow(activityVO.getActivityTime().toInstant(ZoneOffset.UTC).toEpochMilli()));
-                    titleBar.setTitle(activityVO.getActivityTitle());
+                    titleBar.setText(activityVO.getActivityTitle());
                     topicTitle.setText(activityVO.getActivityTitle());
                     topicDetail.setText(activityVO.getActivityDetail());
                     break;
@@ -344,7 +344,7 @@ public class DetailActivity extends AppCompatActivity implements BaseQuickAdapte
                     HelpVO helpVO = detail.getHelpVO();
                     avatorName.setText(helpVO.getUserName());
                     topicTime.setText(TimeUtils.getRecentTimeSpanByNow(helpVO.getHelpCreateTime().getTime()));
-                    titleBar.setTitle(helpVO.getHelpTitle());
+                    titleBar.setText(helpVO.getHelpTitle());
                     topicTitle.setText(helpVO.getHelpTitle());
                     topicDetail.setText(helpVO.getHelpDetail());
                     break;

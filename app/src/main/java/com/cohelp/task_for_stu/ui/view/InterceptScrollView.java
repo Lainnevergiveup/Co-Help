@@ -3,10 +3,10 @@ package com.cohelp.task_for_stu.ui.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ScrollView;
 
-import androidx.core.widget.NestedScrollView;
-
-public class InterceptScrollView extends NestedScrollView {
+public class InterceptScrollView extends ScrollView {
 
     private int lastInterceptX;
     private int lastInterceptY;
@@ -23,6 +23,17 @@ public class InterceptScrollView extends NestedScrollView {
 
     public InterceptScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
+    protected void measureChildWithMargins(View child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
+        super.measureChildWithMargins(child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec, heightUsed);
     }
 
     @Override
