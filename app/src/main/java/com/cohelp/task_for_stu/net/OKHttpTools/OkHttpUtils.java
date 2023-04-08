@@ -673,16 +673,28 @@ public class OkHttpUtils {
     }
     public Boolean answerPublish(Answer answer,Map<String,String> nameAndPath){
         String ans = gson.toJson(answer);
-        okHttp.sendMediaRequest(baseURL+"/course/answer","help",ans,nameAndPath,cookie);
-        String res = okHttp.getResponse().toString();
-        Result<List<Object>> result = gson.fromJson(res, new TypeToken<Result<List<Object>>>(){}.getType());
+        okHttp.sendMediaRequest(baseURL+"/course/answer","answer",ans,nameAndPath,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<Boolean> result = gson.fromJson(res, new TypeToken<Result<Boolean>>(){}.getType());
         return result.getData()==null?false:true;
     }
     public Boolean askPublish(Ask ask, Map<String,String> nameAndPath){
         String askJson = gson.toJson(ask);
-        okHttp.sendMediaRequest(baseURL+"/course/ask","help",askJson,nameAndPath,cookie);
-        String res = okHttp.getResponse().toString();
-        Result<List<Object>> result = gson.fromJson(res, new TypeToken<Result<List<Object>>>(){}.getType());
+        okHttp.sendMediaRequest(baseURL+"/course/ask","ask",askJson,nameAndPath,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(res);
+        Result<?> result = gson.fromJson(res, new TypeToken<Result<?>>(){}.getType());
         return result.getData()==null?false:true;
     }
+
 }

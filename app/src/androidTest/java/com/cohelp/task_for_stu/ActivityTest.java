@@ -3,6 +3,7 @@ package com.cohelp.task_for_stu;
 import android.util.Log;
 
 import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
+import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.OKHttpTools.ToJsonString;
 import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.ActivityListRequest;
@@ -10,6 +11,7 @@ import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.entity.Activity;
+import com.cohelp.task_for_stu.net.model.entity.Ask;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,7 +29,9 @@ import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -39,11 +43,19 @@ import okio.BufferedSink;
 
 public class ActivityTest {
     OKHttp okHttp  = new OKHttp();
+    OkHttpUtils okHttpUtils = new OkHttpUtils();
     //    LoginRequest loginRequest = new LoginRequest();
     Gson gson = new GSON().gsonSetter();
     Activity activity;
     LoginRequest loginRequest = new LoginRequest();
-
+    public void init(){
+        loginRequest.setUserAccount("1234567890");//debug
+        loginRequest.setUserPassword( "1234567890");//debug
+        String loginMessage = ToJsonString.toJson(loginRequest);
+        okHttp.sendRequest("http://43.143.90.226:9090/user/login",loginMessage);
+        String cookieval = okHttp.getResponse().header("Set-Cookie");
+        okHttpUtils.setCookie(cookieval);
+    }
     @Test
     public void changeUserInfo() throws IOException {
 
