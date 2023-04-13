@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,13 +18,11 @@ import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.view.AvatorImageView;
 import com.cohelp.task_for_stu.utils.SessionUtils;
-import com.cohelp.task_for_stu.utils.T;
 import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
 import com.xuexiang.xui.widget.picker.widget.OptionsPickerView;
 import com.xuexiang.xui.widget.picker.widget.builder.OptionsPickerBuilder;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -60,7 +57,7 @@ public class PersonalHomepageActivity extends BaseActivity {
         initTools();
         initView();
         initEvent();
-        setTitle("个人主页");
+        setTitle("");
     }
 
 

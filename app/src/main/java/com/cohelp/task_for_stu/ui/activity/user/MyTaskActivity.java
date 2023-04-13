@@ -46,7 +46,7 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
     LinearLayout UserCenter;
     LinearLayout ll_all,ll_ac,ll_help,ll_dis,ll_current;
 
-    TextView taskPosted,title;
+    TextView text_size,title;
 
     RecyclerView eRecyclerView;
     SwipeRefreshLayout eSwipeRefreshLayout;
@@ -256,19 +256,51 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
             case 0:
                 ll_all.setSelected(true);
                 ll_current = ll_all;
+                text_size = findViewById(R.id.id_tv_all);
+                text_size.setTextSize(20);
+                text_size = findViewById(R.id.id_tv_activity);
+                text_size.setTextSize(16);
+                text_size = findViewById(R.id.id_tv_help);
+                text_size.setTextSize(16);
+                text_size = findViewById(R.id.id_tv_dis);
+                text_size.setTextSize(16);
                 System.out.println("ll_all");
                 break;
             case 1:
                 ll_ac.setSelected(true);
                 ll_current = ll_ac;
+                text_size = findViewById(R.id.id_tv_all);
+                text_size.setTextSize(16);
+                text_size = findViewById(R.id.id_tv_activity);
+                text_size.setTextSize(20);
+                text_size = findViewById(R.id.id_tv_help);
+                text_size.setTextSize(16);
+                text_size = findViewById(R.id.id_tv_dis);
+                text_size.setTextSize(16);
                 System.out.println("ll_ac");
                 break;
             case 2:
                 ll_help.setSelected(true);
+                text_size = findViewById(R.id.id_tv_all);
+                text_size.setTextSize(16);
+                text_size = findViewById(R.id.id_tv_activity);
+                text_size.setTextSize(16);
+                text_size = findViewById(R.id.id_tv_help);
+                text_size.setTextSize(20);
+                text_size = findViewById(R.id.id_tv_dis);
+                text_size.setTextSize(16);
                 ll_current = ll_help;
                 break;
             case 3:
                 ll_dis.setSelected(true);
+                text_size = findViewById(R.id.id_tv_all);
+                text_size.setTextSize(16);
+                text_size = findViewById(R.id.id_tv_activity);
+                text_size.setTextSize(16);
+                text_size = findViewById(R.id.id_tv_help);
+                text_size.setTextSize(16);
+                text_size = findViewById(R.id.id_tv_dis);
+                text_size.setTextSize(20);
                 ll_current = ll_dis;
                 break;
         }

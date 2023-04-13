@@ -22,19 +22,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
-import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.vo.AskVO;
@@ -61,7 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HoleCenterActivity extends BaseActivity {
+public class HoleCenterActivity extends BaseActivity implements View.OnClickListener {
     LinearLayout HelpCenter;
     LinearLayout TaskCenter;
     LinearLayout HoleCenter;
@@ -273,7 +269,7 @@ public class HoleCenterActivity extends BaseActivity {
                 mPageMap.clear();
                 courseList.clear();
                 getCourseList(item);
-//                initTab();
+                initTab1();
 
             }
         });
@@ -291,6 +287,7 @@ public class HoleCenterActivity extends BaseActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initData(){
         getSemesterList();
+        System.out.println("current"+currentSemster);
         getCourseList(currentSemster);
         getAskList(currentCourse,currentSemster);
     }
@@ -345,22 +342,14 @@ public class HoleCenterActivity extends BaseActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initTab1(){
 
-        titleList.clear();
-        titleList.add("标签一");
-        titleList.add("标签二");
-        titleList.add("标签三");
         fragmentList.clear();
-//
-//        fragmentList.add(new OneFragment());
-//        fragmentList.add(new OneFragment());
-//        fragmentList.add(new OneFragment());
-
+        System.out.println("coursesize"+courseList.size());
+        courseList.stream().forEach(o-> System.out.println(o.getName()));
         for (int i = 0; i < courseList.size(); i++) {
             System.out.println("courseList.get(i).getId()"+courseList.get(i).getId());
             System.out.println("(String) niceSpinner.getSelectedItem())"+(String) niceSpinner.getSelectedItem());
             fragmentList.add(new BlankFragment2(this,courseList.get(i).getId(),(String) niceSpinner.getSelectedItem()));
-//            fragmentList.add(new OneFragment());
-//            fragmentList.add(new OneFragment());
+
         }
         for(int i=0;i<titleList.size();i++){
             scrollMap.put(i,0);
@@ -389,33 +378,33 @@ public class HoleCenterActivity extends BaseActivity {
             }
         };
 
-        viewPager.setAdapter(new FragmentStateAdapter(getSupportFragmentManager(), getLifecycle()) {
-            @NonNull
-            @Override
-            public Fragment createFragment(int position) {
-                //FragmentStateAdapter内部自己会管理已实例化的fragment对象。
-                // 所以不需要考虑复用的问题
-                BlankFragment2 blankFragment2 = BlankFragment2.newInstance(courseList.get(position).getName());
-                Bundle bundle = new Bundle();
-                bundle.putString("detail",new GSON().gsonSetter().toJson(askList));
-                blankFragment2.setArguments(bundle);
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null)
-                        .add(R.id.,blankFragment2)
-                        .commit();
-                return blankFragment2;
-            }
-
-            @Override
-            public int getItemCount() {
-                return tabs.length;
-            }
-        });
+//        viewPager.setAdapter(new FragmentStateAdapter(getSupportFragmentManager(), getLifecycle()) {
+//            @NonNull
+//            @Override
+//            public Fragment createFragment(int position) {
+//                //FragmentStateAdapter内部自己会管理已实例化的fragment对象。
+//                // 所以不需要考虑复用的问题
+//                BlankFragment2 blankFragment2 = BlankFragment2.newInstance(courseList.get(position).getName());
+//                Bundle bundle = new Bundle();
+//                bundle.putString("detail",new GSON().gsonSetter().toJson(askList));
+//                blankFragment2.setArguments(bundle);
+//                FragmentManager fragmentManager = getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.addToBackStack(null)
+//                        .add(R.id.,blankFragment2)
+//                        .commit();
+//                return blankFragment2;
+//            }
+//
+//            @Override
+//            public int getItemCount() {
+//                return tabs.length;
+//            }
+//        });
 
 
         viewPager.setAdapter(pagerAdapter);
-        viewPager.setOffscreenPageLimit(titleList.size());
+        viewPager.setOffscreenPageLimit(courseList.size());
         viewPager.registerOnPageChangeCallback(changeCallback);
         meditor = new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
@@ -432,8 +421,7 @@ public class HoleCenterActivity extends BaseActivity {
                 ColorStateList colorStateList = new ColorStateList(states, colors);
                 textView.setText(courseList.get(position).getName());
                 textView.setTextSize(normalSize);
-                textView.setTextColor(colorStateList);
-
+//                textView.setTextColor(colorStateList);
                 tab.setCustomView(textView);
 
             }
@@ -500,10 +488,11 @@ public class HoleCenterActivity extends BaseActivity {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             //可以来设置选中时tab的大小
+            TextView tabView;
             int tabCount = tabLayout.getTabCount();
             for (int i = 0; i < tabCount; i++) {
                 TabLayout.Tab tab = tabLayout.getTabAt(i);
-                TextView tabView = (TextView) tab.getCustomView();
+                tabView = (TextView) tab.getCustomView();
                 if (tab.getPosition() == position) {
                     tabView.setTextSize(activeSize);
                     tabView.setTypeface(Typeface.DEFAULT_BOLD);
@@ -512,12 +501,15 @@ public class HoleCenterActivity extends BaseActivity {
                     tabView.setTypeface(Typeface.DEFAULT);
                 }
             }
-
+            System.out.println("111111");
         }
 
         @Override
         public void onPageSelected(int position) {
             super.onPageSelected(position);
+            System.out.println("222222");
+            viewPager.setCurrentItem(position);
+
         }
 
         @Override
@@ -526,6 +518,13 @@ public class HoleCenterActivity extends BaseActivity {
         }
     };
 
+//    @Override
+//    public void onClick(View view) {
+//        switch (view.getId()){
+//            case :R.id.tv
+//        }
+//
+//    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initTab(){
@@ -699,4 +698,9 @@ public class HoleCenterActivity extends BaseActivity {
         super.onDestroy();
     }
 
+
+    @Override
+    public void onClick(View v) {
+
+    }
 }

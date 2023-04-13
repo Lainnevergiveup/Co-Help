@@ -184,7 +184,7 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
     }
 
     private void toDetailAsk(int postion){
-        Intent intent = new Intent(context,DetailActivity.class);
+        Intent intent = new Intent(context,DetailAskActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("detailResponse",askList.get(postion));
         intent.putExtras(bundle);

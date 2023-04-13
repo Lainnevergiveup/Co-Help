@@ -697,4 +697,32 @@ public class OkHttpUtils {
         return result.getData()==null?false:true;
     }
 
+
+    public String deleteHistoryList(List<Integer> ids){
+        String json = gson.toJson(ids);
+        okHttp.sendRequest(baseURL+"/history/deletehistoryrecords",json,cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<Object> userResult = gson.fromJson(res,new TypeToken<Result<Object>>(){}.getType());
+        return userResult.getMessage();
+    }
+
+    /**
+     * 获取历史记录
+     */
+    public List<ResultVO> getHistoryList(){
+        okHttp.sendRequest(baseURL+"/history/gethistorylist/1/10","",cookie);
+        String res = null;
+        try {
+            res = okHttp.getResponse().body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<List<ResultVO>> userResult = gson.fromJson(res,new TypeToken<Result<List<ResultVO>>>(){}.getType());
+        return userResult.getData();
+    }
 }
