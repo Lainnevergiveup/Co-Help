@@ -11,13 +11,14 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="130dp">
-        <com.cohelp.task_for_stu.ui.view.AvatorImageView
+        <com.cohelp.task_for_stu.ui.view.NetRadiusImageView
             android:id="@+id/id_iv_icon"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:src="@drawable/pictures_no"/>
+            android:src="@drawable/pictures_no"
+            app:riv_corner_radius="80dp"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

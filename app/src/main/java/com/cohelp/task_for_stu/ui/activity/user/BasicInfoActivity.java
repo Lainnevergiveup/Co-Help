@@ -10,6 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.UserInfoHolder;
 import com.cohelp.task_for_stu.bean.User;
@@ -20,6 +24,7 @@ import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.ui.CircleTransform;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.view.AvatorImageView;
+import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.squareup.picasso.Picasso;
@@ -29,7 +34,7 @@ import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
  * 普通用户的基本信息展示页
  */
 public class BasicInfoActivity extends BaseActivity {
-    AvatorImageView icon;
+    NetRadiusImageView icon;
     TextView nickname;
     TextView team;
     RoundButton bt_logOut,bt_switch;
@@ -83,8 +88,14 @@ public class BasicInfoActivity extends BaseActivity {
         userBiz = new UserBiz();
 
 
-        System.out.println(userIcon);
-        icon.setImageURL(userIcon);
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.tuku)
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
+        Glide.with(MyCoHelp.getAppContext())
+                .load(userIcon)
+                .apply(options)
+                .into(icon);
         nickname.setText(transferUser.getUserName());
         team.setText(transferUser.getTeamName());
         //Thread thread = new

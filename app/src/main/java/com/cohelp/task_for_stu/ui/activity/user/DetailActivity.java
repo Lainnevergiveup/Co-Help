@@ -26,8 +26,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
+import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
@@ -336,8 +340,15 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
     private void setDetailData(){
 
         if (detail!=null){
-            avatorPic.setImageURL(detail.getPublisherAvatarUrl());
-
+//            avatorPic.setImageURL(detail.getPublisherAvatarUrl());
+            RequestOptions options = new RequestOptions()
+                    .centerCrop()
+                    .placeholder(R.drawable.tuku)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+            Glide.with(MyCoHelp.getAppContext())
+                    .load(detail.getPublisherAvatarUrl())
+                    .apply(options)
+                    .into(avatorPic);
             switch (detailType){
                 case 1:{
                     ActivityVO activityVO = detail.getActivityVO();
