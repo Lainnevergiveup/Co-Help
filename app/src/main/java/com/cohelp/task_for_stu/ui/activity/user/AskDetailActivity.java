@@ -26,12 +26,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
-import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
@@ -45,7 +41,9 @@ import com.cohelp.task_for_stu.net.model.entity.RemarkHelp;
 import com.cohelp.task_for_stu.net.model.entity.SecondLevelBean;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
+import com.cohelp.task_for_stu.net.model.vo.AskVO;
 import com.cohelp.task_for_stu.net.model.vo.HelpVO;
+import com.cohelp.task_for_stu.net.model.vo.QuestionBankVO;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter;
@@ -69,7 +67,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
-public class DetailActivity extends BaseActivity implements BaseQuickAdapter.RequestLoadMoreListener{
+public class AskDetailActivity extends BaseActivity implements BaseQuickAdapter.RequestLoadMoreListener{
     private  int INITBEANNUM = 5;
     private long totalCount = 5;
     private float slideOffset = 0;
@@ -103,7 +101,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
 
     User user;
 
-    DetailResponse detail;
+    AskVO detail;
     List<RemarkVO> remarkList;
     List<RemarkVO> firstList;
     List<List<RemarkVO>> orderRemarkVO;
@@ -143,8 +141,8 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
         if (intent!=null){
             Bundle bundle = intent.getExtras();
             if (bundle!=null){
-                detail = (DetailResponse) bundle.getSerializable("detailResponse");
-                detailType = detail.getType();
+                detail = (AskVO) bundle.getSerializable("ask");
+//                detailType = detail.getType();
 
             }
         }
@@ -153,7 +151,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
             okHttpUtils = new OkHttpUtils();
         }
         okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
-        idAndType = new IdAndType(detail.getIdByType(detail.getType()),1);
+//        idAndType = new IdAndType(detail.getIdByType(detail.getType()),1);
         mRecyclerViewUtil = new RecyclerViewUtil();
 
     }
@@ -202,9 +200,9 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Integer type = detail.getType();
+//                Integer type = detail.getType();
                 new Thread(()->{
-                    okHttpUtils.remark(type,detail.getIdByType(type));
+//                    okHttpUtils.remark(type,detail.getIdByType(type));
                 }).start();
                 detail.setIsLiked(detail.getIsLiked()==1?0:1);
                 updateButtonState();
@@ -223,20 +221,20 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
         collectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Collect collect = new Collect();
-                Integer type = detail.getType();
-                collect.setTopicId(detail.getIdByType(type));
-                collect.setTopicType(type);
+//                Collect collect = new Collect();
+//                Integer type = detail.getType();
+//                collect.setTopicId(detail.getIdByType(type));
+//                collect.setTopicType(type);
                 detail.setIsCollected(detail.getIsCollected()==1?0:1);
                 updateButtonState();
                 new Thread(()->{
-                    okHttpUtils.insertCollection(collect);
+//                    okHttpUtils.insertCollection(collect);
                 }).start();
             }
         });
 
         ArrayList<ImageInfo> imageInfos = new ArrayList<>();
-        for(String img : detail.getImagesUrl()){
+        for(String img : detail.getImageUrl()){
             ImageInfo imageInfo = new ImageInfo();
             imageInfo.setThumbnailUrl(img);
             imageInfo.setBigImageUrl(img);
@@ -340,36 +338,12 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
     private void setDetailData(){
 
         if (detail!=null){
-//            avatorPic.setImageURL(detail.getPublisherAvatarUrl());
-            RequestOptions options = new RequestOptions()
-                    .centerCrop()
-                    .placeholder(R.drawable.tuku)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL);
-            Glide.with(MyCoHelp.getAppContext())
-                    .load(detail.getPublisherAvatarUrl())
-                    .apply(options)
-                    .into(avatorPic);
-            switch (detailType){
-                case 1:{
-                    ActivityVO activityVO = detail.getActivityVO();
-                    avatorName.setText(activityVO.getUserName());
-                    topicTime.setText(TimeUtils.getRecentTimeSpanByNow(activityVO.getActivityTime().toInstant(ZoneOffset.UTC).toEpochMilli()));
-                    titleBar.setText(activityVO.getActivityTitle());
-                    topicTitle.setText(activityVO.getActivityTitle());
-                    topicDetail.setText(activityVO.getActivityDetail());
-                    break;
-                }
-                case 2:{
-                    HelpVO helpVO = detail.getHelpVO();
-                    avatorName.setText(helpVO.getUserName());
-                    topicTime.setText(TimeUtils.getRecentTimeSpanByNow(helpVO.getHelpCreateTime().getTime()));
-                    titleBar.setText(helpVO.getHelpTitle());
-                    topicTitle.setText(helpVO.getHelpTitle());
-                    topicDetail.setText(helpVO.getHelpDetail());
-                    break;
-                }
-                default:break;
-            }
+            avatorPic.setImageURL(detail.getAvatarUrl());
+            avatorName.setText(detail.getUserName());
+            topicTime.setText(TimeUtils.getRecentTimeSpanByNow(detail.getPublishTime().toInstant().toEpochMilli()));
+            titleBar.setText(detail.getSemester());
+//            topicTitle.setText(detail.get);
+            topicDetail.setText(detail.getQuestion());
         }
     }
     private int getWindowHeight() {
@@ -382,7 +356,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
 
         try {
             Thread t1 = new Thread(()->{
-            remarkList = okHttpUtils.getCommentList(idAndType);
+//                remarkList = okHttpUtils.getCommentList(idAndType);
                 System.out.println(remarkList);
             });
             t1.start();
@@ -457,7 +431,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
         return arrayLists;
     }
     private void changeLocalState(){
-        List<DetailResponse> detailResponses = SessionUtils.getActivityPreference(DetailActivity.this);
+        List<DetailResponse> detailResponses = SessionUtils.getActivityPreference(AskDetailActivity.this);
     }
     private RemarkActivity remarkActivityBuilder(){
         RemarkActivity remarkActivity = new RemarkActivity();
@@ -465,7 +439,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
         remarkActivity.setRemarkContent(commentText.getText().toString());
         remarkActivity.setRemarkLike(0);
         remarkActivity.setTargetIsActivity(commentRootType);
-        remarkActivity.setRemarkActivityId(detail.getIdByType(detailType));
+        remarkActivity.setRemarkActivityId(detail.getId());
         remarkActivity.setRemarkTargetId(commentTargetID);
         remarkActivity.setTopId(commentTopID);
         return remarkActivity;
@@ -476,7 +450,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
         remarkHelp.setRemarkContent(commentText.getText().toString());
         remarkHelp.setRemarkLike(0);
         remarkHelp.setRemarkTargetId(commentTargetID);
-        remarkHelp.setRemarkHelpId(detail.getIdByType(detailType));
+        remarkHelp.setRemarkHelpId(detail.getId());
         remarkHelp.setTargetIsHelp(commentRootType);
         remarkHelp.setTopId(commentTopID);
         return remarkHelp;
@@ -502,7 +476,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
     }
     private synchronized void sendRemark(RemarkRequest remarkRequest){
         Thread thread = new Thread(() -> {
-            okHttpUtils.sendComment(remarkRequest);
+//            okHttpUtils.sendComment(remarkRequest);
         });
         thread.start();
         try {
@@ -515,7 +489,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
 
     private void initCommentTarget(){
         commentRootType = 1;
-        commentTargetID = detail.getIdByType(detailType);
+        commentTargetID = detail.getId();
         commentTopID = 0;
         return;
     }
@@ -760,7 +734,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                DetailActivity.this.slideOffset = slideOffset;
+                AskDetailActivity.this.slideOffset = slideOffset;
             }
         });
 
@@ -816,7 +790,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
 //            datas.get(pos).getSecondLevelBeans().add(secondLevelBean);
 //            DetailActivity.this.dataSort(0);
         } else {
-            commentTargetID = Integer.valueOf(detail.getIdByType(detailType));
+            commentTargetID = Integer.valueOf(detail.getId());
 //            commentText.setText(msg);
             System.out.println(commentText.getText());
             commentRootType = 1;

@@ -160,8 +160,6 @@ public class LoginActivity extends BaseActivity {
             else {
                 String cookieval =response.header("Set-Cookie");
                 SessionUtils.saveCookiePreference(this, cookieval);
-                SessionUtils.getCookiePreference(this);
-                System.out.println(cookieval);
                 user = userResult.getData();
                 toBasicInfoActivity();
             }

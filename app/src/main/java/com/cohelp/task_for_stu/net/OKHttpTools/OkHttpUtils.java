@@ -5,11 +5,7 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import com.cohelp.task_for_stu.net.gsonTools.GSON;
-import com.cohelp.task_for_stu.net.model.domain.ActivityListRequest;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
-import com.cohelp.task_for_stu.net.model.domain.HelpListRequest;
-import com.cohelp.task_for_stu.net.model.domain.HelpTagRequest;
-import com.cohelp.task_for_stu.net.model.domain.HoleListRequest;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
 import com.cohelp.task_for_stu.net.model.domain.PublishDeleteRequest;
@@ -22,7 +18,6 @@ import com.cohelp.task_for_stu.net.model.entity.Answer;
 import com.cohelp.task_for_stu.net.model.entity.Ask;
 import com.cohelp.task_for_stu.net.model.entity.Collect;
 import com.cohelp.task_for_stu.net.model.entity.Help;
-import com.cohelp.task_for_stu.net.model.entity.Hole;
 import com.cohelp.task_for_stu.net.model.entity.Team;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.net.model.vo.AnswerVO;
@@ -43,7 +38,6 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class OkHttpUtils {
     OKHttp okHttp;
@@ -495,7 +489,7 @@ public class OkHttpUtils {
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public List<String> getSemesterList(){
-        Response response = okHttp.sendGetRequest(baseURL+"/user/semester",cookie,null,300);
+        Response response = okHttp.sendGetRequest(baseURL+"/user/semester",cookie,null,0);
         String res = null;
         try {
             res = response.body().string();

@@ -1,7 +1,6 @@
 package com.cohelp.task_for_stu.ui.adpter;
 
 import android.annotation.SuppressLint;
-import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.View;
 
@@ -9,13 +8,9 @@ import androidx.annotation.NonNull;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.model.vo.QuestionBankVO;
-import com.cohelp.task_for_stu.net.model.vo.ResultVO;
 import com.cohelp.task_for_stu.ui.adpter.base.broccoli.BroccoliRecyclerAdapter;
 import com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder;
 import com.xuexiang.xui.adapter.recyclerview.XRecyclerAdapter;
-import com.xuexiang.xui.utils.WidgetUtils;
-import com.xuexiang.xutil.common.CollectionUtils;
-import com.xuexiang.xutil.common.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,27 +29,25 @@ public class NewsListEditQuestionAdapter extends BroccoliRecyclerAdapter<Questio
 
     private boolean mIsSelectAll;
 
-    private NewsListEditAdapter.OnAllSelectStatusChangedListener mListener;
-    public NewsListEditAdapter.OnItemListenter mItemClickListener;
+    private OnAllSelectStatusChangedListener mListener;
+    public OnItemListenter mItemClickListener;
     public interface OnItemListenter{
         void onItemClick(View view, int postion);
     }
 
-    public void setOnItemClickListener(NewsListEditAdapter.OnItemListenter mItemClickListener){
+    public void setOnItemClickListener(OnItemListenter mItemClickListener){
         this.mItemClickListener = mItemClickListener;
     }
 
-    public NewsListEditQuestionAdapter(NewsListEditAdapter.OnAllSelectStatusChangedListener listener, List<QuestionBankVO> questionBankVOList){
+    public NewsListEditQuestionAdapter(OnAllSelectStatusChangedListener listener, List<QuestionBankVO> questionBankVOList){
         super(questionBankVOList);
         mListener = listener;
-
     }
 
     @Override
     protected void onBindData(RecyclerViewHolder holder, QuestionBankVO model, int position) {
-
+        System.out.println(model.toString());
         if (model!=null){
-
             holder.text(R.id.cardView_author_name, model.getCourseName());
             holder.text(R.id.cardView_tag, model.getContent());
             holder.text(R.id.cardView_title, model.getDifficulty());
@@ -83,7 +76,7 @@ public class NewsListEditQuestionAdapter extends BroccoliRecyclerAdapter<Questio
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.adapter_news_edit_list_item;
+        return R.layout.view_cardlist_card;
     }
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull List<Object> payloads) {
@@ -93,23 +86,23 @@ public class NewsListEditQuestionAdapter extends BroccoliRecyclerAdapter<Questio
                 mItemClickListener.onItemClick(view,position);
             }
         });
-        if (CollectionUtils.isEmpty(payloads)) {
-            Logger.e("正在进行全量刷新:" + position);
-            onBindViewHolder(holder, position);
-            return;
-        }
+//        if (CollectionUtils.isEmpty(payloads)) {
+//            Logger.e("正在进行全量刷新:" + position);
+//            onBindViewHolder(holder, position);
+//            return;
+//        }
         // payloads为非空的情况，进行局部刷新
         //取出我们在getChangePayload（）方法返回的bundle
-        Bundle payload = WidgetUtils.getChangePayload(payloads);
-        if (payload == null) {
-            return;
-        }
-        Logger.e("正在进行增量刷新:" + position);
-        for (String key : payload.keySet()) {
-            if (KEY_SELECT_STATUS.equals(key)) {
-                holder.checked(R.id.scb_select, payload.getBoolean(key));
-            }
-        }
+//        Bundle payload = WidgetUtils.getChangePayload(payloads);
+//        if (payload == null) {
+//            return;
+//        }
+//        Logger.e("正在进行增量刷新:" + position);
+//        for (String key : payload.keySet()) {
+//            if (KEY_SELECT_STATUS.equals(key)) {
+//                holder.checked(R.id.scb_select, payload.getBoolean(key));
+//            }
+//        }
     }
     @Override
     public XRecyclerAdapter refresh(Collection<QuestionBankVO> collection) {

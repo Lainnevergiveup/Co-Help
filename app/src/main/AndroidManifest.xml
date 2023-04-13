@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.cohelp.task_for_stu"
-    >
+    package="com.cohelp.task_for_stu">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- <uses-permission android:name="android.permission.CAMERA"/> -->
@@ -36,10 +35,10 @@
 
     <queries package="${applicationId}">
         <intent>
-            <action android:name="android.media.action.IMAGE_CAPTURE"></action>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
         <intent>
-            <action android:name="android.media.action.ACTION_VIDEO_CAPTURE"></action>
+            <action android:name="android.media.action.ACTION_VIDEO_CAPTURE" />
         </intent>
     </queries>
 
@@ -58,9 +57,15 @@
         tools:ignore="ExtraText"
         tools:replace="android:theme">
         <activity
+            android:name=".AskDetailActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".MyRecordActivity"
-            android:exported="false" />
-        <!-- <activity -->
+            android:exported="false" /> <!-- <activity -->
         <!-- android:name=".DiscussDetailActivity" -->
         <!-- android:exported="false"> -->
         <!-- <meta-data -->
@@ -92,7 +97,6 @@
         <activity
             android:name=".ui.activity.user.PersonalHomepageActivity"
             android:exported="false" />
-
         <activity
             android:name="com.cohelp.task_for_stu.ui.activity.manager.ManagerCreateNewUserActivity"
             android:exported="false" />
@@ -183,8 +187,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.BaseActivity"
-            android:exported="false"/>
+        <activity
+            android:name=".ui.activity.BaseActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="design_width_in_dp"
             android:value="360" />

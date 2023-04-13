@@ -125,8 +125,6 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
 //        System.out.println(detailResponse.getReadNum());
 
         if (activityVO!=null){
-            System.out.println("id=22"+activityVO.getId());
-            System.out.println(activityVO.getActivityComment());
 
             holder.text(R.id.cardView_author_name, activityVO.getUserName());
             holder.text(R.id.cardView_tag, activityVO.getActivityLabel());
@@ -138,7 +136,6 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
             holder.text(R.id.cardView_readNumber, "阅读量 " +model.getReadNum().toString());
         }
         if (helpVO!=null){
-            System.out.println("id="+helpVO.getId());
             holder.text(R.id.cardView_author_name, helpVO.getUserName());
             holder.text(R.id.cardView_title, helpVO.getHelpTitle());
             holder.text(R.id.cardView_summary,helpVO.getHelpDetail());
@@ -153,7 +150,6 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
                 holder.text(R.id.cardView_tag, "有偿");
             }
 
-
         }
         if (askVO!=null){
             holder.text(R.id.cardView_author_name, askVO.getUserName());
@@ -163,18 +159,11 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
             holder.text(R.id.cardView_praiseNumber, askVO.getLikeCount().toString());
             holder.text(R.id.cardView_commentNumber, askVO.getAnswerCount().toString());
             holder.text(R.id.cardView_collectNumber, askVO.getCollectCount().toString());
-
-
-
         }
-
-
-
 
         holder.visible(R.id.scb_select, mIsManageMode ? View.VISIBLE : View.GONE);
         if (mIsManageMode) {
             SmoothCheckBox checkBox = holder.findViewById(R.id.scb_select);
-            System.out.println(checkBox);
 
             checkBox.setCheckedSilent(mSparseArray.get(position));
             checkBox.setOnCheckedChangeListener((checkBox1, isChecked) -> {
@@ -183,9 +172,6 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
             });
         }
     }
-
-
-
 
     @Override
     protected void onBindBroccoli(RecyclerViewHolder holder, Broccoli broccoli) {

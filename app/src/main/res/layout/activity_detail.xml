@@ -117,7 +117,7 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-                        <GridView
+                        <com.lzy.ninegrid.NineGridView
                             android:id="@+id/grid_item_image"
                             android:layout_width="match_parent"
                             android:layout_height="400dp"
@@ -128,7 +128,7 @@
                             android:overScrollMode="never"
                             android:isScrollContainer="false"
                             android:stretchMode="columnWidth">
-                        </GridView>
+                        </com.lzy.ninegrid.NineGridView>
                     </FrameLayout>
 
                 </LinearLayout>
