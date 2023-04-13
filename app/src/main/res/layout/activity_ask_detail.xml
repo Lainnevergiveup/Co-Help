@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.user.DetailActivity"
+    android:background="@color/white"
+    >
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/id_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:navigationIcon="@drawable/back_white"
+        app:titleTextColor="#000000"
+        style="@style/ToolbarStyle"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_marginLeft="100dp"
+            android:id="@+id/id_title"
+            android:textColor="@color/white"
+            android:text="详情">
+
+        </TextView>
+
+
+
+
+    </com.google.android.material.appbar.MaterialToolbar>>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        app:layout_constraintTop_toBottomOf="@+id/id_toolbar"
+        android:orientation="horizontal"
+        >
+        <ScrollView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_margin="15dp"
+                android:padding="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:orientation="horizontal">
+
+                    <com.cohelp.task_for_stu.ui.view.NetRadiusImageView
+                        android:id="@+id/image_UserIcon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:scaleType="centerCrop"
+                        app:riv_corner_radius="20dp"
+                        tools:srcCompat="@tools:sample/avatars" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="10dp">
+
+                        <TextView
+                            android:id="@+id/text_UserId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="16dp"
+                            android:text="用户昵称"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:id="@+id/text_TopicCreateTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="12dp"
+                            android:text="活动时间" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/text_MessageTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:text="标题"
+                    android:textSize="@dimen/text_size_20"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/text_TopicDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:text="测试文字"
+                    android:textSize="@dimen/text_size_15"
+                    android:textColor="@color/black"/>
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="10dp"/>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.lzy.ninegrid.NineGridView
+                        android:id="@+id/grid_item_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:divider="#000000"
+                        android:dividerHeight="1dp"
+                        android:numColumns="3"
+                        android:scrollbars="none"
+                        android:overScrollMode="never"
+                        android:isScrollContainer="false"
+                        android:stretchMode="columnWidth">
+                    </com.lzy.ninegrid.NineGridView>
+                </FrameLayout>
+
+            </LinearLayout>
+
+
+        </ScrollView>
+
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/imageButton_Like"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_dianzan_undo"
+            android:scaleType="fitCenter"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/imageButton_Comment"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_comment"
+            android:scaleType="fitCenter"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/imageButton_Collect"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_collect_undo"
+            android:scaleType="fitCenter"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+    <!--        <include layout="@layout/view_comment_bottomsheet"></include>-->
+</androidx.constraintlayout.widget.ConstraintLayout>

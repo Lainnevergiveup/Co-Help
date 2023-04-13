@@ -1,11 +1,11 @@
 package com.cohelp.task_for_stu.net.model.vo;
 
+import java.io.Serializable;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author zgy
@@ -120,6 +120,14 @@ public class QuestionBankVO implements Serializable {
 
     @Override
     public String toString() {
-        return courseName;
+        return "QuestionBankVO{" +
+                "id=" + id +
+                ", content='" + content + '\'' +
+                ", courseId=" + courseId +
+                ", courseName='" + courseName + '\'' +
+                ", level=" + level +
+                ", difficulty='" + difficulty + '\'' +
+                ", imageUrl=" + imageUrl +
+                '}';
     }
 }

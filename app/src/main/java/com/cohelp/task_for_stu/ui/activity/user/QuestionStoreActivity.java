@@ -22,7 +22,6 @@ import com.cohelp.task_for_stu.net.model.vo.CourseVO;
 import com.cohelp.task_for_stu.net.model.vo.QuestionBankVO;
 import com.cohelp.task_for_stu.net.model.vo.ResultVO;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
-import com.cohelp.task_for_stu.ui.adpter.NewsListEditAdapter;
 import com.cohelp.task_for_stu.ui.adpter.NewsListEditQuestionAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
@@ -62,8 +61,6 @@ public class QuestionStoreActivity extends BasicInfoActivity {
     List<CourseVO> courseList;
     Integer currentCourse;
     String semeter = "";
-    CardViewListAdapter cardViewListAdapter;
-    List<ResultVO> collectList;
     String delCollectList;
     OkHttpUtils okHttpUtils;
     Intent intent;
@@ -76,7 +73,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
         initData();
         initView();
         initEvent();
-        setTitle("我的收藏");
+        setTitle("");
     }
 
     private void initTools(){
@@ -133,7 +130,6 @@ public class QuestionStoreActivity extends BasicInfoActivity {
             }
         });
 
-
         mTvSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,7 +171,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
 //                Utils.goWeb(getContext(), item.getDetailUrl());
             }
         });
-        mAdapter.setOnItemClickListener(new NewsListEditAdapter.OnItemListenter() {
+        mAdapter.setOnItemClickListener(new NewsListEditQuestionAdapter.OnItemListenter() {
             @Override
             public void onItemClick(View view, int postion) {
                 toDetailActivity(postion);
@@ -194,7 +190,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
             @Override
             public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
                 item = (CourseVO) niceSpinner.getItemAtPosition(position);
-                courseList.clear();
+                questionList.clear();
                 refreshQuestionListData();
             }
         });
@@ -216,8 +212,6 @@ public class QuestionStoreActivity extends BasicInfoActivity {
                 scbSelectAll.setCheckedSilent(isSelectAll);
             }
         },questionList);
-
-
         niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
         niceSpinner.attachDataSource(courseList);
         niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
@@ -245,18 +239,15 @@ public class QuestionStoreActivity extends BasicInfoActivity {
         finish();
     }
     private void toDetailActivity(int postion){
-        Intent intent = new Intent(QuestionStoreActivity.this,DetailActivity.class);
+        intent = new Intent(QuestionStoreActivity.this,AskDetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("detailResponse",collectList.get(postion).getDetailResponse());
+        QuestionBankVO questionBankVO = questionList.get(postion);
+        bundle.putSerializable("question",questionBankVO);
         intent.putExtras(bundle);
 
-        ResultVO resultVO = collectList.get(postion);
-        DetailResponse detailResponse = resultVO.getDetailResponse();
-        Integer type = detailResponse.getType();
-        IdAndType idAndType = new IdAndType(detailResponse.getIdByType(type),type);
-        new Thread(()->{
-            System.out.println(okHttpUtils.getDetail(idAndType));
-        }).start();
+//        new Thread(()->{
+//            System.out.println(okHttpUtils.getDetail(idAndType));
+//        }).start();
         startActivity(intent);
     }
 
@@ -275,6 +266,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
         Thread t1 = new Thread(()->{
             if (item!=null){
                 questionList = okHttpUtils.getTeacherQuestionList(1,20,item.getId());
+                System.out.println("1"+questionList);
             }
         });
         t1.start();
@@ -308,7 +300,6 @@ public class QuestionStoreActivity extends BasicInfoActivity {
     private synchronized void refreshQuestionListData(){
         getQuestionList();
         mAdapter.refresh(questionList);
-
 //        cardViewListAdapter.setDetailResponseListList(collectList.stream().map(i->i.getDetailResponse()).collect(Collectors.toList()));
 //        eRecyclerView.setAdapter(cardViewListAdapter);
 //        eSwipeRefreshLayout.postDelayed(new Runnable() {
@@ -349,6 +340,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
     private synchronized void getCourseList(){
         Thread thread = new Thread(() -> {
             courseList = okHttpUtils.getTeacherCourseList();
+            System.out.println("2"+courseList);
             item = courseList==null||courseList.isEmpty()?null:courseList.get(0);
         });
         thread.start();
