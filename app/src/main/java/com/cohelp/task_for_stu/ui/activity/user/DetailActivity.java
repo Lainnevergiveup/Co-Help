@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -55,7 +54,9 @@ import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.TimeUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.xuexiang.xui.widget.actionbar.TitleBar;
+import com.lzy.ninegrid.ImageInfo;
+import com.lzy.ninegrid.NineGridView;
+import com.lzy.ninegrid.preview.NineGridViewClickAdapter;
 
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -70,8 +71,6 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
     private float slideOffset = 0;
     private int positionCount = 0;
     Toolbar toolbar;
-    Button returnButton;
-    Button reportButton;
     TextView topicTitle;
     TextView avatorName;
     TextView topicTime;
@@ -79,8 +78,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
     TextView titleBar;
     NetRadiusImageView avatorPic;
     private RecyclerView rv_dialog_lists;
-    private GridView imageGridView;
-    GridViewImageAdapter gridViewImageAdapter;
+    private NineGridView imageGridView;
     ImageButton likeButton;
     ImageButton collectButton;
     ImageButton commentButton;
@@ -168,7 +166,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
         topicTime = (TextView) findViewById(R.id.text_TopicCreateTime);
         topicTitle = (TextView) findViewById(R.id.text_MessageTitle);
         topicDetail = (TextView) findViewById(R.id.text_TopicDetail);
-        imageGridView = (GridView) findViewById(R.id.grid_item_image);
+        imageGridView = (NineGridView) findViewById(R.id.grid_item_image);
 
         imageGridView.setVerticalScrollBarEnabled(false);
         imageGridView.setHorizontalScrollBarEnabled(false);
@@ -232,8 +230,18 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
                 }).start();
             }
         });
-        gridViewImageAdapter = new GridViewImageAdapter(this,detail.getImagesUrl());
-        imageGridView.setAdapter(gridViewImageAdapter);
+
+        ArrayList<ImageInfo> imageInfos = new ArrayList<>();
+        for(String img : detail.getImagesUrl()){
+            ImageInfo imageInfo = new ImageInfo();
+            imageInfo.setThumbnailUrl(img);
+            imageInfo.setBigImageUrl(img);
+            imageInfos.add(imageInfo);
+        }
+        imageGridView.setGridSpacing(10);
+        imageGridView.setSingleImageSize(1200);
+        imageGridView.setMaxSize((imageInfos.size()<=9?imageInfos.size():9));
+        imageGridView.setAdapter(new NineGridViewClickAdapter(this, imageInfos));
         // 点击事件
         bottomSheetAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
