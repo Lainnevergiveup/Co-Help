@@ -14,8 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center"
         android:layout_marginTop="1dp"
-
+        android:background="@color/white"
         >
         <LinearLayout
             android:id="@+id/ll_all"
@@ -26,13 +27,15 @@
             android:orientation="vertical"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/tab_main_pic"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/selector_all"/>
+<!--            <ImageView-->
+<!--                android:id="@+id/tab_main_pic"-->
+<!--                android:layout_width="25dp"-->
+<!--                android:layout_height="25dp"-->
+<!--                android:background="@drawable/selector_all"/>-->
 
             <TextView
+                android:textColor="@color/black"
+                android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="全部"
@@ -50,17 +53,18 @@
             android:orientation="vertical"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/tab_ac_pic"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/selector_activity"/>
+<!--            <ImageView-->
+<!--                android:id="@+id/tab_ac_pic"-->
+<!--                android:layout_width="25dp"-->
+<!--                android:layout_height="25dp"-->
+<!--                android:background="@drawable/selector_activity"/>-->
 
             <TextView
+                android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="活动"
-
+                android:layout_marginTop="2dp"
                 android:id="@+id/id_tv_activity"/>
 
         </LinearLayout>
@@ -74,16 +78,18 @@
             android:orientation="vertical"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/tab_help_pic"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/selector_help"/>
+<!--            <ImageView-->
+<!--                android:id="@+id/tab_help_pic"-->
+<!--                android:layout_width="25dp"-->
+<!--                android:layout_height="25dp"-->
+<!--                android:background="@drawable/selector_help"/>-->
 
             <TextView
+                android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="互助"
+                android:layout_marginTop="2dp"
                 android:id="@+id/id_tv_help"/>
         </LinearLayout>
         <LinearLayout
@@ -95,16 +101,18 @@
             android:orientation="vertical"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/iv_tab_dis"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/selector_discuss" />
+<!--            <ImageView-->
+<!--                android:id="@+id/iv_tab_dis"-->
+<!--                android:layout_width="25dp"-->
+<!--                android:layout_height="25dp"-->
+<!--                android:background="@drawable/selector_discuss" />-->
 
             <TextView
+                android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="讨论"
+                android:layout_marginTop="2dp"
                 android:id="@+id/id_tv_dis"/>
         </LinearLayout>
 

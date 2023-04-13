@@ -141,7 +141,7 @@ public class CreateNewTaskActivity extends BaseActivity  {
 //                        System.out.println(okHttpUtils.answerPublish(answer,stringStringHashMap));
                         okHttpUtils.activityPublish(activity,stringStringHashMap);
                     }).start();
-
+                    Toast.makeText(CreateNewTaskActivity.this, "发布成功~", Toast.LENGTH_LONG).show();
                     toTaskCenterActivity();
                 }
 

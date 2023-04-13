@@ -1,10 +1,14 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.ArrayMap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -12,14 +16,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
@@ -30,9 +38,13 @@ import com.cohelp.task_for_stu.net.model.vo.CourseVO;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CardViewAskListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.MyAskFragmentPagerAdapter;
+import com.cohelp.task_for_stu.ui.adpter.MyFragmentPagerAdapter;
+import com.cohelp.task_for_stu.ui.view.InterceptScrollView;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.xuexiang.xui.utils.DensityUtils;
 import com.xuexiang.xui.utils.XToastUtils;
 import com.xuexiang.xui.widget.tabbar.TabSegment;
@@ -45,7 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HoleCenterActivity extends BaseActivity {
+public class HoleCenterActivity extends BaseActivity implements View.OnClickListener {
     LinearLayout HelpCenter;
     LinearLayout TaskCenter;
     LinearLayout HoleCenter;
@@ -77,6 +89,35 @@ public class HoleCenterActivity extends BaseActivity {
     private int mCurrentItemCount = TAB_COUNT;
 //    private MultiPage mDestPage = MultiPage.教育;
     private Map<String, View> mPageMap = new HashMap<>();
+    final String[] tabs = new String[]{"关注", "推荐", "最新"};
+    private int activeColor = Color.parseColor("#ff678f");
+    private int normalColor = Color.parseColor("#666666");
+    int activeSize = 16;
+    int normalSize = 14;
+
+    private InterceptScrollView mScrollView;
+    private TabLayout tabLayout;
+    private ViewPager2 viewPager;
+    private TabLayoutMediator meditor;
+    private FragmentPagerAdapter mPageAdapter;
+    private LinearLayout container_top;
+    private LinearLayout container_normal;
+    private View viewPlace;
+
+    private ArrayList<String> titleList = new ArrayList<>();
+    private ArrayList<Fragment> fragmentList=new ArrayList<>();
+
+    //存放页面和滑动距离的Map
+    private ArrayMap<Integer,Integer> scrollMap=new ArrayMap<>();
+    //当前页面
+    private int currentTab=0;
+    //当前页面的滑动距离
+    private int currentScrollY=0;
+    //用于判断，当前页面的导航栏是否悬浮
+    private boolean isTabLayoutSuspend;
+
+
+
     private PagerAdapter mPagerAdapter = new PagerAdapter() {
         @Override
         public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
@@ -117,6 +158,7 @@ public class HoleCenterActivity extends BaseActivity {
             return POSITION_NONE;
         }
     };
+
 
     private View getPageView(String semeterName) {
 
@@ -173,6 +215,7 @@ public class HoleCenterActivity extends BaseActivity {
         }
         okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void initEvent() {
 //        setToolbar(R.drawable.common_add, new ClickListener() {
 //            @RequiresApi(api = Build.VERSION_CODES.O)
@@ -226,7 +269,7 @@ public class HoleCenterActivity extends BaseActivity {
                 mPageMap.clear();
                 courseList.clear();
                 getCourseList(item);
-                initTab();
+                initTab1();
 
             }
         });
@@ -236,7 +279,7 @@ public class HoleCenterActivity extends BaseActivity {
 //                toDetailActivity(postion);
 //            }
 //        });
-
+        initTab1();
 
 
     }
@@ -244,9 +287,11 @@ public class HoleCenterActivity extends BaseActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initData(){
         getSemesterList();
+        System.out.println("current"+currentSemster);
         getCourseList(currentSemster);
         getAskList(currentCourse,currentSemster);
     }
+    @SuppressLint("WrongViewCast")
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initView(){
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
@@ -254,6 +299,16 @@ public class HoleCenterActivity extends BaseActivity {
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
         searchBtn = findViewById(R.id.id_iv_search);
+
+
+//        mScrollView=findViewById(R.id.interceptScrollView);
+        tabLayout=findViewById(R.id.tabLayout);
+        viewPager=findViewById(R.id.viewPager);
+        container_top = findViewById(R.id.container_top);
+        container_normal = findViewById(R.id.container_normal);
+        viewPlace=findViewById(R.id.view_place);
+
+
 
         System.out.println(holeList);
 
@@ -268,13 +323,14 @@ public class HoleCenterActivity extends BaseActivity {
         getSemesterList();
 
 //        List<String> dataset = new LinkedList<>(Arrays.asList("One", "Two", "Three", "Four", "Five"));
+        System.out.println("12314"+semesterList);
         niceSpinner.attachDataSource(semesterList);
 //        niceSpinner.setBackgroundDrawable();
         niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
         getCourseList((String) niceSpinner.getSelectedItem());
 
 
-        initTab();
+//        initTab();
 //        System.out.println("asklist"+askList);
 //        cardViewListAdapter = new CardViewAskListAdapter();
 //        cardViewListAdapter.setAskVOList(askList);
@@ -282,6 +338,194 @@ public class HoleCenterActivity extends BaseActivity {
 //        eRecyclerView.setAdapter(cardViewListAdapter);
 
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void initTab1(){
+
+        fragmentList.clear();
+        System.out.println("coursesize"+courseList.size());
+        courseList.stream().forEach(o-> System.out.println(o.getName()));
+        for (int i = 0; i < courseList.size(); i++) {
+            System.out.println("courseList.get(i).getId()"+courseList.get(i).getId());
+            System.out.println("(String) niceSpinner.getSelectedItem())"+(String) niceSpinner.getSelectedItem());
+            fragmentList.add(new BlankFragment2(this,courseList.get(i).getId(),(String) niceSpinner.getSelectedItem()));
+
+        }
+        for(int i=0;i<titleList.size();i++){
+            scrollMap.put(i,0);
+        }
+        MyFragmentPagerAdapter pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),getLifecycle(),fragmentList);
+        mPageAdapter=new FragmentPagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int i) {
+                return fragmentList.get(i);
+            }
+
+            @Nullable
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return titleList.get(position);
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return position;
+            }
+
+            @Override
+            public int getCount() {
+                return titleList.size();
+            }
+        };
+
+//        viewPager.setAdapter(new FragmentStateAdapter(getSupportFragmentManager(), getLifecycle()) {
+//            @NonNull
+//            @Override
+//            public Fragment createFragment(int position) {
+//                //FragmentStateAdapter内部自己会管理已实例化的fragment对象。
+//                // 所以不需要考虑复用的问题
+//                BlankFragment2 blankFragment2 = BlankFragment2.newInstance(courseList.get(position).getName());
+//                Bundle bundle = new Bundle();
+//                bundle.putString("detail",new GSON().gsonSetter().toJson(askList));
+//                blankFragment2.setArguments(bundle);
+//                FragmentManager fragmentManager = getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.addToBackStack(null)
+//                        .add(R.id.,blankFragment2)
+//                        .commit();
+//                return blankFragment2;
+//            }
+//
+//            @Override
+//            public int getItemCount() {
+//                return tabs.length;
+//            }
+//        });
+
+
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setOffscreenPageLimit(courseList.size());
+        viewPager.registerOnPageChangeCallback(changeCallback);
+        meditor = new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                TextView textView = new TextView(HoleCenterActivity.this);
+//                textView.setText(tabs[position]);
+                tab.setCustomView(textView);
+
+                int[][] states = new int[2][];
+                states[0] = new int[]{android.R.attr.state_selected};
+                states[1] = new int[]{};
+
+                int[] colors = new int[]{activeColor, normalColor};
+                ColorStateList colorStateList = new ColorStateList(states, colors);
+                textView.setText(courseList.get(position).getName());
+                textView.setTextSize(normalSize);
+//                textView.setTextColor(colorStateList);
+                tab.setCustomView(textView);
+
+            }
+        });
+        meditor.attach();
+
+//        tabLayout.setupWithViewPager(viewPager);
+
+
+//        mScrollView.setScrollChangedListener(new InterceptScrollView.ScrollChangedListener() {
+//            @Override
+//            public void onScrollChanged(int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                currentScrollY=scrollY;
+//                if (scrollY >= DpUtils.dp2px(HoleCenterActivity.this, 60)&&tabLayout.getParent()==container_normal) {
+//                    container_normal.removeView(tabLayout);
+//                    container_top.addView(tabLayout);
+//                    viewPlace.setVisibility(View.INVISIBLE);
+//                    isTabLayoutSuspend=true;
+//                } else if(scrollY < DpUtils.dp2px(HoleCenterActivity.this, 60)&&tabLayout.getParent()==container_top){
+//                    container_top.removeView(tabLayout);
+//                    container_normal.addView(tabLayout, 1);
+//                    viewPlace.setVisibility(View.GONE);
+//                    isTabLayoutSuspend=false;
+//                }
+//            }
+//        });
+
+//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int i, float v, int i1) {
+//                System.out.println("iiii"+i);
+//            }
+//
+//            @Override
+//            public void onPageSelected(int i) {
+////                //如果导航栏悬浮
+////                if(isTabLayoutSuspend){
+////                    //当前页面的滑动距离为0或者小于60dp，那么只需滑动60dp，让导航栏悬浮即可
+////                    if(scrollMap.get(i)==0||scrollMap.get(i)<DpUtils.dp2px(HoleCenterActivity.this,60)){
+////                        mScrollView.scrollTo(0,DpUtils.dp2px(HoleCenterActivity.this,60));
+////                    }else{//如果页面滑动的距离大于60dp，那么直接滑动对应的距离即可
+////                        mScrollView.scrollTo(0,scrollMap.get(i));
+////                    }
+////                }else{//如果导航栏没有悬浮
+////                    mScrollView.scrollTo(0,currentScrollY);
+////                }
+//
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int i) {
+//                if(i==1){//手指按下时，记录当前页面
+//                    currentTab=viewPager.getCurrentItem();
+//                }else if(i==2){//手指抬起时
+//                    if(currentTab!=viewPager.getCurrentItem()){
+//                        //如果滑动成功，也就是说翻页成功，那么保存之前页面的滑动距离
+//                        scrollMap.put(currentTab,currentScrollY);
+//                    }
+//                }
+//            }
+//        });
+    }
+    private ViewPager2.OnPageChangeCallback changeCallback = new ViewPager2.OnPageChangeCallback() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            //可以来设置选中时tab的大小
+            TextView tabView;
+            int tabCount = tabLayout.getTabCount();
+            for (int i = 0; i < tabCount; i++) {
+                TabLayout.Tab tab = tabLayout.getTabAt(i);
+                tabView = (TextView) tab.getCustomView();
+                if (tab.getPosition() == position) {
+                    tabView.setTextSize(activeSize);
+                    tabView.setTypeface(Typeface.DEFAULT_BOLD);
+                } else {
+                    tabView.setTextSize(normalSize);
+                    tabView.setTypeface(Typeface.DEFAULT);
+                }
+            }
+            System.out.println("111111");
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            super.onPageSelected(position);
+            System.out.println("222222");
+            viewPager.setCurrentItem(position);
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            super.onPageScrollStateChanged(state);
+        }
+    };
+
+//    @Override
+//    public void onClick(View view) {
+//        switch (view.getId()){
+//            case :R.id.tv
+//        }
+//
+//    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initTab(){
 
@@ -446,5 +690,17 @@ public class HoleCenterActivity extends BaseActivity {
             System.out.println(okHttpUtils.getDetail(idAndType));
         }).start();
         startActivity(intent);
+    }
+    @Override
+    protected void onDestroy() {
+        meditor.detach();
+        viewPager.unregisterOnPageChangeCallback(changeCallback);
+        super.onDestroy();
+    }
+
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

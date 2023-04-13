@@ -57,7 +57,7 @@ public class PersonalHomepageActivity extends BaseActivity {
         initTools();
         initView();
         initEvent();
-        setTitle("个人主页");
+        setTitle("");
     }
 
 

@@ -5,84 +5,72 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.activity.user.HoleCenterActivity">
+    tools:context=".ui.activity.user.MyRecordActivity">
+    <include layout="@layout/common_toolbar_publish" />
 
-    <include layout="@layout/common_toolbar_discussion" />
 
-<!--    <com.xuexiang.xui.widget.tabbar.TabSegment-->
-<!--        android:id="@+id/tabSegment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="40dp"-->
-<!--        app:ts_normal_color="@color/xui_config_color_pure_black"-->
-<!--        android:background="@color/xui_config_color_white"/>-->
-    <RelativeLayout
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="@integer/material_motion_duration_long_1">
-<!--        <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout-->
-<!--            android:id="@+id/id_swiperefresh"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_marginTop="15sp"-->
-<!--            android:layout_marginLeft="15sp"-->
-<!--            android:layout_marginRight="15sp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            >-->
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:srlEnableAutoLoadMore="true"
+        app:srlEnableLoadMore="true">
 
-<!--          -->
-<!--        </com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout>-->
-<!--        <androidx.viewpager.widget.ViewPager-->
-<!--            android:id="@+id/contentViewPager"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_weight="1"-->
-<!--            android:fitsSystemWindows="true"/>-->
-            <LinearLayout
-                android:id="@+id/container_normal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:descendantFocusability="beforeDescendants"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:orientation="vertical">
-
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@android:color/white"
-                    app:tabMode="fixed"
-                    app:tabSelectedTextColor="@android:color/black" />
-
-                <View
-                    android:id="@+id/view_place"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:visibility="gone" />
-
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/viewPager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-
-            </LinearLayout>
-
-
-
-        <!-- 悬浮在屏幕上方的顶部空布局-->
-        <LinearLayout
-            android:id="@+id/container_top"
+        <com.scwang.smartrefresh.header.MaterialHeader
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            tools:listitem="@layout/view_cardlist_card" />
+
+        <com.cohelp.task_for_stu.ui.widget.MaterialFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_edit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/xui_config_color_white"
+        android:paddingHorizontal="@dimen/config_margin_24dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.xuexiang.xui.widget.button.SmoothCheckBox
+                android:id="@+id/scb_select_all"
+                android:layout_width="@dimen/common_icon_size"
+                android:layout_height="@dimen/common_icon_size"
+                android:layout_gravity="center_vertical|start" />
+
+
+            <TextView
+                style="@style/TextStyle.Title"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/config_margin_8dp"
+                android:text="@string/lab_select_all" />
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/btn_delete"
+            style="@style/Button.Primary.wrap"
+            android:layout_gravity="center_vertical|end"
+            android:textColor="@color/xui_config_color_red"
+            android:textSize="18dp"
+            android:text="删除" />
 
-    </RelativeLayout>
-
-
-
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"
@@ -106,13 +94,14 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:background="@drawable/selector_activity" />
+                android:src="@drawable/act2" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="活动"
+
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -125,16 +114,17 @@
 
             <ImageView
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:background="@drawable/selector_help" />
+                android:src="@drawable/help1" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="互助"
+
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -150,13 +140,12 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:background="@drawable/dis1" />
+                android:src="@drawable/dis2" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="#1296db"
                 android:text="讨论"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -178,6 +167,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="#1296db"
                 android:text="个人中心"
                 android:textStyle="bold" />
         </LinearLayout>

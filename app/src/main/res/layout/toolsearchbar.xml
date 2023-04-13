@@ -8,7 +8,7 @@
 
     android:layout_marginTop="0dp"
 
-    app:navigationIcon="@drawable/pubish_white"
+    app:navigationIcon="@drawable/pubish_1"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     >
 
@@ -20,6 +20,6 @@
         android:layout_gravity="center"
         android:text="文字居中"
         android:textColor="@android:color/white"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 
 </androidx.appcompat.widget.Toolbar>

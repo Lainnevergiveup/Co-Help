@@ -249,7 +249,7 @@ public class TaskCenterActivity extends BaseActivity {
         searchBtn = findViewById(R.id.id_iv_search);
         eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
         eRecyclerView = findViewById(R.id.id_recyclerview);
-        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
+        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.PULL_FROM_START);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
         cardViewListAdapter = new CardViewListAdapter();
         getActivityList(conditionState);
