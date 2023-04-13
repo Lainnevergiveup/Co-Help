@@ -102,7 +102,9 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
         AskVO askVO = detailResponse.getAskVO();
 
         holder.authorAvator.setImageURL(detailResponse.getPublisherAvatarUrl());
-        Glide.get(MyCoHelp.getAppContext()).
+        Glide.with(MyCoHelp.getAppContext())
+                .load(detailResponse.getPublisherAvatarUrl())
+                .into(holder.authorAvator);
         List<String> imageList = detailResponse.getImagesUrl();
 //        System.out.println("imagelist="+imageList);
         if (imageList!=null&&imageList.size()>0){
