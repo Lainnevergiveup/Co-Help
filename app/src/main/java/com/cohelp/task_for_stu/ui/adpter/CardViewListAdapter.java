@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
@@ -101,9 +103,14 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
         HelpVO helpVO = detailResponse.getHelpVO();
         AskVO askVO = detailResponse.getAskVO();
 
-        holder.authorAvator.setImageURL(detailResponse.getPublisherAvatarUrl());
+//        holder.authorAvator.setImageURL(detailResponse.getPublisherAvatarUrl());
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.tuku)
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
         Glide.with(MyCoHelp.getAppContext())
                 .load(detailResponse.getPublisherAvatarUrl())
+                .apply(options)
                 .into(holder.authorAvator);
         List<String> imageList = detailResponse.getImagesUrl();
 //        System.out.println("imagelist="+imageList);
