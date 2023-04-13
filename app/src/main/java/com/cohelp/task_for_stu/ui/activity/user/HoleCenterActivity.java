@@ -291,7 +291,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
         getCourseList(currentSemster);
         getAskList(currentCourse,currentSemster);
     }
-    @SuppressLint("WrongViewCast")
+    @SuppressLint({"WrongViewCast", "ResourceAsColor"})
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initView(){
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
@@ -317,16 +317,19 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
 ////        eRecyclerView = findViewById(R.id.id_recyclerview);
 //        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.PULL_FROM_START);
 //        eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-        mTabSegment = findViewById(R.id.tabSegment);
         mContentViewPager = findViewById(R.id.contentViewPager);
 //        mSpinnerFitOffset = findViewById(R.id.spinner_system_fit_offset);
         getSemesterList();
 
 //        List<String> dataset = new LinkedList<>(Arrays.asList("One", "Two", "Three", "Four", "Five"));
         System.out.println("12314"+semesterList);
+
         niceSpinner.attachDataSource(semesterList);
-//        niceSpinner.setBackgroundDrawable();
         niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
+        niceSpinner.setTextColor(0xFFFFFFFF);
+        niceSpinner.setArrowTintColor(0xFFFFFFFF);
+//        niceSpinner.setBackgroundDrawable();
+
         getCourseList((String) niceSpinner.getSelectedItem());
 
 
@@ -421,6 +424,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
                 ColorStateList colorStateList = new ColorStateList(states, colors);
                 textView.setText(courseList.get(position).getName());
                 textView.setTextSize(normalSize);
+                textView.setGravity(1);
 //                textView.setTextColor(colorStateList);
                 tab.setCustomView(textView);
 
@@ -604,6 +608,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
         Intent intent = new Intent(this,CreateNewHoleActivity.class);
         startActivity(intent);
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private synchronized void getAskList(Integer id , String semester){
         Thread t1 = new Thread(()->{
             askList = okHttpUtils.getAskList(id, semester);
@@ -650,6 +655,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
     private synchronized void getSemesterList(){
         Thread thread = new Thread(()->{
             semesterList = okHttpUtils.getSemesterList();
+
             currentSemster = semesterList==null&&!semesterList.isEmpty()?"":semesterList.get(0);
         });
         thread.start();

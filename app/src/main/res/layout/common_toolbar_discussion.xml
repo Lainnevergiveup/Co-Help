@@ -28,9 +28,9 @@
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:gravity="center"
-
+        android:textColor="@color/white"
         android:spinnerMode="dropdown"
-
+        app:arrowTint="@color/white"
         />
 
     <TextView
@@ -39,7 +39,7 @@
         style="@style/Button.Radius"
         android:id="@+id/id_tv_manager"
         android:layout_marginEnd="20dp"
-        android:text="管理"
+        android:text="题库"
         android:textSize="16dp"
         android:layout_gravity="right|center_vertical"
         >

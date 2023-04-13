@@ -150,15 +150,6 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
         });
 
 
-//        mRecyclerView = root.findViewById(R.id.recyclerview);
-//        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-//        myAskAdapter = new CardViewAskListAdapter(askList,getContext());
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
-//        mRecyclerView.setHasFixedSize(true);
-//        mRecyclerView.setNestedScrollingEnabled(false);
-//        mRecyclerView.setAdapter(myAskAdapter);
-//        mRecyclerView.setNestedScrollingEnabled(false);
     }
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext()) {
         @Override

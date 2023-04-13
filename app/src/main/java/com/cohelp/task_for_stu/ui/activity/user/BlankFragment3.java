@@ -21,9 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
-import com.cohelp.task_for_stu.net.model.vo.AskVO;
-import com.cohelp.task_for_stu.ui.adpter.MyAskAdapter;
+import com.cohelp.task_for_stu.ui.adpter.MyTaskAdapter;
 import com.cohelp.task_for_stu.ui.view.MyListViewForScrollView;
 import com.cohelp.task_for_stu.ui.view.MyRecyclerView;
 import com.cohelp.task_for_stu.utils.SessionUtils;
@@ -47,12 +47,12 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
     SmoothCheckBox scbSelectAll;
     Button btn_delete;
     OkHttpUtils okHttpUtils = new OkHttpUtils();
-    List<AskVO> askList;
-    Integer id;
+    List<DetailResponse> helplist;
+    String tag;
     String semester;
     MyListViewForScrollView scrollView;
     private TextView mTvSwitch;
-    MyAskAdapter myAskAdapter;
+    MyTaskAdapter myTaskAdapter;
     public static final int GET_DATA_SUCCESS = 1;
     public static final int NETWORK_ERROR = 2;
     public static final int SERVER_ERROR =3;
@@ -72,11 +72,11 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
 //        public void handleMessage(Message msg) {
 //            switch (msg.what){
 //                case GET_DATA_SUCCESS:
-//                    askList = (List<AskVO>) msg.obj;
-////                    myAskAdapter.setAskVOList(askList);
+//                    helplist = (List<AskVO>) msg.obj;
+////                    myAskAdapter.setAskVOList(helplist);
 //                    mRecyclerView.setLayoutManager(mLayoutManager);
 //                    mRecyclerView.setAdapter(myAskAdapter);
-//                    System.out.println("ask_list"+askList);
+//                    System.out.println("ask_list"+helplist);
 //                    break;
 //                case NETWORK_ERROR:
 //                    Toast.makeText(getContext(),"网络连接失败",Toast.LENGTH_SHORT).show();
@@ -88,10 +88,9 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
 //        }
 //    };
 
-    public BlankFragment3(Context context ,Integer id , String semester){
+    public BlankFragment3(Context context , String tag){
         this.context = context;
-        this.id = id;
-        this.semester = semester;
+        this.tag = tag;
     }
     public BlankFragment3(){
 
@@ -108,11 +107,11 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
 
     }
 
-    public static BlankFragment2 newInstance(String tabname) {
+    public static BlankFragment3 newInstance(String tabname) {
 
         Bundle args = new Bundle();
 
-        BlankFragment2 fragment = new BlankFragment2();
+        BlankFragment3 fragment = new BlankFragment3();
         fragment.setArguments(args);
         return fragment;
     }
@@ -139,27 +138,16 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
     }
 
     private void initEvent() throws InterruptedException {
-        getAskList(id,semester);
-        System.out.println("asklist"+askList);
-        myAskAdapter = new MyAskAdapter(getContext(),this,askList);
-        scrollView.setAdapter(myAskAdapter);
+        gethelplist(tag);
+        myTaskAdapter= new MyTaskAdapter(getContext(),this,helplist);
+        scrollView.setAdapter(myTaskAdapter);
         scrollView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                toDetailAsk(position);
+                toDetailHelp(position);
             }
         });
 
-
-//        mRecyclerView = root.findViewById(R.id.recyclerview);
-//        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-//        myAskAdapter = new CardViewAskListAdapter(askList,getContext());
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
-//        mRecyclerView.setHasFixedSize(true);
-//        mRecyclerView.setNestedScrollingEnabled(false);
-//        mRecyclerView.setAdapter(myAskAdapter);
-//        mRecyclerView.setNestedScrollingEnabled(false);
     }
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext()) {
         @Override
@@ -168,28 +156,28 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
         }
     };
 
-    private synchronized void getAskList(Integer id , String semester) throws InterruptedException {
+    private synchronized void gethelplist(String tag) throws InterruptedException {
         Thread t1 = new Thread(()->{
-            System.out.println("idgetasklist"+id);
-            System.out.println("semester"+semester);
-            askList = okHttpUtils.getAskList(id, semester);
+
+            System.out.println("TAG"+tag);
+            helplist = okHttpUtils.helpListByTag(tag);
 //            Message msg = Message.obtain();
-//            msg.obj = askList;
+//            msg.obj = helplist;
 //            msg.what = GET_DATA_SUCCESS;
 //            handler.sendMessage(msg);
         });
-        System.out.println("ask_list"+askList);
+        System.out.println("ask_list"+helplist);
         t1.start();
         t1.join();
 
     }
 
-    private void toDetailAsk(int postion){
+    private void toDetailHelp(int postion){
         Intent intent = new Intent(context,DetailAskActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("detailResponse",askList.get(postion));
+        bundle.putSerializable("detailResponse",helplist.get(postion));
         intent.putExtras(bundle);
-        IdAndType idAndType = new IdAndType(askList.get(postion).getId(),1);
+        IdAndType idAndType = new IdAndType(helplist.get(postion).getType(),1);
         new Thread(()->{
             System.out.println(okHttpUtils.getDetail(idAndType));
         }).start();

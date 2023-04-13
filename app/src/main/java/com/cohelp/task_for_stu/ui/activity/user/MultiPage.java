@@ -27,11 +27,7 @@ public enum MultiPage {
     跑腿代取(2),
     问题求助(3),
     其他(4);
-//    母婴(5),
-//    音乐(6),
-//    健康(7),
-//    旅游(8),
-//    文化(9);
+
 
     private final int position;
 
