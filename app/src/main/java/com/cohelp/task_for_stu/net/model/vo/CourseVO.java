@@ -76,4 +76,9 @@ public class CourseVO implements Serializable {
 
     public CourseVO() {
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

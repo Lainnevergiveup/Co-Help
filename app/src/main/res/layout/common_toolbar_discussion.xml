@@ -33,5 +33,16 @@
 
         />
 
+    <TextView
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        style="@style/Button.Radius"
+        android:id="@+id/id_tv_manager"
+        android:layout_marginEnd="20dp"
+        android:text="管理"
+        android:textSize="16dp"
+        android:layout_gravity="right|center_vertical"
+        >
+    </TextView>
 
 </com.google.android.material.appbar.MaterialToolbar>

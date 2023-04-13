@@ -117,4 +117,9 @@ public class QuestionBankVO implements Serializable {
         this.difficulty = difficulty;
         this.imageUrl = imageUrl;
     }
+
+    @Override
+    public String toString() {
+        return courseName;
+    }
 }

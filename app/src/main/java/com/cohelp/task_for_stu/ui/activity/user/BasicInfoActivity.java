@@ -240,7 +240,10 @@ public class BasicInfoActivity extends BaseActivity {
     }
 
     private void toMyTaskActivity() {
-        Intent intent = new Intent(this,MyTaskActivity.class);
+        Intent intent = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            intent = new Intent(this, MyTaskActivity.class);
+        }
         startActivity(intent);
     }
 
@@ -261,7 +264,9 @@ public class BasicInfoActivity extends BaseActivity {
     }
 
     private void toSettingActivity(){
-        Intent intent = new Intent(this,SettingActivity.class);
+//        Intent intent = new Intent(this,SettingActivity.class);
+        Intent intent = new Intent(this,QuestionStoreActivity.class);
+
         startActivity(intent);
     }
 

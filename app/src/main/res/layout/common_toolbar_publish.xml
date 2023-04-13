@@ -14,12 +14,10 @@
         android:layout_height="30dp"
         style="@style/Button.Radius"
         android:id="@+id/id_tv_manager"
-        android:layout_marginLeft="230dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
         android:text="管理"
         android:textSize="16dp"
-        android:layout_gravity="center_vertical"
-
+        android:layout_gravity="right|center_vertical"
         >
 
     </TextView>

@@ -18,13 +18,15 @@ import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
+import com.cohelp.task_for_stu.net.model.vo.CourseVO;
+import com.cohelp.task_for_stu.net.model.vo.QuestionBankVO;
 import com.cohelp.task_for_stu.net.model.vo.ResultVO;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.NewsListEditAdapter;
+import com.cohelp.task_for_stu.ui.adpter.NewsListEditQuestionAdapter;
 import com.cohelp.task_for_stu.ui.adpter.TaskAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
-import com.cohelp.task_for_stu.utils.T;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.utils.ViewUtils;
 import com.xuexiang.xui.utils.WidgetUtils;
@@ -32,11 +34,14 @@ import com.xuexiang.xui.widget.button.SmoothCheckBox;
 import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 
+import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MyCollectActivity extends BasicInfoActivity {
+public class QuestionStoreActivity extends BasicInfoActivity {
 
     LinearLayout HoleCenter;
     LinearLayout HelpCenter;
@@ -49,14 +54,17 @@ public class MyCollectActivity extends BasicInfoActivity {
     private TextView mTvSwitch;
     SmartRefreshLayout refreshLayout;
     RecyclerView recyclerView;
-    private NewsListEditAdapter mAdapter;
+    private NewsListEditQuestionAdapter mAdapter;
     FrameLayout flEdit;
     SmoothCheckBox scbSelectAll;
-    TaskAdapter taskAdapter;
     Button btn_delete;
-    TextView title;
 
-
+    NiceSpinner niceSpinner;
+    CourseVO item;
+    List<QuestionBankVO> questionList;
+    List<CourseVO> courseList;
+    Integer currentCourse;
+    String semeter = "";
     CardViewListAdapter cardViewListAdapter;
     List<ResultVO> collectList;
     String delCollectList;
@@ -65,11 +73,13 @@ public class MyCollectActivity extends BasicInfoActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_collect);
+        setContentView(R.layout.activity_question_store);
         setUpToolBar();
         initTools();
+        initData();
         initView();
         initEvent();
+        setTitle("我的收藏");
     }
 
     private void initTools(){
@@ -79,6 +89,10 @@ public class MyCollectActivity extends BasicInfoActivity {
             okHttpUtils = new OkHttpUtils();
         }
         okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+    }
+    private void initData(){
+        getCourseList();
+        getQuestionList();
     }
     private void initEvent(){
 
@@ -97,7 +111,9 @@ public class MyCollectActivity extends BasicInfoActivity {
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toHelpCenterActivity();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    toHelpCenterActivity();
+                }
             }
         });
 
@@ -119,21 +135,7 @@ public class MyCollectActivity extends BasicInfoActivity {
                 toUserCenterActivity();
             }
         });
-//        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
-//            @Override
-//            public void onItemClick(View view, int postion) {
-//                System.out.println("lisetn in act");
-//                Intent intent = new Intent(MyCollectActivity.this,DetailActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("detailResponse",collectList.get(postion));
-//                intent.putExtras(bundle);
-//                IdAndType idAndType = new IdAndType(collectList.get(postion).getActivityVO().getId(),1);
-//                new Thread(()->{
-//                    System.out.println(okHttpUtils.getDetail(idAndType));
-//                }).start();
-//                startActivity(intent);
-//            }
-//        });
+
 
         mTvSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,14 +159,13 @@ public class MyCollectActivity extends BasicInfoActivity {
 
         //下拉刷新
         refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-            getCollectList();
-            mAdapter.refresh(collectList);
+            getQuestionList();
+            mAdapter.refresh(questionList);
             refreshLayout.finishRefresh();
         }, 300));
         //上拉加载
 //        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-//
-//       .loadMore(collectList);
+//            mAdapter.loadMore(collectList);
 //            refreshLayout.finishLoadMore();
 //        }, 1000));
         refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
@@ -190,6 +191,16 @@ public class MyCollectActivity extends BasicInfoActivity {
             }
         });
 
+
+        niceSpinner.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                item = (CourseVO) niceSpinner.getItemAtPosition(position);
+                courseList.clear();
+                refreshQuestionListData();
+            }
+        });
     }
 
     private void initView() {
@@ -203,24 +214,17 @@ public class MyCollectActivity extends BasicInfoActivity {
         refreshLayout = findViewById(R.id.refreshLayout);
         btn_delete = findViewById(R.id.btn_delete);
         mTvSwitch = findViewById(R.id.id_tv_manager);
-//        title = findViewById(R.id.id_title);
-//        title.setText("我的收藏");
-        mAdapter = new NewsListEditAdapter(isSelectAll -> {
+        mAdapter = new NewsListEditQuestionAdapter(isSelectAll -> {
             if (scbSelectAll != null) {
                 scbSelectAll.setCheckedSilent(isSelectAll);
             }
-        },collectList);
-        getCollectList();
-        System.out.println("collect"+collectList);
-//        cardViewListAdapter = new CardViewListAdapter(collectList);
+        },questionList);
 
-//        eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
-//        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
-//        eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-//
-//        eRecyclerView = findViewById(R.id.id_recyclerview);
-//        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        eRecyclerView.setAdapter(cardViewListAdapter);
+
+        niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
+        niceSpinner.attachDataSource(courseList);
+        niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
+
     }
 
     private void refreshManageMode() {
@@ -239,15 +243,12 @@ public class MyCollectActivity extends BasicInfoActivity {
     }
 
     private void toTaskCenterActivity() {
-        Intent intent = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            intent = new Intent(this, TaskCenterActivity.class);
-        }
+        Intent intent = new Intent(this,QuestionStoreActivity.class);
         startActivity(intent);
         finish();
     }
     private void toDetailActivity(int postion){
-        Intent intent = new Intent(MyCollectActivity.this,DetailActivity.class);
+        Intent intent = new Intent(QuestionStoreActivity.this,DetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("detailResponse",collectList.get(postion).getDetailResponse());
         intent.putExtras(bundle);
@@ -262,11 +263,9 @@ public class MyCollectActivity extends BasicInfoActivity {
         startActivity(intent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void toHelpCenterActivity() {
-        Intent intent = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            intent = new Intent(this, HelpCenterActivity.class);
-        }
+        Intent intent = new Intent(this, HelpCenterActivity.class);
         startActivity(intent);
         finish();
     }
@@ -275,9 +274,11 @@ public class MyCollectActivity extends BasicInfoActivity {
         startActivity(intent);
         finish();
     }
-    private synchronized void getCollectList(){
+    private synchronized void getQuestionList(){
         Thread t1 = new Thread(()->{
-            collectList = okHttpUtils.getCollectList();
+            if (item!=null){
+                questionList = okHttpUtils.getTeacherQuestionList(1,20,item.getId());
+            }
         });
         t1.start();
         try {
@@ -286,45 +287,47 @@ public class MyCollectActivity extends BasicInfoActivity {
             e.printStackTrace();
         }
     }
-    private synchronized void delCollectList(){
-        Thread t1 = new Thread(()->{
-            List<ResultVO> selectedDetailResponseList = mAdapter.getSelectedDetailResponseList();
-            List<Integer> deleteIdList=new ArrayList<>();
-            for (ResultVO i:selectedDetailResponseList){
-
-                deleteIdList.add(i.getId());
-            }
-
-
-            System.out.println(deleteIdList);
-            delCollectList = okHttpUtils.delCollectList(deleteIdList);
-        });
-        t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    private synchronized void delQuestionList(){
+//        Thread t1 = new Thread(()->{
+//            List<ResultVO> selectedDetailResponseList = mAdapter.getSelectedDetailResponseList();
+//            List<Integer> deleteIdList=new ArrayList<>();
+//            for (ResultVO i:selectedDetailResponseList){
+//
+//                deleteIdList.add(i.getId());
+//            }
+//
+//
+//            System.out.println(deleteIdList);
+//            delCollectList = okHttpUtils.delCollectList(deleteIdList);
+//        });
+//        t1.start();
+//        try {
+//            t1.join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private synchronized void refreshCollectListData(){
-        getCollectList();
+    private synchronized void refreshQuestionListData(){
+        getQuestionList();
+        mAdapter.refresh(questionList);
+
 //        cardViewListAdapter.setDetailResponseListList(collectList.stream().map(i->i.getDetailResponse()).collect(Collectors.toList()));
 //        eRecyclerView.setAdapter(cardViewListAdapter);
-        eSwipeRefreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //关闭刷新
-                eSwipeRefreshLayout.setRefreshing(false);
-            }
-        },1000);
+//        eSwipeRefreshLayout.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                //关闭刷新
+//                eSwipeRefreshLayout.setRefreshing(false);
+//            }
+//        },1000);
     }
 
     /**
      * 简单的确认对话框
      */
     private void showSimpleConfirmDialog() {
-        new MaterialDialog.Builder(MyCollectActivity.this)
+        new MaterialDialog.Builder(QuestionStoreActivity.this)
                 .content("是否确认删除")
                 .positiveText(R.string.lab_yes)
                 .negativeText(R.string.lab_no)
@@ -333,9 +336,9 @@ public class MyCollectActivity extends BasicInfoActivity {
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 //                        XToastUtils.toast("sssssss");
                         System.out.println("List"+mAdapter.getSelectedIndexList());
-                        delCollectList();
-                        getCollectList();
-                        mAdapter.refresh(collectList);
+//                        delQuestionList();
+                        getQuestionList();
+                        mAdapter.refresh(questionList);
                         refreshLayout.finishRefresh();
 
                         mAdapter.switchManageMode();
@@ -344,5 +347,18 @@ public class MyCollectActivity extends BasicInfoActivity {
                     }
                 })
                 .show();
+    }
+
+    private synchronized void getCourseList(){
+        Thread thread = new Thread(() -> {
+            courseList = okHttpUtils.getTeacherCourseList();
+            item = courseList==null||courseList.isEmpty()?null:courseList.get(0);
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
