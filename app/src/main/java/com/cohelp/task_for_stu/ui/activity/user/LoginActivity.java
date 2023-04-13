@@ -27,6 +27,8 @@ import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
 
 import java.io.IOException;
 
+import okhttp3.Response;
+
 
 /**
  * 登陆页控制类
@@ -142,12 +144,10 @@ public class LoginActivity extends BaseActivity {
         new Thread(()->{
             String loginMessage = ToJsonString.toJson(loginRequest);
             okHttp = new OKHttp();
-            okHttp.sendRequest("http://43.143.90.226:9090/user/login",loginMessage);
+            Response response = okHttp.sendPostRequest("http://43.143.90.226:9090/user/login", loginMessage, null, 0);
             String res = null;
             try {
-                System.out.println(okHttp.getResponse());
-                res = okHttp.getResponse().body().string();
-                //System.out.println(res);
+                res = response.body().string();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -158,7 +158,7 @@ public class LoginActivity extends BaseActivity {
                 T.showToast(userResult.getMessage());
             }
             else {
-                String cookieval = okHttp.getResponse().header("Set-Cookie");
+                String cookieval =response.header("Set-Cookie");
                 SessionUtils.saveCookiePreference(this, cookieval);
                 SessionUtils.getCookiePreference(this);
                 System.out.println(cookieval);

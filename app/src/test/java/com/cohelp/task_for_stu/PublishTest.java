@@ -1,6 +1,5 @@
 package com.cohelp.task_for_stu;
 
-import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.ToJsonString;
 import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.HistoryAndCollectRequest;
@@ -12,14 +11,12 @@ import com.cohelp.task_for_stu.net.model.domain.SearchPublishResponse;
 import com.cohelp.task_for_stu.net.model.domain.SearchRequest;
 import com.cohelp.task_for_stu.net.model.entity.History;
 import com.cohelp.task_for_stu.net.model.entity.RemarkActivity;
-import com.cohelp.task_for_stu.net.model.entity.User;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.List;
 
 public class PublishTest {
     OKHttp okHttp  = new OKHttp();

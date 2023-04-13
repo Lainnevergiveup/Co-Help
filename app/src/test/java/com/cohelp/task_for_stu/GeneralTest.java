@@ -1,14 +1,11 @@
 package com.cohelp.task_for_stu;
 
-import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.ToJsonString;
 import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
-import com.cohelp.task_for_stu.net.model.entity.Activity;
-import com.cohelp.task_for_stu.net.model.entity.User;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

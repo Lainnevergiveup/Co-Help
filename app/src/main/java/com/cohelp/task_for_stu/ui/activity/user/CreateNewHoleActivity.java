@@ -1,7 +1,5 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
-import androidx.annotation.RequiresApi;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,13 +20,15 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+
 import com.bigkoo.pickerview.TimePickerView;
+import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.bean.BaseTask;
 import com.cohelp.task_for_stu.biz.TaskBiz;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.entity.Hole;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
-import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.ui.vo.Task;
 import com.cohelp.task_for_stu.utils.ImageTool;
 import com.cohelp.task_for_stu.utils.SessionUtils;
@@ -106,7 +106,7 @@ public class CreateNewHoleActivity extends BaseActivity {
                         stringStringHashMap.put(i+"",list.get(i));
                     }
                     new Thread(()->{
-                        okHttpUtils.holePublish(hole,stringStringHashMap);
+//                        okHttpUtils.holePublish(hole,stringStringHashMap);
                     }).start();
                     upload();
                     toHoleCenterActivity();

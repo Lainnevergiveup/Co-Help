@@ -1,12 +1,14 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.bean.User;
@@ -16,22 +18,21 @@ import com.cohelp.task_for_stu.net.CommonCallback;
 import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.ToJsonString;
 import com.cohelp.task_for_stu.net.model.domain.RegisterRequest;
-import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.ui.CircleTransform;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
-import com.cohelp.task_for_stu.utils.BasicUtils;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import com.leon.lfilepickerlibrary.LFilePicker;
 import com.leon.lfilepickerlibrary.utils.Constant;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
+
+import okhttp3.Response;
 
 /**
  * 注册控制类
@@ -50,6 +51,7 @@ public class RegisterActivity extends BaseActivity {
     RegisterRequest registerRequest;
     OKHttp okHttp;
     String emailString;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +111,7 @@ public class RegisterActivity extends BaseActivity {
             }
         });
         getConfirmCode.setOnClickListener(new View.OnClickListener(){
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public  void onClick(View view){
                 System.out.println(emailString);
@@ -135,33 +138,32 @@ public class RegisterActivity extends BaseActivity {
             }
         });
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendComfirmCodeRequest(){
         new Thread(()->{
              emailString= registerRequest.getUserEmail();
 
             System.out.println(3);
-            okHttp.sendGetRequest("http://43.143.90.226:9090/user/sendconfirmcode?userEmail="+emailString);
-            String cookieval = okHttp.getResponse().header("Set-Cookie");
+            Response response = okHttp.sendGetRequest("http://43.143.90.226:9090/user/sendconfirmcode?userEmail=" + emailString, null, null, 0);
+            String cookieval = response.header("Set-Cookie");
             SessionUtils.saveCookiePreference(this, cookieval);
-            System.out.println(cookieval);
-            System.out.println(5);
-            System.out.println(okHttp.getResponse());
+
         }).start();
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendRegistRequest(){
         new Thread(()->{
             String cookie = SessionUtils.getCookiePreference(this);
             String registMessage = ToJsonString.toJson(registerRequest);
 
-            okHttp.sendRequest("http://43.143.90.226:9090/user/register",registMessage,cookie);
+            Response response = okHttp.sendPostRequest("http://43.143.90.226:9090/user/register", registMessage, cookie, 0);
             String res = null;
             try {
-                System.out.println(okHttp.getResponse());
-                res = okHttp.getResponse().body().string();
-                //System.out.println(res);
+                res = response.body().string();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             Gson gson = new Gson();
             JsonObject jsonObject = (JsonObject) new JsonParser().parse(res).getAsJsonObject();
             String message = jsonObject.get("message").getAsString();
@@ -216,6 +218,7 @@ public class RegisterActivity extends BaseActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void initView() {
         okHttp = new OKHttp();
         icon = findViewById(R.id.id_iv_icon);

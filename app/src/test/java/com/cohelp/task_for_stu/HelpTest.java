@@ -1,12 +1,9 @@
 package com.cohelp.task_for_stu;
 
-import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.gsonTools.GSON;
-import com.cohelp.task_for_stu.net.model.domain.ActivityListRequest;
 import com.cohelp.task_for_stu.net.model.domain.HelpListRequest;
 import com.cohelp.task_for_stu.net.model.domain.HelpTagRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
-import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.net.model.entity.Help;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -14,9 +11,6 @@ import com.google.gson.reflect.TypeToken;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 public class HelpTest {
     OKHttp okHttp  = new OKHttp();
