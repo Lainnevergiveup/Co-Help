@@ -202,7 +202,7 @@ public class AskDetailActivity extends BaseActivity implements BaseQuickAdapter.
             public void onClick(View view) {
 //                Integer type = detail.getType();
                 new Thread(()->{
-                    okHttpUtils.remark(type,detail.getIdByType(type));
+//                    okHttpUtils.remark(type,detail.getIdByType(type));
                 }).start();
                 detail.setIsLiked(detail.getIsLiked()==1?0:1);
                 updateButtonState();
@@ -228,7 +228,7 @@ public class AskDetailActivity extends BaseActivity implements BaseQuickAdapter.
                 detail.setIsCollected(detail.getIsCollected()==1?0:1);
                 updateButtonState();
                 new Thread(()->{
-                    okHttpUtils.insertCollection(collect);
+//                    okHttpUtils.insertCollection(collect);
                 }).start();
             }
         });
@@ -356,7 +356,7 @@ public class AskDetailActivity extends BaseActivity implements BaseQuickAdapter.
 
         try {
             Thread t1 = new Thread(()->{
-                remarkList = okHttpUtils.getCommentList(idAndType);
+//                remarkList = okHttpUtils.getCommentList(idAndType);
                 System.out.println(remarkList);
             });
             t1.start();
@@ -476,7 +476,7 @@ public class AskDetailActivity extends BaseActivity implements BaseQuickAdapter.
     }
     private synchronized void sendRemark(RemarkRequest remarkRequest){
         Thread thread = new Thread(() -> {
-            okHttpUtils.sendComment(remarkRequest);
+//            okHttpUtils.sendComment(remarkRequest);
         });
         thread.start();
         try {
