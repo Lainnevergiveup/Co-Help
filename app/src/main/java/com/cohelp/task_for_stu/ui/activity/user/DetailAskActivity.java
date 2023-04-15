@@ -1,6 +1,9 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
+import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_CHILD;
 import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_EMPTY;
+import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_MORE;
+import static com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter.TYPE_COMMENT_PARENT;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -11,12 +14,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
@@ -24,15 +30,14 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
-import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
-import com.cohelp.task_for_stu.net.model.domain.RemarkRequest;
+import com.cohelp.task_for_stu.net.model.entity.Answer;
 import com.cohelp.task_for_stu.net.model.entity.CommentMoreBean;
 import com.cohelp.task_for_stu.net.model.entity.FirstLevelBean;
 import com.cohelp.task_for_stu.net.model.entity.SecondLevelBean;
 import com.cohelp.task_for_stu.net.model.entity.User;
+import com.cohelp.task_for_stu.net.model.vo.AnswerVO;
 import com.cohelp.task_for_stu.net.model.vo.AskVO;
-import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter;
 import com.cohelp.task_for_stu.ui.adpter.GridViewImageAdapter;
@@ -44,6 +49,9 @@ import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.TimeUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.lzy.ninegrid.ImageInfo;
+import com.lzy.ninegrid.NineGridView;
+import com.lzy.ninegrid.preview.NineGridViewClickAdapter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -55,6 +63,8 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     private long totalCount = 5;
     private float slideOffset = 0;
     private int positionCount = 0;
+    final Integer TYPE_QUESTION = 7;
+    final Integer TYPE_ANSWER = 8;
     Toolbar toolbar;
     Button returnButton;
     Button reportButton;
@@ -65,7 +75,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     TextView titleBar;
     NetRadiusImageView avatorPic;
     private RecyclerView rv_dialog_lists;
-    private GridView imageGridView;
+    private NineGridView imageGridView;
     GridViewImageAdapter gridViewImageAdapter;
     ImageButton likeButton;
     ImageButton collectButton;
@@ -88,9 +98,9 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     User user;
 
     AskVO detail;
-    List<RemarkVO> remarkList;
-    List<RemarkVO> firstList;
-    List<List<RemarkVO>> orderRemarkVO;
+    List<AnswerVO> remarkList;
+    List<AnswerVO> firstList;
+    List<List<AnswerVO>> orderRemarkVO;
     IdAndType idAndType;
 
     Integer commentRootType = 1;//是否为根评论
@@ -112,15 +122,14 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_ask_detail);
         initTools();
 
         setUpToolBar();
         initView();
         initData();
-//        showSheetDialog();
+        showSheetDialog();
         initEvent();
-
     }
 
     private void initTools(){
@@ -153,7 +162,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
         topicTime = (TextView) findViewById(R.id.text_TopicCreateTime);
         topicTitle = (TextView) findViewById(R.id.text_MessageTitle);
         topicDetail = (TextView) findViewById(R.id.text_TopicDetail);
-        imageGridView = (GridView) findViewById(R.id.grid_item_image);
+        imageGridView = (NineGridView) findViewById(R.id.grid_item_image);
 
         imageGridView.setVerticalScrollBarEnabled(false);
         imageGridView.setHorizontalScrollBarEnabled(false);
@@ -165,135 +174,140 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
 
         getUser();
 
-//        refreshComment();
+        refreshComment();
 
-//        updateButtonState();
+        updateButtonState();
 
     }
     private void initEvent(){
 
-//        setSupportActionBar(toolbar);
-//        toolbar.setNavigationOnClickListener(
-//                new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        onBackPressed();
-//                    }
-//                }
-//        );
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onBackPressed();
+                    }
+                }
+        );
 
-//        likeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Integer type = detail.getType();
-//                new Thread(()->{
-//                    okHttpUtils.remark(type,detail.getIdByType(type));
-//                }).start();
-//                detail.setIsLiked(detail.getIsLiked()==1?0:1);
-//                updateButtonState();
-//            }
-//        });
-//        commentButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (bottomSheetDialog!=null){
-//                    bottomSheetAdapter.notifyDataSetChanged();
-//                    slideOffset = 0;
-//                    bottomSheetDialog.show();
-//                }
-//            }
-//        });
-//        collectButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Collect collect = new Collect();
-//                Integer type = detail.getType();
-//                collect.setTopicId(detail.getIdByType(type));
-//                collect.setTopicType(type);
-//                detail.setIsCollected(detail.getIsCollected()==1?0:1);
-//                updateButtonState();
-//                new Thread(()->{
-//                    okHttpUtils.insertCollection(collect);
-//                }).start();
-//            }
-//        });
-//        gridViewImageAdapter = new GridViewImageAdapter(this,detail.getImagesUrl());
-        imageGridView.setAdapter(gridViewImageAdapter);
-//        // 点击事件
-//        bottomSheetAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-//            @RequiresApi(api = Build.VERSION_CODES.O)
-//            @Override
-//            public void onItemChildClick(BaseQuickAdapter adapter, View view1, int position) {
-//                switch ((int) view1.getTag()) {
-//                    case TYPE_COMMENT_PARENT:
-//                        if (view1.getId() == R.id.rl_group) {
-//                            //添加二级评论
-//                            initInputTextMsgDialog((View) view1.getParent(), false, bottomSheetAdapter.getData().get(position), position);
-//                        } else if (view1.getId() == R.id.ll_like) {
-//                            //一级评论点赞 项目中还得通知服务器 成功才可以修改
-//                            FirstLevelBean bean = (FirstLevelBean) bottomSheetAdapter.getData().get(position);
-//                            bean.setLikeCount(bean.getLikeCount() + (bean.getIsLike() == 0 ? 1 : -1));
-//                            bean.setIsLike(bean.getIsLike() == 0 ? 1 : 0);
-//                            datas.set(bean.getPosition(), bean);
-//                            initData();
-//                            bottomSheetAdapter.notifyDataSetChanged();
-//                        }
-//                        break;
-//                    case TYPE_COMMENT_CHILD:
-//
-//                        if (view1.getId() == R.id.rl_group) {
-//                            //添加二级评论（回复）
-//                            initInputTextMsgDialog(view1, true, bottomSheetAdapter.getData().get(position), position);
-//                        } else if (view1.getId() == R.id.ll_like) {
-//                            //二级评论点赞 项目中还得通知服务器 成功才可以修改
-//                            SecondLevelBean bean = (SecondLevelBean) bottomSheetAdapter.getData().get(position);
-//                            bean.setLikeCount(bean.getLikeCount() + (bean.getIsLike() == 0 ? 1 : -1));
-//                            bean.setIsLike(bean.getIsLike() == 0 ? 1 : 0);
-//
-//                            List<SecondLevelBean> secondLevelBeans = datas.get((int) bean.getPosition()).getSecondLevelBeans();
-//                            secondLevelBeans.set(bean.getChildPosition(), bean);
-////                            CommentMultiActivity.this.dataSort(0);
-//                            bottomSheetAdapter.notifyDataSetChanged();
-//                        }
-//
-//                        break;
-//                    case TYPE_COMMENT_MORE:
-//                        //在项目中是从服务器获取数据，其实就是二级评论分页获取
-//                        CommentMoreBean moreBean = (CommentMoreBean) bottomSheetAdapter.getData().get(position);
-//                        long beanPosition = moreBean.getPosition();
-//                        FirstLevelBean firstLevelBean = datas.get((int)beanPosition);
-//                        int showingSecondCount = firstLevelBean.getShowingSecondCount();
-//                        SecondLevelBean secondLevelBean = firstLevelBean.getSecondLevelBeans().get(showingSecondCount);
-//                        firstLevelBean.setShowingSecondCount(showingSecondCount+1);
-//                        datas.get((int) moreBean.getPosition()).getSecondLevelBeans().add(secondLevelBean);
-//
-//                        System.out.println(secondLevelBean);
-//                        dataSort(0);
-//
-//                        bottomSheetAdapter.notifyDataSetChanged();
-//                        break;
-//                    case TYPE_COMMENT_EMPTY:
-////                        initRefresh();
-//                        break;
-//
-//                }
-//
-//            }
-//        });
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Integer type = TYPE_ANSWER;
+                new Thread(()->{
+                    okHttpUtils.askLike(type,detail.getId());
+                }).start();
+                detail.setIsLiked(detail.getIsLiked()==1?0:1);
+                updateButtonState();
+            }
+        });
+        commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (bottomSheetDialog!=null){
+                    bottomSheetAdapter.notifyDataSetChanged();
+                    slideOffset = 0;
+                    bottomSheetDialog.show();
+                }
+            }
+        });
+        collectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Thread(()->{
+                    okHttpUtils.collectAsk(detail.getId());
+                }).start();
+                detail.setIsCollected(detail.getIsCollected()==1?0:1);
+                updateButtonState();
+            }
+        });
+        ArrayList<ImageInfo> imageInfos = new ArrayList<>();
+        for(String img : detail.getImageUrl()){
+            ImageInfo imageInfo = new ImageInfo();
+            imageInfo.setThumbnailUrl(img);
+            imageInfo.setBigImageUrl(img);
+            imageInfos.add(imageInfo);
+        }
+        imageGridView.setGridSpacing(10);
+        imageGridView.setSingleImageSize(1200);
+        imageGridView.setMaxSize((imageInfos.size()<=9?imageInfos.size():9));
+        imageGridView.setAdapter(new NineGridViewClickAdapter(this, imageInfos));
+        // 点击事件
+        bottomSheetAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view1, int position) {
+                switch ((int) view1.getTag()) {
+                    case TYPE_COMMENT_PARENT:
+                        if (view1.getId() == R.id.rl_group) {
+                            //添加二级评论
+                            initInputTextMsgDialog((View) view1.getParent(), false, bottomSheetAdapter.getData().get(position), position);
+                        } else if (view1.getId() == R.id.ll_like) {
+                            //一级评论点赞 项目中还得通知服务器 成功才可以修改
+                            FirstLevelBean bean = (FirstLevelBean) bottomSheetAdapter.getData().get(position);
+                            bean.setLikeCount(bean.getLikeCount() + (bean.getIsLike() == 0 ? 1 : -1));
+                            bean.setIsLike(bean.getIsLike() == 0 ? 1 : 0);
+                            datas.set(bean.getPosition(), bean);
+                            initData();
+                            bottomSheetAdapter.notifyDataSetChanged();
+                        }
+                        break;
+                    case TYPE_COMMENT_CHILD:
 
-        //滚动事件
-//        if (mRecyclerViewUtil != null) mRecyclerViewUtil.initScrollListener(rv_dialog_lists);
-//
-//        mKeyBoardListener = new SoftKeyBoardListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
-//            @Override
-//            public void keyBoardShow(int height) {
-//            }
-//
-//            @Override
-//            public void keyBoardHide(int height) {
-//                dismissInputDialog();
-//            }
-//        });
+                        if (view1.getId() == R.id.rl_group) {
+                            //添加二级评论（回复）
+                            initInputTextMsgDialog(view1, true, bottomSheetAdapter.getData().get(position), position);
+                        } else if (view1.getId() == R.id.ll_like) {
+                            //二级评论点赞 项目中还得通知服务器 成功才可以修改
+                            SecondLevelBean bean = (SecondLevelBean) bottomSheetAdapter.getData().get(position);
+                            bean.setLikeCount(bean.getLikeCount() + (bean.getIsLike() == 0 ? 1 : -1));
+                            bean.setIsLike(bean.getIsLike() == 0 ? 1 : 0);
+
+                            List<SecondLevelBean> secondLevelBeans = datas.get((int) bean.getPosition()).getSecondLevelBeans();
+                            secondLevelBeans.set(bean.getChildPosition(), bean);
+//                            CommentMultiActivity.this.dataSort(0);
+                            bottomSheetAdapter.notifyDataSetChanged();
+                        }
+
+                        break;
+                    case TYPE_COMMENT_MORE:
+                        //在项目中是从服务器获取数据，其实就是二级评论分页获取
+                        CommentMoreBean moreBean = (CommentMoreBean) bottomSheetAdapter.getData().get(position);
+                        long beanPosition = moreBean.getPosition();
+                        FirstLevelBean firstLevelBean = datas.get((int)beanPosition);
+                        int showingSecondCount = firstLevelBean.getShowingSecondCount();
+                        SecondLevelBean secondLevelBean = firstLevelBean.getSecondLevelBeans().get(showingSecondCount);
+                        firstLevelBean.setShowingSecondCount(showingSecondCount+1);
+                        datas.get((int) moreBean.getPosition()).getSecondLevelBeans().add(secondLevelBean);
+
+                        System.out.println(secondLevelBean);
+                        dataSort(0);
+
+                        bottomSheetAdapter.notifyDataSetChanged();
+                        break;
+                    case TYPE_COMMENT_EMPTY:
+                        initRefresh();
+                        break;
+
+                }
+
+            }
+        });
+
+//        滚动事件
+        if (mRecyclerViewUtil != null) mRecyclerViewUtil.initScrollListener(rv_dialog_lists);
+
+        mKeyBoardListener = new SoftKeyBoardListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+            }
+
+            @Override
+            public void keyBoardHide(int height) {
+                dismissInputDialog();
+            }
+        });
 
     }
 
@@ -335,7 +349,8 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
 
         try {
             Thread t1 = new Thread(()->{
-            remarkList = okHttpUtils.getCommentList(idAndType);
+                System.out.println("id"+detail.getId());
+                remarkList = okHttpUtils.getAnswerList(1,50,detail.getId());
                 System.out.println(remarkList);
             });
             t1.start();
@@ -347,48 +362,48 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     private void sortCommentList(){
         orderRemarkVO = orderRemarkVO(remarkList);
         firstList = new ArrayList<>();
-        for (List<RemarkVO> voList:orderRemarkVO){
-            RemarkVO vo = voList.get(0);
+        for (List<AnswerVO> voList:orderRemarkVO){
+            AnswerVO vo = voList.get(0);
             firstList.add(vo);
 //            voList.remove(0);
         }
     }
 
-    public List<List<RemarkVO>> orderRemarkVO(List<RemarkVO> data){
+    public List<List<AnswerVO>> orderRemarkVO(List<AnswerVO> data){
         if(data==null){
             return null;
         }
-        Stack<RemarkVO> stackA = new Stack<>();
-        Stack<RemarkVO> stackB = new Stack<>();
-        ArrayList<RemarkVO> topRemark = new ArrayList<>();
-        List<List<RemarkVO>> arrayLists = new ArrayList<>();
+        Stack<AnswerVO> stackA = new Stack<>();
+        Stack<AnswerVO> stackB = new Stack<>();
+        ArrayList<AnswerVO> topRemark = new ArrayList<>();
+        List<List<AnswerVO>> arrayLists = new ArrayList<>();
         //筛选出一级评论
-        Iterator<RemarkVO> iter = data.iterator();
+        Iterator<AnswerVO> iter = data.iterator();
         while(iter.hasNext()){
-            RemarkVO remarkVO = iter.next();
-            if(remarkVO.getTargetIsTopic().equals(1)){
+            AnswerVO remarkVO = iter.next();
+            if(remarkVO.getAnswerTargetType().equals(0)){
                 topRemark.add(remarkVO);
                 iter.remove();
             }
         }
         //将每条评论链的评论按逻辑顺序压入List
-        for(RemarkVO remarkTop:topRemark){
-            ArrayList<RemarkVO> remarkVOS = new ArrayList<>();
+        for(AnswerVO remarkTop:topRemark){
+            ArrayList<AnswerVO> remarkVOS = new ArrayList<>();
             stackA.push(remarkTop);
             while(!stackA.isEmpty()){
-                RemarkVO peek = stackA.peek();
+                AnswerVO peek = stackA.peek();
                 Integer peekRemarkId = peek.getId();
                 iter = data.iterator();
                 while(iter.hasNext()){
-                    RemarkVO remark = iter.next();
-                    if(remark.getRemarkTargetId().equals(peekRemarkId)){
-                        remark.setRemarkTargetName(peek.getRemarkOwnerName());
+                    AnswerVO remark = iter.next();
+                    if(remark.getAnswerTargetId().equals(peekRemarkId)){
+                        remark.setAnswerTargetName(peek.getPublisherName());
                         stackA.push(remark);
                         iter.remove();
                     }
                 }
                 if(stackA.peek().equals(peek)){
-                    RemarkVO pop = stackA.pop();
+                    AnswerVO pop = stackA.pop();
                     //设置当前评论的评论对象
 //                    if (!stackA.isEmpty()){
 //                        pop.setRemarkTargetName(stackA.peek().getRemarkOwnerName());
@@ -409,59 +424,20 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
 
         return arrayLists;
     }
-    private void changeLocalState(){
-        List<DetailResponse> detailResponses = SessionUtils.getActivityPreference(DetailAskActivity.this);
-    }
-//    private RemarkActivity remarkActivityBuilder(){
-//        RemarkActivity remarkActivity = new RemarkActivity();
-//        remarkActivity.setRemarkTime(new Date());
-//        remarkActivity.setRemarkContent(commentText.getText().toString());
-//        remarkActivity.setRemarkLike(0);
-//        remarkActivity.setTargetIsActivity(commentRootType);
-//        remarkActivity.setRemarkActivityId(detail.getIdByType(detailType));
-//        remarkActivity.setRemarkTargetId(commentTargetID);
-//        remarkActivity.setTopId(commentTopID);
-//        return remarkActivity;
-//    }
 
-//    private RemarkRequest remarkRequestBuilder(){
-//        RemarkRequest remarkRequest = new RemarkRequest();
-//        remarkRequest.setType(detailType);
-//        switch (detailType){
-//            case 1:{
-//                remarkRequest.setRemarkActivity(remarkActivityBuilder());
-//                break;
-//            }
-//            case 2:{
-//                remarkRequest.setRemarkHelp((remarkHelpBiulder()));
-//                break;
-//            }
-//            default:{
-//                break;
-//            }
-//        }
-////        System.out.println(okHttpUtils.getGson().toJson(remarkRequest));
-//        return remarkRequest;
-//    }
-    private synchronized void sendRemark(RemarkRequest remarkRequest){
+    private  void sendRemark(Answer answer){
         Thread thread = new Thread(() -> {
-            okHttpUtils.sendComment(remarkRequest);
+            okHttpUtils.answerPublish(answer,null);
         });
         thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
     }
 
-//    private void initCommentTarget(){
-//        commentRootType = 1;
-//        commentTargetID = detail.getIdByType(detailType);
-//        commentTopID = 0;
-//        return;
-//    }
+    private void initCommentTarget(){
+        commentRootType = 1;
+        commentTargetID = detail.getId();
+        commentTopID = 0;
+        return;
+    }
 
     //更新按钮状态
     private void updateButtonState(){
@@ -486,30 +462,31 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
         mRvCustomer.getItemAnimator().setRemoveDuration(0);
         ((SimpleItemAnimator) mRvCustomer.getItemAnimator()).setSupportsChangeAnimations(false);
     }
-//    private void initInputTextMsgDialog(View view, final boolean isReply, final MultiItemEntity item, final int position) {
-//        dismissInputDialog();
-//        if (view != null) {
-//            offsetY = view.getTop();
-//            scrollLocation(offsetY);
-//        }
-//        if (inputTextMsgDialog == null) {
-//            inputTextMsgDialog = new InputTextMsgDialog(this, R.style.dialog);
-//            commentText = inputTextMsgDialog.getMessageTextView();
-//            inputTextMsgDialog.setmOnTextSendListener(new InputTextMsgDialog.OnTextSendListener() {
-//                @Override
-//                public void onTextSend(String msg) {
-//                    addComment(isReply, item, position, msg);
-//                }
-//
-//                @Override
-//                public void dismiss() {
-//                    //item滑动到原位
-//                    scrollLocation(-offsetY);
-//                }
-//            });
-//        }
-//        showInputTextMsgDialog();
-//    }
+    private void initInputTextMsgDialog(View view, final boolean isReply, final MultiItemEntity item, final int position) {
+        dismissInputDialog();
+        if (view != null) {
+            offsetY = view.getTop();
+            scrollLocation(offsetY);
+        }
+        if (inputTextMsgDialog == null) {
+            inputTextMsgDialog = new InputTextMsgDialog(this, R.style.dialog);
+            commentText = inputTextMsgDialog.getMessageTextView();
+            inputTextMsgDialog.setmOnTextSendListener(new InputTextMsgDialog.OnTextSendListener() {
+                @Override
+                public void onTextSend(String msg) {
+                    System.out.println("send!!!!!"+msg);
+                    addComment(isReply, item, position, msg);
+                }
+
+                @Override
+                public void dismiss() {
+                    //item滑动到原位
+                    scrollLocation(-offsetY);
+                }
+            });
+        }
+        showInputTextMsgDialog();
+    }
     //隐藏输入会话框
     private void dismissInputDialog() {
         if (inputTextMsgDialog != null) {
@@ -528,40 +505,40 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     }
     //原始数据 一般是从服务器接口请求过来的
     private void toCommentBeanList() {
-        for (RemarkVO i : firstList) {
+        for (AnswerVO i : firstList) {
             int childPos = 0;
             FirstLevelBean firstLevelBean = new FirstLevelBean();
-            firstLevelBean.setContent(i.getRemarkContent());
-            firstLevelBean.setCreateTime(i.getRemarkTime().getTime());
-            firstLevelBean.setHeadImg(i.getRemarkOwnerAvatar());
+            firstLevelBean.setContent(i.getContent());
+            firstLevelBean.setCreateTime(i.getPublishTime().getTime());
+            firstLevelBean.setHeadImg(i.getPublisherAvatar());
             firstLevelBean.setId(i.getId().toString());
             firstLevelBean.setIsLike(i.getIsLiked());
-            firstLevelBean.setLikeCount(i.getRemarkLike());
-            firstLevelBean.setUserName(i.getRemarkOwnerName());
+            firstLevelBean.setLikeCount(i.getIsLiked());
+            firstLevelBean.setUserName(i.getPublisherName());
 //            firstLevelBean.setTotalCount(i + size);
 //            firstLevelBean.setPosition(position);
 
 
             List<SecondLevelBean> beans = new ArrayList<>();
             int beanSize = 0;
-            for (List<RemarkVO> j : orderRemarkVO) {
+            for (List<AnswerVO> j : orderRemarkVO) {
 //                posCount += 2;
                 if (j.size()>0&&j.get(0)== i){
                     j.remove(i);
                     beanSize = j.size();
 //                    posCount += beanSize;
 //                    firstLevelBean.setPositionCount(posCount);
-                    for (RemarkVO k:j){
+                    for (AnswerVO k:j){
                         SecondLevelBean secondLevelBean = new SecondLevelBean();
-                        secondLevelBean.setContent(k.getRemarkContent());
-                        secondLevelBean.setCreateTime(k.getRemarkTime().getTime());
-                        secondLevelBean.setHeadImg(k.getRemarkOwnerAvatar());
+                        secondLevelBean.setContent(k.getContent());
+                        secondLevelBean.setCreateTime(k.getPublishTime().getTime());
+                        secondLevelBean.setHeadImg(k.getPublisherAvatar());
                         secondLevelBean.setId(k.getId().toString());
                         secondLevelBean.setIsLike(k.getIsLiked());
-                        secondLevelBean.setLikeCount(k.getRemarkLike());
-                        secondLevelBean.setUserName(k.getRemarkOwnerName());
-                        secondLevelBean.setIsReply(k.getTargetIsTopic()^1);
-                        secondLevelBean.setReplyUserName(k.getRemarkTargetName());
+                        secondLevelBean.setLikeCount(k.getLikeCount());
+                        secondLevelBean.setUserName(k.getPublisherName());
+                        secondLevelBean.setIsReply(k.getAnswerTargetType()^1);
+                        secondLevelBean.setReplyUserName(k.getAnswerTargetName());
                         secondLevelBean.setTotalCount(j.size()+1);
 //                        secondLevelBean.setPosition(position);
 //                        secondLevelBean.setPositionCount(posCount);
@@ -657,57 +634,57 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
         slideOffset = 0;
         bottomSheetDialog.show();
     }
-//    private void showSheetDialog() {
-//        if (bottomSheetDialog != null) {
-//            return;
-//        }
-//
-//        //view
-//        view = View.inflate(this, R.layout.dialog_bottomsheet, null);
-//        ImageView iv_dialog_close = (ImageView) view.findViewById(R.id.dialog_bottomsheet_iv_close);
-//        rv_dialog_lists = (RecyclerView) view.findViewById(R.id.dialog_bottomsheet_rv_lists);
-//        RelativeLayout rl_comment = view.findViewById(R.id.rl_comment);
-//        iv_dialog_close.setOnClickListener(v -> bottomSheetDialog.dismiss());
-//        rl_comment.setOnClickListener(v -> {
-//            //添加二级评论
-//            initInputTextMsgDialog(null, false, null, -1);
-//        });
-//
-//        //adapter
-//        bottomSheetAdapter = new CommentDialogMutiAdapter(data);
-//        rv_dialog_lists.setHasFixedSize(true);
-//        rv_dialog_lists.setLayoutManager(new LinearLayoutManager(this));
-//        closeDefaultAnimator(rv_dialog_lists);
-//        bottomSheetAdapter.setOnLoadMoreListener(this, rv_dialog_lists);
-//        rv_dialog_lists.setAdapter(bottomSheetAdapter);
-//
-//        //dialog
-//        bottomSheetDialog = new BottomSheetDialog(this, R.style.dialog);
-//        bottomSheetDialog.setContentView(view);
-//        bottomSheetDialog.setCanceledOnTouchOutside(true);
-//        BottomSheetBehavior mDialogBehavior = BottomSheetBehavior.from((View) view.getParent());
-//        mDialogBehavior.setPeekHeight(getWindowHeight());
-//        //dialog滑动监听
-//        mDialogBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-//            @Override
-//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-//                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-//                    mDialogBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-//                } else if (newState == BottomSheetBehavior.STATE_SETTLING) {
-//                    if (slideOffset <= -0.28) {
-//                        //当向下滑动时 值为负数
-//                        bottomSheetDialog.dismiss();
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-//                DetailAskActivity.this.slideOffset = slideOffset;
-//            }
-//        });
-//
-//    }
+    private void showSheetDialog() {
+        if (bottomSheetDialog != null) {
+            return;
+        }
+
+        //view
+        view = View.inflate(this, R.layout.dialog_bottomsheet, null);
+        ImageView iv_dialog_close = (ImageView) view.findViewById(R.id.dialog_bottomsheet_iv_close);
+        rv_dialog_lists = (RecyclerView) view.findViewById(R.id.dialog_bottomsheet_rv_lists);
+        RelativeLayout rl_comment = view.findViewById(R.id.rl_comment);
+        iv_dialog_close.setOnClickListener(v -> bottomSheetDialog.dismiss());
+        rl_comment.setOnClickListener(v -> {
+            //添加二级评论
+            initInputTextMsgDialog(null, false, null, -1);
+        });
+
+        //adapter
+        bottomSheetAdapter = new CommentDialogMutiAdapter(data);
+        rv_dialog_lists.setHasFixedSize(true);
+        rv_dialog_lists.setLayoutManager(new LinearLayoutManager(this));
+        closeDefaultAnimator(rv_dialog_lists);
+        bottomSheetAdapter.setOnLoadMoreListener(this, rv_dialog_lists);
+        rv_dialog_lists.setAdapter(bottomSheetAdapter);
+
+        //dialog
+        bottomSheetDialog = new BottomSheetDialog(this, R.style.dialog);
+        bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
+        BottomSheetBehavior mDialogBehavior = BottomSheetBehavior.from((View) view.getParent());
+        mDialogBehavior.setPeekHeight(getWindowHeight());
+        //dialog滑动监听
+        mDialogBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    mDialogBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                } else if (newState == BottomSheetBehavior.STATE_SETTLING) {
+                    if (slideOffset <= -0.28) {
+                        //当向下滑动时 值为负数
+                        bottomSheetDialog.dismiss();
+                    }
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                DetailAskActivity.this.slideOffset = slideOffset;
+            }
+        });
+
+    }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initRefresh() {
         datas.clear();
@@ -717,79 +694,84 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     private void showInputTextMsgDialog() {
         inputTextMsgDialog.show();
     }
-//    private void addComment(boolean isReply, MultiItemEntity item, final int position, String msg) {
-//        final String userName = user.getUserName();
-//        if (position >= 0) {
-//            //添加二级评论
-//            int pos = 0;
-//            String replyUserName = "";
+    private void addComment(boolean isReply, MultiItemEntity item, final int position, String msg) {
+        final String userName = user.getUserName();
+        Answer answer = new Answer();
+        if (position >= 0) {
+            //添加二级评论
+            int pos = 0;
+            String replyUserName = "";
+
+            if (item instanceof FirstLevelBean) {
+                FirstLevelBean firstLevelBean = (FirstLevelBean) item;
+                positionCount = (int) (firstLevelBean.getPositionCount() + 1);
+                pos = (int) firstLevelBean.getPosition();
+                replyUserName = firstLevelBean.getUserName();
+                commentTargetID = Integer.valueOf(firstLevelBean.getId());
+                commentText.setText(msg);
+                commentRootType = 1;
+                commentTopID = Integer.valueOf(datas.get(firstLevelBean.getPosition()).getId());
+
+            } else if (item instanceof SecondLevelBean) {
+                SecondLevelBean secondLevelBean = (SecondLevelBean) item;
+                positionCount = (int) (secondLevelBean.getPositionCount() + 1);
+                pos = (int) secondLevelBean.getPosition();
+                replyUserName = secondLevelBean.getUserName();
+                commentTargetID = Integer.valueOf(secondLevelBean.getId());
+                commentText.setText(msg);
+                commentRootType = 1;
+                commentTopID = Integer.valueOf(datas.get(secondLevelBean.getPosition()).getId());
+            }
+
+//            SecondLevelBean secondLevelBean = new SecondLevelBean();
+//            secondLevelBean.setReplyUserName(replyUserName);
+//            secondLevelBean.setIsReply(isReply ? 1 : 0);
+//            secondLevelBean.setContent(msg);
+//            secondLevelBean.setHeadImg(this.user.);
+//            secondLevelBean.setCreateTime(System.currentTimeMillis());
+//            secondLevelBean.setIsLike(0);
+//            secondLevelBean.setUserName(userName);
+//            secondLevelBean.setId("");
+//            secondLevelBean.setPosition(positionCount);
 //
-//            if (item instanceof FirstLevelBean) {
-//                FirstLevelBean firstLevelBean = (FirstLevelBean) item;
-//                positionCount = (int) (firstLevelBean.getPositionCount() + 1);
-//                pos = (int) firstLevelBean.getPosition();
-//                replyUserName = firstLevelBean.getUserName();
-//                commentTargetID = Integer.valueOf(firstLevelBean.getId());
-//                commentText.setText(msg);
-//                commentRootType = 0;
-//                commentTopID = Integer.valueOf(datas.get(firstLevelBean.getPosition()).getId());
-//
-//            } else if (item instanceof SecondLevelBean) {
-//                SecondLevelBean secondLevelBean = (SecondLevelBean) item;
-//                positionCount = (int) (secondLevelBean.getPositionCount() + 1);
-//                pos = (int) secondLevelBean.getPosition();
-//                replyUserName = secondLevelBean.getUserName();
-//                commentTargetID = Integer.valueOf(secondLevelBean.getId());
-//                commentText.setText(msg);
-//                commentRootType = 0;
-//                commentTopID = Integer.valueOf(datas.get(secondLevelBean.getPosition()).getId());
-//            }
-//
-////            SecondLevelBean secondLevelBean = new SecondLevelBean();
-////            secondLevelBean.setReplyUserName(replyUserName);
-////            secondLevelBean.setIsReply(isReply ? 1 : 0);
-////            secondLevelBean.setContent(msg);
-////            secondLevelBean.setHeadImg(this.user.);
-////            secondLevelBean.setCreateTime(System.currentTimeMillis());
-////            secondLevelBean.setIsLike(0);
-////            secondLevelBean.setUserName(userName);
-////            secondLevelBean.setId("");
-////            secondLevelBean.setPosition(positionCount);
-////
-////            datas.get(pos).getSecondLevelBeans().add(secondLevelBean);
-////            DetailActivity.this.dataSort(0);
-//        } else {
-//            commentTargetID = Integer.valueOf(detail.getIdByType(detailType));
-////            commentText.setText(msg);
-//            System.out.println(commentText.getText());
-//            commentRootType = 1;
-//            commentTopID = null;
-//            //添加一级评论
-////            FirstLevelBean firstLevelBean = new FirstLevelBean();
-////            firstLevelBean.setUserName(userName);
-////            firstLevelBean.setId(bottomSheetAdapter.getItemCount() + 1 + "");
-////            firstLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1918451189,3095768332&fm=26&gp=0.jpg");
-////            firstLevelBean.setCreateTime(System.currentTimeMillis());
-////            firstLevelBean.setContent(msg);
-////            firstLevelBean.setLikeCount(0);
-////            firstLevelBean.setSecondLevelBeans(new ArrayList<SecondLevelBean>());
-////            datas.add(0, firstLevelBean);
-////            DetailActivity.this.dataSort(0);
-////            bottomSheetAdapter.notifyDataSetChanged();
-////            rv_dialog_lists.scrollToPosition(0);
-//        }
-//        sendRemark(remarkRequestBuilder());
-//        refreshComment();
-//        bottomSheetAdapter.notifyDataSetChanged();
-//        rv_dialog_lists.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                ((LinearLayoutManager) rv_dialog_lists.getLayoutManager())
-//                        .scrollToPositionWithOffset(positionCount >= data.size() - 1 ? data.size() - 1
-//                                : positionCount, positionCount >= data.size() - 1 ? Integer.MIN_VALUE : rv_dialog_lists.getHeight());
-//            }
-//        }, 100);
-//    }
+//            datas.get(pos).getSecondLevelBeans().add(secondLevelBean);
+//            DetailActivity.this.dataSort(0);
+        } else {
+            commentTargetID = Integer.valueOf(detail.getId());
+            commentText.setText(msg);
+            commentRootType = 0;
+            commentTopID = null;
+            //添加一级评论
+//            FirstLevelBean firstLevelBean = new FirstLevelBean();
+//            firstLevelBean.setUserName(userName);
+//            firstLevelBean.setId(bottomSheetAdapter.getItemCount() + 1 + "");
+//            firstLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1918451189,3095768332&fm=26&gp=0.jpg");
+//            firstLevelBean.setCreateTime(System.currentTimeMillis());
+//            firstLevelBean.setContent(msg);
+//            firstLevelBean.setLikeCount(0);
+//            firstLevelBean.setSecondLevelBeans(new ArrayList<SecondLevelBean>());
+//            datas.add(0, firstLevelBean);
+//            DetailActivity.this.dataSort(0);
+//            bottomSheetAdapter.notifyDataSetChanged();
+//            rv_dialog_lists.scrollToPosition(0);
+        }
+        answer.setAnswerTargetId(commentTargetID);
+        answer.setContent(commentText.getText().toString());
+        answer.setAskId(detail.getId());
+        answer.setPublisherId(user.getId());
+        answer.setAnswerTargetType(commentRootType);
+        sendRemark(answer);
+        refreshComment();
+        bottomSheetAdapter.notifyDataSetChanged();
+        rv_dialog_lists.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ((LinearLayoutManager) rv_dialog_lists.getLayoutManager())
+                        .scrollToPositionWithOffset(positionCount >= data.size() - 1 ? data.size() - 1
+                                : positionCount, positionCount >= data.size() - 1 ? Integer.MIN_VALUE : rv_dialog_lists.getHeight());
+            }
+        }, 100);
+    }
 
     private synchronized void getUser(){
         Thread t1 = new Thread(()->{
@@ -802,7 +784,19 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
             e.printStackTrace();
         }
     }
-
+    protected void setUpToolBar() {
+        toolbar = findViewById(R.id.id_toolbar);
+        toolbar.setTitle("提问详情");
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onBackPressed();
+                    }
+                }
+        );
+    }
     @Override
     public void onLoadMoreRequested() {
         if (datas.size() >= totalCount) {

@@ -551,7 +551,7 @@ public class OkHttpUtils {
         return result.getData();
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public List<AnswerVO> getTeacherAnswerList(Integer page, Integer limit, Integer askID){
+    public List<AnswerVO> getAnswerList(Integer page, Integer limit, Integer askID){
         Response response = okHttp.sendGetRequest(baseURL+"/teach/listanswer/"+page+'/'+limit+'/'+askID,cookie,null,0);
         String res = null;
         try {
@@ -674,17 +674,64 @@ public class OkHttpUtils {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Boolean answerPublish(Answer answer, Map<String,String> nameAndPath){
         String ans = gson.toJson(answer);
-        Response response = okHttp.sendPostRequest(baseURL+"/course/answer","help",ans,nameAndPath,cookie,0);
-        String res = response.toString();
-        Result<List<Object>> result = gson.fromJson(res, new TypeToken<Result<List<Object>>>(){}.getType());
+        System.out.println("ans"+ans);
+        Response response = okHttp.sendPostRequest(baseURL+"/course/answer","answer",ans,nameAndPath,cookie,0);
+        String res = null;
+        try {
+            res = response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<Boolean> result = gson.fromJson(res, new TypeToken<Result<Boolean>>(){}.getType());
+        System.out.println(result.getData());
         return result.getData()==null?false:true;
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Boolean askPublish(Ask ask, Map<String,String> nameAndPath){
         String askJson = gson.toJson(ask);
         Response response = okHttp.sendPostRequest(baseURL+"/course/ask","help",askJson,nameAndPath,cookie,0);
-        String res = response.toString();
-        Result<List<Object>> result = gson.fromJson(res, new TypeToken<Result<List<Object>>>(){}.getType());
+        String res = null;
+        try {
+            res = response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }        Result<List<Object>> result = gson.fromJson(res, new TypeToken<Result<List<Object>>>(){}.getType());
         return result.getData()==null?false:true;
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public Boolean askLike(Integer type, Integer id){
+        Response response = okHttp.sendPostRequest(baseURL+"/course/like/"+type+"/"+id,"",cookie,0);
+        String res = null;
+        try {
+            res = response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<Boolean> result = gson.fromJson(res, new TypeToken<Result<Boolean>>(){}.getType());
+        return result.getData()==null?false:(Boolean) result.getData();
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public Boolean deleteAsk(Integer id){
+        Response response = okHttp.sendPostRequest(baseURL+"/course/lideleteAsk/"+id,"",cookie,0);
+        String res = null;
+        try {
+            res = response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<Boolean> result = gson.fromJson(res, new TypeToken<Result<Boolean>>(){}.getType());
+        return result.getData()==null?false:(Boolean) result.getData();
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public Boolean collectAsk(Integer id){
+        Response response = okHttp.sendPostRequest(baseURL+"/course/collect/"+id,"",cookie,0);
+        String res = null;
+        try {
+            res = response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }        Result<Boolean> result = gson.fromJson(res, new TypeToken<Result<Boolean>>(){}.getType());
+        return result.getData()==null?false:(Boolean) result.getData();
+    }
+
 }
