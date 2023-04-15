@@ -102,10 +102,7 @@ public class TaskCenterActivity extends BaseActivity {
     private void initTools(){
         intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            okHttpUtils = new OkHttpUtils();
-        }
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+        
     }
 
     private void initToolbar(){
@@ -262,39 +259,34 @@ public class TaskCenterActivity extends BaseActivity {
 
     @Override
     protected void onPause() {
-        SessionUtils.saveActivityPreference(TaskCenterActivity.this,okHttpUtils.getGson().toJson(activityVOList));
+        SessionUtils.saveActivityPreference(TaskCenterActivity.this,OkHttpUtils.gson.toJson(activityVOList));
         super.onPause();
-//        System.out.println("\n\n\n\n\n\nonPause!!!!!\n\n\n\n\n\n\n");
     }
 
 
     @Override
     protected void onDestroy() {
-//        SessionUtils.deleteActivityPreference(TaskCenterActivity.this);
         super.onDestroy();
-//        System.out.println("\n\n\n\n\n\nonDestroy!!!!!");
     }
 
     private void toUserCenterActivity() {
         Intent intent = new Intent(this,BasicInfoActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
 
-    private void toTaskCenterActivity() {
-        Intent intent = new Intent(this,TaskCenterActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
     private void toHelpCenterActivity() {
         Intent intent = new Intent(this, HelpCenterActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
     private void toHoleCenterActivity(){
         Intent intent = new Intent(this, HoleCenterActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
     private void toDetailActivity(int postion){

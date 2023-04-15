@@ -60,10 +60,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
 
 
     private void initTools(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            okHttpUtils = new OkHttpUtils();
-        }
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(getActivity()));
+
     }
 
 //    private Handler handler = new Handler() {

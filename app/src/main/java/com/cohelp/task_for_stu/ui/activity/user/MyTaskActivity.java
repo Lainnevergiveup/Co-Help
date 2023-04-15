@@ -85,10 +85,7 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
 
 
     private void initTools(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            okHttpUtils = new OkHttpUtils();
-        }
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+        
     }
     @SuppressLint("ResourceType")
     private void initEvent() {

@@ -210,10 +210,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
     }
     private void initTools(){
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            okHttpUtils = new OkHttpUtils();
-        }
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+        
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initEvent() {
@@ -245,10 +242,6 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
             public void onClick(View view) {
                 toUserCenterActivity();
             }
-        });
-        HoleCenter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {toHoleCenterActivity();}
         });
 
 //
@@ -582,6 +575,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
     private void toUserCenterActivity() {
         Intent intent = new Intent(this,BasicInfoActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
 
@@ -589,6 +583,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
     private void toTaskCenterActivity() {
         Intent intent = new Intent(this,TaskCenterActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
 
@@ -596,11 +591,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
     private void toHelpCenterActivity() {
         Intent intent = new Intent(this, HelpCenterActivity.class);
         startActivity(intent);
-        finish();
-    }
-    private void toHoleCenterActivity(){
-        Intent intent = new Intent(this, HoleCenterActivity.class);
-        startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
     @RequiresApi(api = Build.VERSION_CODES.O)

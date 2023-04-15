@@ -161,21 +161,10 @@ public class HelpCenterActivity extends BaseActivity {
     private void initTools(){
 //        intent = getIntent();
 //        user = (User) intent.getSerializableExtra("user");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            okHttpUtils = new OkHttpUtils();
-        }
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+        
     }
 
     private void initEvent() {
-
-
-        HelpCenter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toHelpCenterActivity();
-            }
-        });
 
         TaskCenter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -423,24 +412,21 @@ public class HelpCenterActivity extends BaseActivity {
     private void toUserCenterActivity() {
         Intent intent = new Intent(this,BasicInfoActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
 
     private void toTaskCenterActivity() {
         Intent intent = new Intent(this,TaskCenterActivity.class);
         startActivity(intent);
-        finish();
-    }
-
-    private void toHelpCenterActivity() {
-        Intent intent = new Intent(this, HelpCenterActivity.class);
-        startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
 
     private void toHoleCenterActivity(){
         Intent intent = new Intent(this, HoleCenterActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
 //    private synchronized void getHelpList(){

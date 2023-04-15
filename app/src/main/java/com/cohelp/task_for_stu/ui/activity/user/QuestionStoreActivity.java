@@ -79,10 +79,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
     private void initTools(){
 //        intent = getIntent();
 //        user = (User) intent.getSerializableExtra("user");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            okHttpUtils = new OkHttpUtils();
-        }
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+        
     }
     private void initData(){
         getCourseList();

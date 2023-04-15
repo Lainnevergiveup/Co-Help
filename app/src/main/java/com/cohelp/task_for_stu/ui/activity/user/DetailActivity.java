@@ -149,10 +149,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            okHttpUtils = new OkHttpUtils();
-        }
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+        
         idAndType = new IdAndType(detail.getIdByType(detail.getType()),1);
         mRecyclerViewUtil = new RecyclerViewUtil();
 
@@ -450,10 +447,6 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
             }
             arrayLists.add(remarkVOS);
         }
-
-
-
-
         return arrayLists;
     }
     private void changeLocalState(){

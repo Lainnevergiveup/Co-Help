@@ -41,10 +41,6 @@ public class AskFragment extends Fragment {
     CardViewAskListAdapter cardViewAskListAdapter;
     RecyclerView recyclerView;
     private void initTools(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            okHttpUtils = new OkHttpUtils();
-        }
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(getActivity()));
     }
     public AskFragment() {
         // Required empty public constructor

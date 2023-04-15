@@ -57,7 +57,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
-
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.RequestLoadMoreListener{
     private  int INITBEANNUM = 5;
     private long totalCount = 5;
@@ -92,7 +92,6 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
 
     private SoftKeyBoardListener mKeyBoardListener;
 
-    OkHttpUtils okHttpUtils;
     Intent intent;
 
     User user;
@@ -132,6 +131,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
         initEvent();
     }
 
+
     private void initTools(){
         intent = getIntent();
         if (intent!=null){
@@ -142,10 +142,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            okHttpUtils = new OkHttpUtils();
-        }
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+
         mRecyclerViewUtil = new RecyclerViewUtil();
 
     }
@@ -196,7 +193,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
             public void onClick(View view) {
                 Integer type = TYPE_ANSWER;
                 new Thread(()->{
-                    okHttpUtils.askLike(type,detail.getId());
+                    OkHttpUtils.askLike(type,detail.getId());
                 }).start();
                 detail.setIsLiked(detail.getIsLiked()==1?0:1);
                 updateButtonState();
@@ -216,7 +213,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
             @Override
             public void onClick(View view) {
                 new Thread(()->{
-                    okHttpUtils.collectAsk(detail.getId());
+                    OkHttpUtils.collectAsk(detail.getId());
                 }).start();
                 detail.setIsCollected(detail.getIsCollected()==1?0:1);
                 updateButtonState();
@@ -350,7 +347,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
         try {
             Thread t1 = new Thread(()->{
                 System.out.println("id"+detail.getId());
-                remarkList = okHttpUtils.getAnswerList(1,50,detail.getId());
+                remarkList = OkHttpUtils.getAnswerList(1,50,detail.getId());
                 System.out.println(remarkList);
             });
             t1.start();
@@ -427,7 +424,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
 
     private  void sendRemark(Answer answer){
         Thread thread = new Thread(() -> {
-            okHttpUtils.answerPublish(answer,null);
+            OkHttpUtils.answerPublish(answer,null);
         });
         thread.start();
     }
@@ -775,7 +772,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
 
     private synchronized void getUser(){
         Thread t1 = new Thread(()->{
-            user=okHttpUtils.getUser();
+            user=OkHttpUtils.getUser();
         });
         t1.start();
         try {
