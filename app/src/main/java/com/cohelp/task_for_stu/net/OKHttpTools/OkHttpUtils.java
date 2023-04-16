@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.Cache;
+import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.internal.cache.DiskLruCache;
 
@@ -272,14 +273,13 @@ public class OkHttpUtils {
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static List<DetailResponse> search(String key, Integer type){
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.setKey(key);
-        List<Integer> list = new ArrayList<>();
-        list.add(type);
-        searchRequest.setTypes(list);
-        String searchMessage = ToJsonString.toJson(searchRequest);
+        //get请求参数预处理
+        Map<String, List<String>> map = new HashMap<>();
+        List<String> keyStr = new ArrayList<>();keyStr.add(key);map.put("key",keyStr);
+        List<String> types = new ArrayList<>();types.add("1");map.put("types",types);
 
-        Response response = okHttp.sendPostRequest(baseURL+"/general/search/1/5",searchMessage,300);
+        Response response = OKHttp.sendGetRequest(OkHttpUtils.baseURL + "/general/search/1/5", map, 300);
+
         String res = null;
         try {
             res = response.body().string();

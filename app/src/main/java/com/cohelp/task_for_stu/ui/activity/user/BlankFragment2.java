@@ -1,5 +1,7 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
+import static com.xuexiang.xutil.XUtil.runOnUiThread;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -11,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,18 +22,30 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
+import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.gsonTools.GSON;
+import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
+import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.vo.AskVO;
 import com.cohelp.task_for_stu.ui.adpter.MyAskAdapter;
 import com.cohelp.task_for_stu.ui.view.MyListViewForScrollView;
 import com.cohelp.task_for_stu.ui.view.MyRecyclerView;
 import com.cohelp.task_for_stu.utils.SessionUtils;
+import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
 
+import java.io.IOException;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class BlankFragment2 extends Fragment implements View.OnClickListener{
@@ -60,28 +75,6 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
 
     private void initTools(){
     }
-
-//    private Handler handler = new Handler() {
-//        @SuppressLint("HandlerLeak")
-//        @Override
-//        public void handleMessage(Message msg) {
-//            switch (msg.what){
-//                case GET_DATA_SUCCESS:
-//                    askList = (List<AskVO>) msg.obj;
-////                    myAskAdapter.setAskVOList(askList);
-//                    mRecyclerView.setLayoutManager(mLayoutManager);
-//                    mRecyclerView.setAdapter(myAskAdapter);
-//                    System.out.println("ask_list"+askList);
-//                    break;
-//                case NETWORK_ERROR:
-//                    Toast.makeText(getContext(),"网络连接失败",Toast.LENGTH_SHORT).show();
-//                    break;
-//                case SERVER_ERROR:
-//                    Toast.makeText(getContext(),"服务器发生错误",Toast.LENGTH_SHORT).show();
-//                    break;
-//            }
-//        }
-//    };
 
     public BlankFragment2(Context context ,Integer id , String semester){
         this.context = context;
@@ -120,11 +113,7 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
         }
         initTools();
         initView();
-        try {
-            initEvent();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        initAskList(id,semester);
         return root;
     }
 
@@ -133,9 +122,7 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
         scrollView = root.findViewById(R.id.lv_task_list);
     }
 
-    private void initEvent() throws InterruptedException {
-        getAskList(id,semester);
-        System.out.println("asklist"+askList);
+    private void initEvent(){
         myAskAdapter = new MyAskAdapter(getContext(),this,askList);
         scrollView.setAdapter(myAskAdapter);
         scrollView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -154,20 +141,32 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
         }
     };
 
-    private synchronized void getAskList(Integer id , String semester) throws InterruptedException {
-        Thread t1 = new Thread(()->{
-            System.out.println("idgetasklist"+id);
-            System.out.println("semester"+semester);
-            askList = okHttpUtils.getAskList(id, semester);
-//            Message msg = Message.obtain();
-//            msg.obj = askList;
-//            msg.what = GET_DATA_SUCCESS;
-//            handler.sendMessage(msg);
-        });
-        System.out.println("ask_list"+askList);
-        t1.start();
-        t1.join();
+    private void initAskList(Integer id , String semester){
 
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/course/list/ask/1/5/" + id + "/" + semester + "/2", null, 120);
+        //执行请求
+        OKHttp.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String res = null;
+                try {
+                    res = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Result<List<AskVO>> result = GSON.gson.fromJson(res, new TypeToken<Result<List<AskVO>>>(){}.getType());
+                askList =  result.getData();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        initEvent();
+                    }
+                });
+            }
+        });
     }
 
     private void toDetailAsk(int postion){

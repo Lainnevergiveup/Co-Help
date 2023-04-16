@@ -57,11 +57,11 @@ public class HelpCenterActivity extends BaseActivity {
     LinearLayout TaskCenter;
     LinearLayout HoleCenter;
     LinearLayout UserCenter;
-    TextView lb1,lb2,lb3,lb4,lb5;
-    NiceSpinner niceSpinner;
-    String item;
+//    TextView lb1,lb2,lb3,lb4,lb5;
+//    NiceSpinner niceSpinner;
+//    String item;
     TextView title;
-    TabSegment mTabSegment;
+//    TabSegment mTabSegment;
     ViewPager2 viewPager;
 
     androidx.appcompat.widget.Toolbar toolbar;
@@ -69,25 +69,24 @@ public class HelpCenterActivity extends BaseActivity {
     EditText searchedContent;
     ImageView searchBtn,search;
     SwipeRefreshLayout eSwipeRefreshLayout;
-    RecyclerView eRecyclerView;
-    Integer conditionState = 0;
+//    RecyclerView eRecyclerView;
+//    Integer conditionState = 0;
     List<DetailResponse> helpList = new ArrayList<>();
 
 //    HelpAdapter helpAdapter;
     CardViewListAdapter cardViewListAdapter = new CardViewListAdapter();
-    OkHttpUtils okHttpUtils;
-    String helpTag = "组团招人";
-    private final int TAB_COUNT = 10;
-    private int mCurrentItemCount = TAB_COUNT;
+//    String helpTag = "组团招人";
+//    private final int TAB_COUNT = 10;
+//    private int mCurrentItemCount = TAB_COUNT;
     String[] pages = MultiPage.getPageNames();
-    private MultiPage mDestPage = MultiPage.组团招人;
+//    private MultiPage mDestPage = MultiPage.组团招人;
 
-    private Map<MultiPage, View> mPageMap = new HashMap<>();
-    private MyPagerAdapter mPagerAdapter ;
+//    private Map<MultiPage, View> mPageMap = new HashMap<>();
+//    private MyPagerAdapter mPagerAdapter ;
     private TabLayout tabLayout;
     private int activeColor = Color.parseColor("#ff678f");
     private int normalColor = Color.parseColor("#666666");
-    private ArrayList<String> titleList = new ArrayList<>();
+//    private ArrayList<String> titleList = new ArrayList<>();
     private ArrayList<Fragment> fragmentList=new ArrayList<>();
     private TabLayoutMediator meditor;
     int activeSize = 16;
@@ -96,54 +95,54 @@ public class HelpCenterActivity extends BaseActivity {
     public static final int GET_DATA_SUCCESS = 1;
     public static final int NETWORK_ERROR = 2;
     public static final int SERVER_ERROR = 3;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what){
-                case GET_DATA_SUCCESS:
-                    helpList = (List<DetailResponse>) msg.obj;
-
-                    cardViewListAdapter.setDetailResponseListList(helpList);
-                    System.out.println("handler's working");
-
-//                    eRecyclerView.setLayoutManager(new LinearLayoutManager(HelpCenterActivity.this));
-//                    eRecyclerView.setAdapter(cardViewListAdapter);
-                    break;
-                case NETWORK_ERROR:
-                    Toast.makeText(HelpCenterActivity.this,"网络连接失败",Toast.LENGTH_SHORT).show();
-                    break;
-                case SERVER_ERROR:
-                    Toast.makeText(HelpCenterActivity.this,"服务器发生错误",Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        }
-    };
-
-
-    private View getPageView(MultiPage page) {
-
-        View view = mPageMap.get(page);
-        if (view == null) {
+//    private Handler handler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            switch (msg.what){
+//                case GET_DATA_SUCCESS:
+//                    helpList = (List<DetailResponse>) msg.obj;
+//
+//                    cardViewListAdapter.setDetailResponseListList(helpList);
+//                    System.out.println("handler's working");
+//
+////                    eRecyclerView.setLayoutManager(new LinearLayoutManager(HelpCenterActivity.this));
+////                    eRecyclerView.setAdapter(cardViewListAdapter);
+//                    break;
+//                case NETWORK_ERROR:
+//                    Toast.makeText(HelpCenterActivity.this,"网络连接失败",Toast.LENGTH_SHORT).show();
+//                    break;
+//                case SERVER_ERROR:
+//                    Toast.makeText(HelpCenterActivity.this,"服务器发生错误",Toast.LENGTH_SHORT).show();
+//                    break;
+//            }
+//        }
+//    };
 
 
-            RecyclerView recyclerView = new RecyclerView(HelpCenterActivity.this,null);
-//            swipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
-//            swipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-//            swipeRefreshLayout.addView(recyclerView);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(cardViewListAdapter);
-//            swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
-//                @Override
-//                public void onRefresh() {
-//                    System.out.println("isrefreshing");
-//                }
-//            });
-            view = recyclerView;
-            mPageMap.put(page, view);
-
-        }
-        return view;
-    }
+//    private View getPageView(MultiPage page) {
+//
+//        View view = mPageMap.get(page);
+//        if (view == null) {
+//
+//
+//            RecyclerView recyclerView = new RecyclerView(HelpCenterActivity.this,null);
+////            swipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
+////            swipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
+////            swipeRefreshLayout.addView(recyclerView);
+//            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//            recyclerView.setAdapter(cardViewListAdapter);
+////            swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
+////                @Override
+////                public void onRefresh() {
+////                    System.out.println("isrefreshing");
+////                }
+////            });
+//            view = recyclerView;
+//            mPageMap.put(page, view);
+//
+//        }
+//        return view;
+//    }
 
 
     @Override
@@ -163,6 +162,182 @@ public class HelpCenterActivity extends BaseActivity {
 //        user = (User) intent.getSerializableExtra("user");
         
     }
+
+    private void initToolbar(){
+        toolbar.setNavigationOnClickListener(onClickListener);
+        toolbar.inflateMenu(R.menu.menu_help);
+        toolbar.setOnMenuItemClickListener(menuItemClickListener);
+        title.setText("互助");
+    }
+
+    private void initTab(){
+//        mPagerAdapter = new PagerAdapter() {
+//            private RecyclerView recyclerView;
+//            @Override
+//            public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+//                this.recyclerView = (RecyclerView) object;
+//            }
+//            public RecyclerView getPrimaryItem() {
+//                return this.recyclerView;
+//            }
+//
+//            @Override
+//            public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+//                return view == object;
+//            }
+//
+//            @Override
+//            public int getCount() {
+//                return mDestPage.size();
+//            }
+//
+//            @Override
+//            public Object instantiateItem(final ViewGroup container, int position) {
+//                MultiPage page = MultiPage.getPage(position);
+//                System.out.println("position"+position);
+//                View view = getPageView(page);
+//                view.setTag(page);
+//                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                container.addView(view, params);
+//                return view;
+//            }
+//
+//            @Override
+//            public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
+//                container.removeView((View) object);
+//            }
+//
+//            @Override
+//            public int getItemPosition(@NonNull Object object) {
+//                View view = (View) object;
+//                Object page = view.getTag();
+//                if (page instanceof MultiPage) {
+//                    int pos = ((MultiPage) page).getPosition();
+//                    System.out.println("pos"+pos);
+//                    if (pos >= mCurrentItemCount) {
+//                        return POSITION_NONE;
+//                    }
+//                    return POSITION_UNCHANGED;
+//                }
+//                return POSITION_NONE;
+//            }
+//        };
+//        mPagerAdapter = new MyPagerAdapter(){
+//            private RecyclerView recyclerView;
+//            public RecyclerView getPrimaryItem() {
+//                return this.recyclerView;
+//            }
+//            @Override
+//            public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+//                this.recyclerView = (RecyclerView) object;
+//            }
+//
+//
+//            @Override
+//            public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+//                return view == object;
+//            }
+//
+//            @Override
+//            public int getCount() {
+//                return mDestPage.size();
+//            }
+//
+//            @Override
+//            public Object instantiateItem(final ViewGroup container, int position) {
+//                MultiPage page = MultiPage.getPage(position);
+//                System.out.println("position"+position);
+//                View view = getPageView(page);
+//                view.setTag(page);
+//                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                container.addView(view, params);
+//                return view;
+//            }
+//
+//            @Override
+//            public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
+//                container.removeView((View) object);
+//            }
+//
+//            @Override
+//            public int getItemPosition(@NonNull Object object) {
+//                View view = (View) object;
+//                Object page = view.getTag();
+//                if (page instanceof MultiPage) {
+//                    int pos = ((MultiPage) page).getPosition();
+//                    System.out.println("pos"+pos);
+//                    if (pos >= mCurrentItemCount) {
+//                        return POSITION_NONE;
+//                    }
+//                    return POSITION_UNCHANGED;
+//                }
+//                return POSITION_NONE;
+//            }
+//
+//
+//            @RequiresApi(api = Build.VERSION_CODES.O)
+//            private View getPageView(MultiPage page) {
+//
+//                View view = mPageMap.get(page);
+//                if (view == null) {
+//
+//
+//                    RecyclerView recyclerView = new RecyclerView(HelpCenterActivity.this,null);
+////            swipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
+////            swipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
+////            swipeRefreshLayout.addView(recyclerView);
+//                    recyclerView.setLayoutManager(new LinearLayoutManager(HelpCenterActivity.this));
+//                    recyclerView.setAdapter(cardViewListAdapter);
+////            swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
+////                @Override
+////                public void onRefresh() {
+////                    System.out.println("isrefreshing");
+////                }
+////            });
+//                    view = recyclerView;
+//                    mPageMap.put(page, view);
+//
+//                }
+//                return view;
+//            }
+//        };
+        fragmentList.clear();
+
+        fragmentList.add(new BlankFragment3(this,"组团招人"));
+        fragmentList.add(new BlankFragment3(this,"寻物启事"));
+        fragmentList.add(new BlankFragment3(this,"跑腿代取"));
+        fragmentList.add(new BlankFragment3(this,"问题求助"));
+        fragmentList.add(new BlankFragment3(this,"其他"));
+        MyFragmentPagerAdapter pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),getLifecycle(),fragmentList);
+//        mTabSegment.reset();
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setOffscreenPageLimit(5);
+        viewPager.registerOnPageChangeCallback(changeCallback);
+        meditor = new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                TextView textView = new TextView(HelpCenterActivity.this);
+//                textView.setText(tabs[position]);
+                tab.setCustomView(textView);
+
+                int[][] states = new int[2][];
+                states[0] = new int[]{android.R.attr.state_selected};
+                states[1] = new int[]{};
+
+                int[] colors = new int[]{activeColor, normalColor};
+//                ColorStateList colorStateList = new ColorStateList(states, colors);
+                textView.setText(pages[position]);
+                textView.setTextSize(normalSize);
+                textView.setGravity(1);
+//                textView.setTextColor(colorStateList);
+                tab.setCustomView(textView);
+
+            }
+        });
+        meditor.attach();
+
+    }
+    private View.OnClickListener onClickListener = v -> toCreateNewHelpActivity();
 
     private void initEvent() {
 
@@ -329,22 +504,12 @@ public class HelpCenterActivity extends BaseActivity {
 //        });
     }
 
-    private void initToolbar(){
-        toolbar.setNavigationOnClickListener(onClickListener);
-        toolbar.inflateMenu(R.menu.menu_help);
-        toolbar.setOnMenuItemClickListener(menuItemClickListener);
-        title.setText("互助");
-    }
-    private View.OnClickListener onClickListener = v -> toCreateNewHelpActivity();  ;
-
     androidx.appcompat.widget.Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
-//        XToastUtils.toast("点击了:" + item.getTitle());
        if(item.getItemId() == R.id.item_search){
             searchFragment.showFragment(getSupportFragmentManager(), SearchFragment.TAG);
         }
         return false;
     };
-
 
 
     private synchronized void refreshHelpListData(){
@@ -393,7 +558,7 @@ public class HelpCenterActivity extends BaseActivity {
         tabLayout = findViewById(R.id.tabLayout);
         eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.PULL_FROM_START);
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-        getHelpList();
+//        getHelpList();
 //        cardViewListAdapter = new CardViewListAdapter(helpList);
 
 //        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -401,13 +566,84 @@ public class HelpCenterActivity extends BaseActivity {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
+
+
+    private synchronized void getHelpList(){
+        Thread t1 = new Thread(()->{
+//            helpList = okHttpUtils.helpListByTag(helpTag);
+            helpList =OkHttpUtils.helpList(0);
+//            Message msg = Message.obtain();
+//            msg.obj = helpList;
+//            msg.what = GET_DATA_SUCCESS;
+//            handler.sendMessage(msg);
+            cardViewListAdapter.setDetailResponseListList(helpList);
+        });
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    private ViewPager2.OnPageChangeCallback changeCallback = new ViewPager2.OnPageChangeCallback() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            //可以来设置选中时tab的大小
+            TextView tabView;
+            int tabCount = tabLayout.getTabCount();
+            for (int i = 0; i < tabCount; i++) {
+                TabLayout.Tab tab = tabLayout.getTabAt(i);
+                tabView = (TextView) tab.getCustomView();
+                if (tab.getPosition() == position) {
+                    tabView.setTextSize(activeSize);
+                    tabView.setTypeface(Typeface.DEFAULT_BOLD);
+                } else {
+                    tabView.setTextSize(normalSize);
+                    tabView.setTypeface(Typeface.DEFAULT);
+                }
+            }
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            super.onPageSelected(position);
+            viewPager.setCurrentItem(position);
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            super.onPageScrollStateChanged(state);
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        meditor.detach();
+        viewPager.unregisterOnPageChangeCallback(changeCallback);
+        super.onDestroy();
+    }
+
+    private void toDetailActivity(int postion){
+        Intent intent = new Intent(HelpCenterActivity.this,DetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("detailResponse",helpList.get(postion));
+        intent.putExtras(bundle);
+        IdAndType idAndType = new IdAndType(helpList.get(postion).getIdByType(helpList.get(postion).getType()),1);
+        new Thread(()->{
+            System.out.println(OkHttpUtils.getDetail(idAndType));
+        }).start();
+        startActivity(intent);
+    }
+
     private void toCreateNewHelpActivity() {
         Intent intent = new Intent(this,CreateNewHelpActivity.class);
         startActivity(intent);
     }
-
-
 
     private void toUserCenterActivity() {
         Intent intent = new Intent(this,BasicInfoActivity.class);
@@ -429,270 +665,11 @@ public class HelpCenterActivity extends BaseActivity {
         overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
-//    private synchronized void getHelpList(){
-//        Thread t1 = new Thread(()->{
-//            helpList = okHttpUtils.helpListByTag(helpTag);
-////            Message msg = Message.obtain();
-////            msg.obj = helpList;
-////            msg.what = GET_DATA_SUCCESS;
-////            handler.sendMessage(msg);
-//            cardViewListAdapter.setDetailResponseListList(helpList);
-//        });
-//        t1.start();
-//        try {
-//            t1.join();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+
+//    private  List<DetailResponse> changeTag(){
+//
+//        return helpList.stream().filter(x->x.getHelpVO().getHelpLabel().toString().equals(helpTag)).collect(Collectors.toList());
 //    }
-
-    private synchronized void getHelpList(){
-        Thread t1 = new Thread(()->{
-//            helpList = okHttpUtils.helpListByTag(helpTag);
-            helpList = okHttpUtils.helpList(0);
-//            Message msg = Message.obtain();
-//            msg.obj = helpList;
-//            msg.what = GET_DATA_SUCCESS;
-//            handler.sendMessage(msg);
-            cardViewListAdapter.setDetailResponseListList(helpList);
-        });
-        t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void toDetailActivity(int postion){
-        Intent intent = new Intent(HelpCenterActivity.this,DetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("detailResponse",helpList.get(postion));
-        intent.putExtras(bundle);
-        IdAndType idAndType = new IdAndType(helpList.get(postion).getIdByType(helpList.get(postion).getType()),1);
-        new Thread(()->{
-            System.out.println(okHttpUtils.getDetail(idAndType));
-        }).start();
-        startActivity(intent);
-    }
-
-    private void initTab(){
-//        mPagerAdapter = new PagerAdapter() {
-//            private RecyclerView recyclerView;
-//            @Override
-//            public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-//                this.recyclerView = (RecyclerView) object;
-//            }
-//            public RecyclerView getPrimaryItem() {
-//                return this.recyclerView;
-//            }
-//
-//            @Override
-//            public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-//                return view == object;
-//            }
-//
-//            @Override
-//            public int getCount() {
-//                return mDestPage.size();
-//            }
-//
-//            @Override
-//            public Object instantiateItem(final ViewGroup container, int position) {
-//                MultiPage page = MultiPage.getPage(position);
-//                System.out.println("position"+position);
-//                View view = getPageView(page);
-//                view.setTag(page);
-//                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//                container.addView(view, params);
-//                return view;
-//            }
-//
-//            @Override
-//            public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
-//                container.removeView((View) object);
-//            }
-//
-//            @Override
-//            public int getItemPosition(@NonNull Object object) {
-//                View view = (View) object;
-//                Object page = view.getTag();
-//                if (page instanceof MultiPage) {
-//                    int pos = ((MultiPage) page).getPosition();
-//                    System.out.println("pos"+pos);
-//                    if (pos >= mCurrentItemCount) {
-//                        return POSITION_NONE;
-//                    }
-//                    return POSITION_UNCHANGED;
-//                }
-//                return POSITION_NONE;
-//            }
-//        };
-        mPagerAdapter = new MyPagerAdapter(){
-            private RecyclerView recyclerView;
-            public RecyclerView getPrimaryItem() {
-                return this.recyclerView;
-            }
-            @Override
-            public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-                this.recyclerView = (RecyclerView) object;
-            }
-
-
-            @Override
-            public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-                return view == object;
-            }
-
-            @Override
-            public int getCount() {
-                return mDestPage.size();
-            }
-
-            @Override
-            public Object instantiateItem(final ViewGroup container, int position) {
-                MultiPage page = MultiPage.getPage(position);
-                System.out.println("position"+position);
-                View view = getPageView(page);
-                view.setTag(page);
-                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                container.addView(view, params);
-                return view;
-            }
-
-            @Override
-            public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
-                container.removeView((View) object);
-            }
-
-            @Override
-            public int getItemPosition(@NonNull Object object) {
-                View view = (View) object;
-                Object page = view.getTag();
-                if (page instanceof MultiPage) {
-                    int pos = ((MultiPage) page).getPosition();
-                    System.out.println("pos"+pos);
-                    if (pos >= mCurrentItemCount) {
-                        return POSITION_NONE;
-                    }
-                    return POSITION_UNCHANGED;
-                }
-                return POSITION_NONE;
-            }
-
-
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            private View getPageView(MultiPage page) {
-
-                View view = mPageMap.get(page);
-                if (view == null) {
-
-
-                    RecyclerView recyclerView = new RecyclerView(HelpCenterActivity.this,null);
-//            swipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
-//            swipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-//            swipeRefreshLayout.addView(recyclerView);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(HelpCenterActivity.this));
-                    recyclerView.setAdapter(cardViewListAdapter);
-//            swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
-//                @Override
-//                public void onRefresh() {
-//                    System.out.println("isrefreshing");
-//                }
-//            });
-                    view = recyclerView;
-                    mPageMap.put(page, view);
-
-                }
-                return view;
-            }
-        };
-
-
-        fragmentList.clear();
-
-        fragmentList.add(new BlankFragment3(this,"组团招人"));
-        fragmentList.add(new BlankFragment3(this,"寻物启事"));
-        fragmentList.add(new BlankFragment3(this,"跑腿代取"));
-        fragmentList.add(new BlankFragment3(this,"问题求助"));
-        fragmentList.add(new BlankFragment3(this,"其他"));
-        MyFragmentPagerAdapter pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),getLifecycle(),fragmentList);
-        System.out.println("adapter init finish");
-//        mTabSegment.reset();
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setOffscreenPageLimit(5);
-        viewPager.registerOnPageChangeCallback(changeCallback);
-        meditor = new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                TextView textView = new TextView(HelpCenterActivity.this);
-//                textView.setText(tabs[position]);
-                tab.setCustomView(textView);
-
-                int[][] states = new int[2][];
-                states[0] = new int[]{android.R.attr.state_selected};
-                states[1] = new int[]{};
-
-                int[] colors = new int[]{activeColor, normalColor};
-                ColorStateList colorStateList = new ColorStateList(states, colors);
-                textView.setText(pages[position]);
-                textView.setTextSize(normalSize);
-                textView.setGravity(1);
-//                textView.setTextColor(colorStateList);
-                tab.setCustomView(textView);
-
-            }
-        });
-        meditor.attach();
-
-    }
-
-    private ViewPager2.OnPageChangeCallback changeCallback = new ViewPager2.OnPageChangeCallback() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            //可以来设置选中时tab的大小
-            TextView tabView;
-            int tabCount = tabLayout.getTabCount();
-            for (int i = 0; i < tabCount; i++) {
-                TabLayout.Tab tab = tabLayout.getTabAt(i);
-                tabView = (TextView) tab.getCustomView();
-                if (tab.getPosition() == position) {
-                    tabView.setTextSize(activeSize);
-                    tabView.setTypeface(Typeface.DEFAULT_BOLD);
-                } else {
-                    tabView.setTextSize(normalSize);
-                    tabView.setTypeface(Typeface.DEFAULT);
-                }
-            }
-            System.out.println("111111");
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            super.onPageSelected(position);
-            System.out.println("222222");
-            viewPager.setCurrentItem(position);
-
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-            super.onPageScrollStateChanged(state);
-        }
-    };
-
-    @Override
-    protected void onDestroy() {
-        meditor.detach();
-        viewPager.unregisterOnPageChangeCallback(changeCallback);
-        super.onDestroy();
-    }
-
-
-    private  List<DetailResponse> changeTag(){
-
-        return helpList.stream().filter(x->x.getHelpVO().getHelpLabel().toString().equals(helpTag)).collect(Collectors.toList());
-    }
 
 
 }
