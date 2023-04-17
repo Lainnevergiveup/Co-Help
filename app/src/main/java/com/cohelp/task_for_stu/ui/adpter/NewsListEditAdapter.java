@@ -34,10 +34,10 @@ import com.cohelp.task_for_stu.ui.adpter.base.broccoli.BroccoliRecyclerAdapter;
 import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
 import com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder;
 import com.xuexiang.xui.adapter.recyclerview.XRecyclerAdapter;
+import com.xuexiang.xui.utils.CollectionUtils;
 import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
 import com.xuexiang.xui.widget.imageview.ImageLoader;
-import com.xuexiang.xutil.common.CollectionUtils;
 import com.xuexiang.xutil.common.logger.Logger;
 
 import java.util.ArrayList;
@@ -110,9 +110,9 @@ public class NewsListEditAdapter extends BroccoliRecyclerAdapter<ResultVO> {
         ActivityVO activityVO = model.getActivityVO();
         HelpVO helpVO = model.getHelpVO();
         AskVO askVO = model.getAskVO();
-        System.out.println("help"+helpVO);
-        System.out.println("ac"+activityVO);
-        System.out.println("ask"+askVO);
+//        System.out.println("help"+helpVO);
+//        System.out.println("ac"+activityVO);
+//        System.out.println("ask"+askVO);
         NetRadiusImageView imageView = holder.findViewById(R.id.cardView_author_pic);
         ImageLoader.get().loadImage(imageView, model.getPublisherAvatarUrl());
 

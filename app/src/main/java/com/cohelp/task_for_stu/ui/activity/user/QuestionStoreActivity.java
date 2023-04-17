@@ -207,22 +207,22 @@ public class QuestionStoreActivity extends BasicInfoActivity {
         refreshLayout = findViewById(R.id.refreshLayout);
         btn_delete = findViewById(R.id.btn_delete);
         mTvSwitch = findViewById(R.id.id_tv_manager);
+
+        niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
+        niceSpinner.attachDataSource(courseList);
+        niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
+
         mAdapter = new NewsListEditQuestionAdapter(isSelectAll -> {
             if (scbSelectAll != null) {
                 scbSelectAll.setCheckedSilent(isSelectAll);
             }
         },questionList);
-        niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
-        niceSpinner.attachDataSource(courseList);
-        niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
-
     }
 
     private void refreshManageMode() {
         if (mTvSwitch != null) {
             mTvSwitch.setText(mAdapter.isManageMode() ? "退出" : "管理");
             mTvSwitch.getCompoundPaddingLeft();
-
         }
         ViewUtils.setVisibility(flEdit, mAdapter.isManageMode());
     }
@@ -239,7 +239,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
         finish();
     }
     private void toDetailActivity(int postion){
-        intent = new Intent(QuestionStoreActivity.this,AskDetailActivity.class);
+        intent = new Intent(QuestionStoreActivity.this,DetailAskActivity.class);
         Bundle bundle = new Bundle();
         QuestionBankVO questionBankVO = questionList.get(postion);
         bundle.putSerializable("question",questionBankVO);
@@ -266,7 +266,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
         Thread t1 = new Thread(()->{
             if (item!=null){
                 questionList = okHttpUtils.getTeacherQuestionList(1,20,item.getId());
-                System.out.println("1"+questionList);
+//                System.out.println("1"+questionList);
             }
         });
         t1.start();

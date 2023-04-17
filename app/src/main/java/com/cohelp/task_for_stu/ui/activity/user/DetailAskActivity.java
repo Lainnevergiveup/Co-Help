@@ -351,6 +351,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
             Thread t1 = new Thread(()->{
                 System.out.println("id"+detail.getId());
                 remarkList = okHttpUtils.getAnswerList(1,50,detail.getId());
+//                if (remarkList==null) Toast.makeText("")
                 System.out.println(remarkList);
             });
             t1.start();

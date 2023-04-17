@@ -656,7 +656,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
         Thread thread = new Thread(()->{
             semesterList = okHttpUtils.getSemesterList();
 
-            currentSemster = semesterList==null&&!semesterList.isEmpty()?"":semesterList.get(0);
+            currentSemster = semesterList==null||semesterList.size()>0?"":semesterList.get(0);
         });
         thread.start();
         try {
