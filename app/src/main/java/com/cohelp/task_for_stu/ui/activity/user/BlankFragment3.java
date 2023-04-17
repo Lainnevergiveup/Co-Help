@@ -1,5 +1,7 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
+import static com.xuexiang.xutil.XUtil.runOnUiThread;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -11,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,18 +22,32 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
+import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
+import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.ui.adpter.MyTaskAdapter;
 import com.cohelp.task_for_stu.ui.view.MyListViewForScrollView;
 import com.cohelp.task_for_stu.ui.view.MyRecyclerView;
 import com.cohelp.task_for_stu.utils.SessionUtils;
+import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -46,10 +63,8 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
     FrameLayout flEdit;
     SmoothCheckBox scbSelectAll;
     Button btn_delete;
-    OkHttpUtils okHttpUtils = new OkHttpUtils();
     List<DetailResponse> helplist;
     String tag;
-    String semester;
     MyListViewForScrollView scrollView;
     private TextView mTvSwitch;
     MyTaskAdapter myTaskAdapter;
@@ -60,10 +75,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
 
 
     private void initTools(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            okHttpUtils = new OkHttpUtils();
-        }
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(getActivity()));
+
     }
 
 //    private Handler handler = new Handler() {
@@ -102,7 +114,6 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
 
     }
@@ -124,11 +135,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
         }
         initTools();
         initView();
-        try {
-            initEvent();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        initHelplist(tag);
         return root;
     }
 
@@ -137,8 +144,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
         scrollView = root.findViewById(R.id.lv_task_list);
     }
 
-    private void initEvent() throws InterruptedException {
-        gethelplist(tag);
+    private void initEvent(){
         myTaskAdapter= new MyTaskAdapter(getContext(),this,helplist);
         scrollView.setAdapter(myTaskAdapter);
         scrollView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -156,19 +162,40 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
         }
     };
 
-    private synchronized void gethelplist(String tag) throws InterruptedException {
-        Thread t1 = new Thread(()->{
+    private void initHelplist(String tag){
 
-            System.out.println("TAG"+tag);
-            helplist = okHttpUtils.helpListByTag(tag);
-//            Message msg = Message.obtain();
-//            msg.obj = helplist;
-//            msg.what = GET_DATA_SUCCESS;
-//            handler.sendMessage(msg);
+        //get请求参数预处理
+        Map<String, List<String>> map = new HashMap<>();
+        List<String> list = new ArrayList<>();
+        list.add(tag);
+        map.put("tag",list);
+
+        //创建请求
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/help/list/tag/1/20", map, 300);
+
+        //执行请求
+        OKHttp.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String res = null;
+                try {
+                    res = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Result<List<DetailResponse>> result = GSON.gson.fromJson(res, new TypeToken<Result<List<DetailResponse>>>(){}.getType());
+                helplist = result.getData();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                       initEvent();
+                    }
+                });
+            }
         });
-        System.out.println("ask_list"+helplist);
-        t1.start();
-        t1.join();
 
     }
 
@@ -179,7 +206,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
         intent.putExtras(bundle);
         IdAndType idAndType = new IdAndType(helplist.get(postion).getType(),1);
         new Thread(()->{
-            System.out.println(okHttpUtils.getDetail(idAndType));
+            OkHttpUtils.getDetail(idAndType);
         }).start();
         startActivity(intent);
     }

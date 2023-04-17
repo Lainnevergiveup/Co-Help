@@ -144,7 +144,7 @@ public class RegisterActivity extends BaseActivity {
              emailString= registerRequest.getUserEmail();
 
             System.out.println(3);
-            Response response = okHttp.sendGetRequest("http://43.143.90.226:9090/user/sendconfirmcode?userEmail=" + emailString, null, null, 0);
+            Response response = okHttp.sendGetRequest("http://43.143.90.226:9090/user/sendconfirmcode?userEmail=" + emailString, null,  0);
             String cookieval = response.header("Set-Cookie");
             SessionUtils.saveCookiePreference(this, cookieval);
 
@@ -153,10 +153,9 @@ public class RegisterActivity extends BaseActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendRegistRequest(){
         new Thread(()->{
-            String cookie = SessionUtils.getCookiePreference(this);
             String registMessage = ToJsonString.toJson(registerRequest);
 
-            Response response = okHttp.sendPostRequest("http://43.143.90.226:9090/user/register", registMessage, cookie, 0);
+            Response response = okHttp.sendPostRequest("http://43.143.90.226:9090/user/register", registMessage, 0);
             String res = null;
             try {
                 res = response.body().string();

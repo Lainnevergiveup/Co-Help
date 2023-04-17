@@ -33,6 +33,7 @@ import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
 /**
  * 普通用户的基本信息展示页
  */
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class BasicInfoActivity extends BaseActivity {
     NetRadiusImageView icon;
     TextView nickname;
@@ -53,7 +54,6 @@ public class BasicInfoActivity extends BaseActivity {
     UserBiz userBiz;
 
     Intent intent;
-    OkHttpUtils okHttpUtils;
     String userIcon;
 
     @Override
@@ -61,7 +61,6 @@ public class BasicInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basic_info);
         initTools();
-
         initView();
         initEvent();
         setTitle("个人中心");
@@ -164,12 +163,6 @@ public class BasicInfoActivity extends BaseActivity {
             }
         });
 
-        UserCenter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toUserCenterActivity();
-            }
-        });
         bt_logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -222,32 +215,30 @@ public class BasicInfoActivity extends BaseActivity {
 //        });
     }
 
-    private void toUserCenterActivity() {
-        Intent intent = new Intent(this,BasicInfoActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
     private void toTaskCenterActivity() {
         Intent intent = new Intent(this,TaskCenterActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
 
     private void toHelpCenterActivity() {
         Intent intent = new Intent(this, HelpCenterActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
     private void toHoleCenterActivity(){
         Intent intent = new Intent(this, HoleCenterActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
 
     private void toMyQuestionActivity() {
         Intent intent = new Intent(this,MyQuestionActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
     }
 
     private void toMyTaskActivity() {
@@ -256,6 +247,7 @@ public class BasicInfoActivity extends BaseActivity {
             intent = new Intent(this, MyTaskActivity.class);
         }
         startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
     }
 
     private void toMyCollectActivity(){
@@ -275,13 +267,11 @@ public class BasicInfoActivity extends BaseActivity {
     }
 
     private void toSettingActivity(){
-//        Intent intent = new Intent(this,SettingActivity.class);
         Intent intent = new Intent(this,QuestionStoreActivity.class);
-
         startActivity(intent);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     private void toPersonalHomepageActivity(){
         Intent intent = new Intent(this,PersonalHomepageActivity.class);
         startActivity(intent);
@@ -297,15 +287,10 @@ public class BasicInfoActivity extends BaseActivity {
     }
     private void initTools(){
         intent = getIntent();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            okHttpUtils = new OkHttpUtils();
-        }
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
     }
     private synchronized void getUser(){
         Thread t1 = new Thread(()->{
-            transferUser=okHttpUtils.getUser();
+            transferUser=OkHttpUtils.getUser();
         });
         t1.start();
         try {
@@ -316,7 +301,7 @@ public class BasicInfoActivity extends BaseActivity {
     }
     private synchronized void getUserIcon(){
         Thread t1 = new Thread(()->{
-            userIcon = okHttpUtils.getImageById(transferUser.getAvatar());
+            userIcon = OkHttpUtils.getImageById(transferUser.getAvatar());
             System.out.println(userIcon);
         });
         t1.start();

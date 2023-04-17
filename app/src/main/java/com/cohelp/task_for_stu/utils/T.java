@@ -7,16 +7,12 @@ public class T {
 
     private static Toast toast;
 
-    public static void showToast(
-            String content) {
+    public static void showToast(String content) {
         toast.setText(content);
         toast.show();
     }
 
     public static void init(Context context) {
-        toast = Toast.makeText(context,
-                "",
-                Toast.LENGTH_SHORT);
+        toast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
     }
-
 }

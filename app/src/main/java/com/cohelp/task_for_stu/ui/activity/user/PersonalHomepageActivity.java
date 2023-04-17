@@ -250,10 +250,7 @@ public class PersonalHomepageActivity extends BaseActivity {
     private void initTools(){
         intent = getIntent();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            okHttpUtils = new OkHttpUtils();
-        }
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+        
     }
 
     private synchronized void getUser(){

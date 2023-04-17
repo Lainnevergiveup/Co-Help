@@ -15,9 +15,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class GSON {
+
+    public static Gson gson;
+
+    static {
+        gson = gsonSetter();
+    }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Gson gsonSetter(){
+    public static Gson gsonSetter(){
         //序列化
         final JsonSerializer<LocalDateTime> jsonSerializerDateTime = (localDateTime, type, jsonSerializationContext)
                 -> new JsonPrimitive(localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));

@@ -14,14 +14,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
+import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.OKHttpTools.ToJsonString;
+import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
+import com.cohelp.task_for_stu.net.model.domain.Result;
+import com.cohelp.task_for_stu.net.model.domain.SearchRequest;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.ActivityAdapter;
@@ -30,12 +37,24 @@ import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
+import com.google.gson.reflect.TypeToken;
 import com.leon.lfilepickerlibrary.utils.StringUtils;
 import com.wyt.searchbox.SearchFragment;
 import com.wyt.searchbox.custom.IOnSearchClickListener;
 import com.xuexiang.xui.widget.button.switchbutton.SwitchButton;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
+
 /*
     活动
  */
@@ -56,12 +75,13 @@ public class TaskCenterActivity extends BaseActivity {
 
     SwitchButton switchButton;
     List<DetailResponse> activityVOList;
-    User user;
     OkHttpUtils okHttpUtils;
     Intent intent;
     SearchFragment searchFragment = SearchFragment.newInstance();
     ActivityAdapter activityAdapter;
     CardViewListAdapter cardViewListAdapter;
+
+    private View.OnClickListener onClickListener;
     Integer conditionState = 0;
 
     public static final int GET_DATA_SUCCESS = 1;
@@ -92,7 +112,7 @@ public class TaskCenterActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_center);
-        activityVOList = SessionUtils.getActivityPreference(TaskCenterActivity.this);
+//        activityVOList = SessionUtils.getActivityPreference(TaskCenterActivity.this);
         initTools();
         initView();
         initToolbar();
@@ -100,12 +120,25 @@ public class TaskCenterActivity extends BaseActivity {
         setTitle("活动");
     }
     private void initTools(){
-        intent = getIntent();
-        user = (User) intent.getSerializableExtra("user");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            okHttpUtils = new OkHttpUtils();
-        }
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+        
+    }
+
+    private void initView() {
+        toolbar = findViewById(R.id.tool_bar_2);
+        title = findViewById(R.id.tv_title);
+        HoleCenter = findViewById(R.id.id_ll_holeCenter);
+        HelpCenter = findViewById(R.id.id_ll_helpCenter);
+        TaskCenter = findViewById(R.id.id_ll_taskCenter);
+        UserCenter = findViewById(R.id.id_ll_userCenter);
+        search = findViewById(R.id.iv_search_search);
+        searchedContent = findViewById(R.id.et_search_keyword);
+        searchBtn = findViewById(R.id.id_iv_search);
+        eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
+        eRecyclerView = findViewById(R.id.id_recyclerview);
+        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.PULL_FROM_START);
+        eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
+        cardViewListAdapter = new CardViewListAdapter();
+        refreshActivityList();
     }
 
     private void initToolbar(){
@@ -114,27 +147,6 @@ public class TaskCenterActivity extends BaseActivity {
         toolbar.setOnMenuItemClickListener(menuItemClickListener);
         title.setText("活动");
     }
-    private View.OnClickListener onClickListener = v -> toCreateNewTaskActivity()  ;
-
-    androidx.appcompat.widget.Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
-//        XToastUtils.toast("点击了:" + item.getTitle());
-        if (item.getItemId() == R.id.item_hot) {
-            startLoadingProgress();
-            conditionState = 0;
-            refreshActivityListData();
-            stopLoadingProgress();
-        }else if(item.getItemId() == R.id.item_time){
-            startLoadingProgress();
-            conditionState = 1;
-            refreshActivityListData();
-            stopLoadingProgress();
-        }else if(item.getItemId() == R.id.item_search){
-            searchFragment.showFragment(getSupportFragmentManager(),SearchFragment.TAG);
-        }
-
-        return false;
-    };
-
 
     private void initEvent() {
 //        setToolbar(R.drawable.common_add, new ClickListener() {
@@ -144,7 +156,7 @@ public class TaskCenterActivity extends BaseActivity {
 //                toCreateNewTaskActivity();
 //            }
 //        });
-
+        onClickListener = v -> toCreateNewTaskActivity();
         searchFragment.setOnSearchClickListener(new IOnSearchClickListener() {
             @Override
             public void OnSearchClick(String keyword) {
@@ -154,12 +166,8 @@ public class TaskCenterActivity extends BaseActivity {
                     T.showToast("查询的标题不能为空哦~");
                 }
                 else {
-                    startLoadingProgress();
                     searchActivity(keyword);
-//                    activityAdapter.setActivityList(activityVOList);
-                    cardViewListAdapter.setDetailResponseListList(activityVOList);
-//                    eRecyclerView.setAdapter(activityAdapter);
-                    eRecyclerView.setAdapter(cardViewListAdapter);
+                    startLoadingProgress();
                     eSwipeRefreshLayout.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -227,6 +235,28 @@ public class TaskCenterActivity extends BaseActivity {
 
     }
 
+
+    androidx.appcompat.widget.Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
+        if (item.getItemId() == R.id.item_hot) {
+            startLoadingProgress();
+            conditionState = 0;
+            refreshActivityListData();
+            stopLoadingProgress();
+        }else if(item.getItemId() == R.id.item_time){
+            startLoadingProgress();
+            conditionState = 1;
+            refreshActivityListData();
+            stopLoadingProgress();
+        }else if(item.getItemId() == R.id.item_search){
+            searchFragment.showFragment(getSupportFragmentManager(),SearchFragment.TAG);
+        }
+
+        return false;
+    };
+
+
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void toCreateNewTaskActivity() {
         //TODO 创建新任务
@@ -234,67 +264,36 @@ public class TaskCenterActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    private void initView() {
-        toolbar = findViewById(R.id.tool_bar_2);
-        title = findViewById(R.id.tv_title);
-        HoleCenter = findViewById(R.id.id_ll_holeCenter);
-        HelpCenter = findViewById(R.id.id_ll_helpCenter);
-        TaskCenter = findViewById(R.id.id_ll_taskCenter);
-        UserCenter = findViewById(R.id.id_ll_userCenter);
-//        act = findViewById(R.id.id_tv_activity);
-//        help = findViewById(R.id.id_tv_help);
-//        tree = findViewById(R.id.id_tv_treehole);
-        search = findViewById(R.id.iv_search_search);
-        searchedContent = findViewById(R.id.et_search_keyword);
-        searchBtn = findViewById(R.id.id_iv_search);
-        eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
-        eRecyclerView = findViewById(R.id.id_recyclerview);
-        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.PULL_FROM_START);
-        eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-        cardViewListAdapter = new CardViewListAdapter();
-        getActivityList(conditionState);
-//        activityAdapter = new ActivityAdapter(this,activityVOList);
-//        cardViewListAdapter = new CardViewListAdapter(activityVOList);
-        cardViewListAdapter.setDetailResponseListList(activityVOList);
-        eRecyclerView.setLayoutManager(new LinearLayoutManager(TaskCenterActivity.this));
-        eRecyclerView.setAdapter(cardViewListAdapter);
-    }
+
 
     @Override
     protected void onPause() {
-        SessionUtils.saveActivityPreference(TaskCenterActivity.this,okHttpUtils.getGson().toJson(activityVOList));
+//        SessionUtils.saveActivityPreference(TaskCenterActivity.this,OkHttpUtils.gson.toJson(activityVOList));
         super.onPause();
-//        System.out.println("\n\n\n\n\n\nonPause!!!!!\n\n\n\n\n\n\n");
     }
 
 
     @Override
     protected void onDestroy() {
-//        SessionUtils.deleteActivityPreference(TaskCenterActivity.this);
         super.onDestroy();
-//        System.out.println("\n\n\n\n\n\nonDestroy!!!!!");
     }
 
     private void toUserCenterActivity() {
         Intent intent = new Intent(this,BasicInfoActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
-
-    private void toTaskCenterActivity() {
-        Intent intent = new Intent(this,TaskCenterActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
     private void toHelpCenterActivity() {
         Intent intent = new Intent(this, HelpCenterActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
     private void toHoleCenterActivity(){
         Intent intent = new Intent(this, HoleCenterActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
     private void toDetailActivity(int postion){
@@ -304,43 +303,79 @@ public class TaskCenterActivity extends BaseActivity {
         intent.putExtras(bundle);
         IdAndType idAndType = new IdAndType(activityVOList.get(postion).getActivityVO().getId(),1);
         new Thread(()->{
-            System.out.println(okHttpUtils.getDetail(idAndType));
+            OkHttpUtils.getDetail(idAndType);
         }).start();
         startActivity(intent);
     }
-    private  void getActivityList(Integer CconditionType){
-//        if (activityVOList!=null){
-//            System.out.println("is not empty");
-//            activityVOList = SessionUtils.getActivityPreference(TaskCenterActivity.this);
+    private  void refreshActivityList(){
+        //get请求参数预处理
+        Map<String, List<String>> map = new HashMap<>();
+        List<String> list = new ArrayList<>();list.add(conditionState.toString());map.put("conditionType",list);
+        //创建请求
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/activity/list/1/20", map, 300);
 
-//            return;
-//        }
-        Thread t1 = new Thread(()->{
-            activityVOList = okHttpUtils.activityList(conditionState);
-            Message msg = Message.obtain();
-            msg.obj = activityVOList;
-            msg.what = GET_DATA_SUCCESS;
-            handler.sendMessage(msg);
+        OKHttp.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String res = null;
+                try {
+                    res = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //转换数据
+                Result<List<DetailResponse>> result = GSON.gson.fromJson(res, new TypeToken<Result<List<DetailResponse>>>() {}.getType());
+                activityVOList = result.getData();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        cardViewListAdapter.setDetailResponseListList(activityVOList);
+                        eRecyclerView.setLayoutManager(new LinearLayoutManager(TaskCenterActivity.this));
+                        eRecyclerView.setAdapter(cardViewListAdapter);
+                    }
+                });
+
+            }
         });
-        t1.start();
-
-
     }
     private  void  searchActivity(String key){
-        Thread t1 = new Thread(()->{
-            activityVOList = okHttpUtils.search(key,1);
-            Message msg = Message.obtain();
-            msg.obj = activityVOList;
-            msg.what = GET_DATA_SUCCESS;
-            handler.sendMessage(msg);
-        });
-        t1.start();
+        //get请求参数预处理
+        Map<String, List<String>> map = new HashMap<>();
+        List<String> keyStr = new ArrayList<>();keyStr.add(key);map.put("key",keyStr);
+        List<String> types = new ArrayList<>();types.add("1");map.put("types",types);
 
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/general/search/1/5", map, 300);
+        OKHttp.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String res = null;
+                try {
+                    res = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //转换数据
+                Result<List<DetailResponse>> result = GSON.gson.fromJson(res, new TypeToken<Result<List<DetailResponse>>>() {}.getType());
+                activityVOList = result.getData();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        cardViewListAdapter.setDetailResponseListList(activityVOList);
+                        eRecyclerView.setAdapter(cardViewListAdapter);
+                    }
+                });
+            }
+        });
     }
-    private synchronized void refreshActivityListData(){
-        getActivityList(conditionState);
-        cardViewListAdapter.setDetailResponseListList(activityVOList);
-        eRecyclerView.setAdapter(cardViewListAdapter);
+    private void refreshActivityListData(){
+        refreshActivityList();
         eSwipeRefreshLayout.postDelayed(new Runnable() {
             @Override
             public void run() {

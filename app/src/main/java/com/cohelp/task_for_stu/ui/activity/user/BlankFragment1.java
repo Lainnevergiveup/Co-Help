@@ -47,10 +47,6 @@ public class BlankFragment1 extends Fragment implements View.OnClickListener {
     private TextView mTvSwitch;
     MyTaskAdapter myTaskAdapter = new MyTaskAdapter();
     private void initTools(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            okHttpUtils = new OkHttpUtils();
-        }
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(getActivity()));
     }
     public BlankFragment1(Context context){
         this.context = context;

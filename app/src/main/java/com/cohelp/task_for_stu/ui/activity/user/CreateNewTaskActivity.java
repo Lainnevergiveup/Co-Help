@@ -87,7 +87,7 @@ public class CreateNewTaskActivity extends BaseActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_task);
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+        
         askPermissions();
 
         setUpToolBar();

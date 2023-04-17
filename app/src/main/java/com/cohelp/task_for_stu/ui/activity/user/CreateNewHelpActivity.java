@@ -96,7 +96,7 @@ public class CreateNewHelpActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_help);
-        okHttpUtils.setCookie(SessionUtils.getCookiePreference(this));
+        
 //        askPermissions();
         setUpToolBar();
         setTitle("创建互助");
