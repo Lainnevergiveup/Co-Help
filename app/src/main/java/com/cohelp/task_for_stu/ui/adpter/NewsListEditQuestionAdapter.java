@@ -73,6 +73,7 @@ public class NewsListEditQuestionAdapter extends BroccoliRecyclerAdapter<Questio
                             .load(image)
                             .apply(options)
                             .into(holder.getImageView(R.id.cardView_firstImage));
+                    holder.getImageView(R.id.cardView_firstImage).setVisibility(View.VISIBLE);
                 }
                 else {
                     holder.getImageView(R.id.cardView_firstImage).setVisibility(View.GONE);
@@ -116,12 +117,12 @@ public class NewsListEditQuestionAdapter extends BroccoliRecyclerAdapter<Questio
     }
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull List<Object> payloads) {
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mItemClickListener.onItemClick(view,position);
-            }
-        });
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mItemClickListener.onItemClick(view,position);
+//            }
+//        });
         if (CollectionUtils.isEmpty(payloads)) {
 //            Logger.e("正在进行全量刷新:" + position);
             onBindViewHolder(holder, position);
@@ -261,7 +262,7 @@ public class NewsListEditQuestionAdapter extends BroccoliRecyclerAdapter<Questio
         return list;
     }
 
-    public List<QuestionBankVO> getSelectedDetailResponseList() {
+    public List<QuestionBankVO> getSelectedQuestionList() {
         List<QuestionBankVO> list = new ArrayList<>();
         for (int i = 0; i < getItemCount(); i++) {
             if (mSparseArray.get(i)) {

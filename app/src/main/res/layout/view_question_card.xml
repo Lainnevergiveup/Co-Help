@@ -37,6 +37,8 @@
                 android:maxLines="3"
                 android:singleLine="false"
                 android:text="深度解析RocketMQ消息发送的高可用设计"
+                android:textSize="@dimen/text_size_16"
+
                 android:textColor="@color/xui_config_color_pure_black" />
             <LinearLayout
                 android:layout_width="match_parent"
@@ -49,10 +51,10 @@
                     style="@style/TextStyle.Content"
                     android:layout_marginTop="5dp"
                     android:ellipsize="end"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:maxLines="1"
                     android:layout_weight="1"
-
+                    android:textSize="@dimen/text_size_12"
                     android:singleLine="true"
                     android:text="difficulity"
                     android:textColor="?attr/xui_config_color_content_text" />

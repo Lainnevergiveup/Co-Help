@@ -4,7 +4,6 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
@@ -12,7 +11,6 @@ import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
 import com.cohelp.task_for_stu.net.model.domain.PublishDeleteRequest;
 import com.cohelp.task_for_stu.net.model.domain.RemarkRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
-import com.cohelp.task_for_stu.net.model.domain.SearchRequest;
 import com.cohelp.task_for_stu.net.model.domain.TeamUpdateRequest;
 import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.net.model.entity.Answer;
@@ -28,7 +26,6 @@ import com.cohelp.task_for_stu.net.model.vo.QuestionBankVO;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.net.model.vo.ResultVO;
 import com.cohelp.task_for_stu.net.model.vo.ScoreVO;
-import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -39,10 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.Cache;
-import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.internal.cache.DiskLruCache;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class OkHttpUtils {
@@ -719,7 +713,19 @@ public class OkHttpUtils {
             res = response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
-        }        Result<Boolean> result = gson.fromJson(res, new TypeToken<Result<Boolean>>(){}.getType());
+        }
+        Result<Boolean> result = gson.fromJson(res, new TypeToken<Result<Boolean>>(){}.getType());
         return result.getData()==null?false:(Boolean) result.getData();
     }
+//    //删除题库
+//    public static Boolean removeQuestion(Integer id){
+//        Response response ;
+//        String res = null;
+//        try {
+//            res = response.body().string();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }        Result<Boolean> result = gson.fromJson(res, new TypeToken<Result<Boolean>>(){}.getType());
+//        return result.getData()==null?false:(Boolean) result.getData();
+//    }
 }
