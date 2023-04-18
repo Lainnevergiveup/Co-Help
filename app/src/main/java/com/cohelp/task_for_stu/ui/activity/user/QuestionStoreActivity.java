@@ -1,5 +1,8 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
+import static com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils.baseURL;
+import static com.cohelp.task_for_stu.net.gsonTools.GSON.gson;
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,16 +18,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cohelp.task_for_stu.R;
+import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
-import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
-import com.cohelp.task_for_stu.net.model.domain.IdAndType;
+import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.vo.CourseVO;
 import com.cohelp.task_for_stu.net.model.vo.QuestionBankVO;
-import com.cohelp.task_for_stu.net.model.vo.ResultVO;
-import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.NewsListEditQuestionAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
-import com.cohelp.task_for_stu.utils.SessionUtils;
+import com.cohelp.task_for_stu.utils.T;
+import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.utils.ViewUtils;
 import com.xuexiang.xui.utils.WidgetUtils;
@@ -35,8 +37,16 @@ import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import org.angmarch.views.NiceSpinner;
 import org.angmarch.views.OnSpinnerItemSelectedListener;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
+
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class QuestionStoreActivity extends BasicInfoActivity {
 
     LinearLayout HoleCenter;
@@ -54,7 +64,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
     FrameLayout flEdit;
     SmoothCheckBox scbSelectAll;
     Button btn_delete;
-
+    Button btn_publish;
     NiceSpinner niceSpinner;
     CourseVO item;
     List<QuestionBankVO> questionList;
@@ -79,7 +89,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
     private void initTools(){
 //        intent = getIntent();
 //        user = (User) intent.getSerializableExtra("user");
-        
+        T.init(this);
     }
     private void initData(){
         getCourseList();
@@ -141,7 +151,12 @@ public class QuestionStoreActivity extends BasicInfoActivity {
                 showSimpleConfirmDialog();
             }
         });
-
+        btn_publish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPublishConfirmDialog();
+            }
+        });
         WidgetUtils.initRecyclerView(recyclerView, 0);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
@@ -164,14 +179,8 @@ public class QuestionStoreActivity extends BasicInfoActivity {
             if (mAdapter.isManageMode()) {
                 mAdapter.updateSelectStatus(position);
             } else {
-                toDetailActivity(position);
+//                toDetailActivity(position);
 //                Utils.goWeb(getContext(), item.getDetailUrl());
-            }
-        });
-        mAdapter.setOnItemClickListener(new NewsListEditQuestionAdapter.OnItemListenter() {
-            @Override
-            public void onItemClick(View view, int postion) {
-                toDetailActivity(postion);
             }
         });
         mAdapter.setOnItemLongClickListener((itemView, item, position) -> {
@@ -204,7 +213,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
         refreshLayout = findViewById(R.id.refreshLayout);
         btn_delete = findViewById(R.id.btn_delete);
         mTvSwitch = findViewById(R.id.id_tv_manager);
-
+        btn_publish = findViewById(R.id.btn_publish);
         niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
         niceSpinner.attachDataSource(courseList);
         niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
@@ -273,25 +282,13 @@ public class QuestionStoreActivity extends BasicInfoActivity {
             e.printStackTrace();
         }
     }
-    private synchronized void delQuestionList(){
-//        Thread t1 = new Thread(()->{
-//            List<ResultVO> selectedDetailResponseList = mAdapter.getSelectedDetailResponseList();
-//            List<Integer> deleteIdList=new ArrayList<>();
-//            for (ResultVO i:selectedDetailResponseList){
-//
-//                deleteIdList.add(i.getId());
-//            }
-//
-//
-//            System.out.println(deleteIdList);
-//            delCollectList = okHttpUtils.delCollectList(deleteIdList);
-//        });
-//        t1.start();
-//        try {
-//            t1.join();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+    private void delQuestionList(){
+        List<QuestionBankVO> selectedQuestionList = mAdapter.getSelectedQuestionList();
+        for (QuestionBankVO q : selectedQuestionList){
+            deleteQuestion(q.getId());
+            questionList.remove(q);
+        }
+        mAdapter.refresh(questionList);
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     private synchronized void refreshQuestionListData(){
@@ -320,9 +317,9 @@ public class QuestionStoreActivity extends BasicInfoActivity {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 //                        XToastUtils.toast("sssssss");
-                        System.out.println("List"+mAdapter.getSelectedIndexList());
-//                        delQuestionList();
-                        getQuestionList();
+//                        System.out.println("List"+mAdapter.getSelectedIndexList());
+                        delQuestionList();
+//                        getQuestionList();
                         mAdapter.refresh(questionList);
                         refreshLayout.finishRefresh();
 
@@ -346,5 +343,83 @@ public class QuestionStoreActivity extends BasicInfoActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    private void deleteQuestion(Integer id){
+        Request request = OKHttp.buildGetRequest(baseURL + "/teach/removequestion/" + id, null, 0);
+        OKHttp.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+
+            }
+        });
+    }
+    private void publishQuestion(List<Integer> ids){
+        String s = "";
+        Integer integer = ids.get(0);
+        s+=String.valueOf(integer);
+        ids.remove(integer);
+        for (Integer i : ids){
+            s =s+ ","+String.valueOf(i);
+        }
+        System.out.println(s);
+        Request request = OKHttp.buildGetRequest(baseURL + "/teach/publishquestion/" + s, null, 0);
+        OKHttp.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                T.showToast("出错啦！"+e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String res = null;
+                try {
+                    res = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Result<String> result = gson.fromJson(res, new TypeToken<Result<String>>(){}.getType());
+                T.showToast(result.getMessage());
+            }
+        });
+    }
+    private void doPublishQuestion(){
+        List<QuestionBankVO> selectedQuestionList = mAdapter.getSelectedQuestionList();
+        List<Integer> ids = new ArrayList<>();
+//        Iterator<QuestionBankVO> iterator = selectedQuestionList.iterator();
+//        String s = "";
+//        while (iterator.hasNext()){
+//            s+=iterator.
+//        }
+        for (QuestionBankVO questionBankVO:selectedQuestionList){
+            ids.add(questionBankVO.getId());
+        }
+        publishQuestion(ids);
+    }
+    private void showPublishConfirmDialog(){
+        new MaterialDialog.Builder(QuestionStoreActivity.this)
+                .content("是否确认发布")
+                .positiveText(R.string.lab_yes)
+                .negativeText(R.string.lab_no)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//                        XToastUtils.toast("sssssss");
+//                        System.out.println("List"+mAdapter.getSelectedIndexList());
+                        doPublishQuestion();
+//                        getQuestionList();
+//                        mAdapter.refresh(questionList);
+//                        refreshLayout.finishRefresh();
+
+                        mAdapter.switchManageMode();
+                        refreshManageMode();
+
+                    }
+                })
+                .show();
     }
 }
