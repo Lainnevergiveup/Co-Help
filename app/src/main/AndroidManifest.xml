@@ -57,14 +57,14 @@
         tools:ignore="ExtraText"
         tools:replace="android:theme">
         <activity
-            android:name=".AskDetailActivity"
+            android:name=".ui.activity.user.AskDetailActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".MyRecordActivity"
+            android:name=".ui.activity.user.MyRecordActivity"
             android:exported="false" /> <!-- <activity -->
         <!-- android:name=".DiscussDetailActivity" -->
         <!-- android:exported="false"> -->

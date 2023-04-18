@@ -68,6 +68,7 @@ public class MyCollectActivity extends BasicInfoActivity {
         initTools();
         initView();
         initEvent();
+        setTitle("");
     }
 
     private void initTools(){
@@ -198,8 +199,8 @@ public class MyCollectActivity extends BasicInfoActivity {
         refreshLayout = findViewById(R.id.refreshLayout);
         btn_delete = findViewById(R.id.btn_delete);
         mTvSwitch = findViewById(R.id.id_tv_manager);
-//        title = findViewById(R.id.id_title);
-//        title.setText("我的收藏");
+        title = findViewById(R.id.tv_title);
+        title.setText("我的收藏");
         mAdapter = new NewsListEditAdapter(isSelectAll -> {
             if (scbSelectAll != null) {
                 scbSelectAll.setCheckedSilent(isSelectAll);

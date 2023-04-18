@@ -23,9 +23,7 @@ import com.cohelp.task_for_stu.net.CommonCallback;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.ui.CircleTransform;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
-import com.cohelp.task_for_stu.ui.view.AvatorImageView;
 import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
-import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.squareup.picasso.Picasso;
 import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
@@ -44,6 +42,7 @@ public class BasicInfoActivity extends BaseActivity {
     LinearLayout myTask;
     LinearLayout myQuestion;
     LinearLayout myCollect;
+    LinearLayout myRecord;
     LinearLayout TaskCenter;
     LinearLayout UserCenter;
     LinearLayout HelpCenter;
@@ -77,6 +76,7 @@ public class BasicInfoActivity extends BaseActivity {
         myTask = findViewById(R.id.id_ll_myTask);
         myQuestion = findViewById(R.id.id_ll_myquestion);
         myCollect = findViewById(R.id.id_ll_myCollect);
+        myRecord = findViewById(R.id.id_ll_myRecord);
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
@@ -190,6 +190,12 @@ public class BasicInfoActivity extends BaseActivity {
                 toMyQuestionActivity();
             }
         });
+        myRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toMyRecordActivity();
+            }
+        });
         Setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -252,6 +258,10 @@ public class BasicInfoActivity extends BaseActivity {
 
     private void toMyCollectActivity(){
         Intent intent = new Intent(this,MyCollectActivity.class);
+        startActivity(intent);
+    }
+    private void toMyRecordActivity(){
+        Intent intent = new Intent(this,MyRecordActivity.class);
         startActivity(intent);
     }
 

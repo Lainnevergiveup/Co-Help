@@ -45,13 +45,14 @@ import com.cohelp.task_for_stu.ui.listener.SoftKeyBoardListener;
 import com.cohelp.task_for_stu.ui.view.InputTextMsgDialog;
 import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
 import com.cohelp.task_for_stu.utils.RecyclerViewUtil;
-import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.TimeUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.lzy.ninegrid.ImageInfo;
 import com.lzy.ninegrid.NineGridView;
 import com.lzy.ninegrid.preview.NineGridViewClickAdapter;
+import com.xuexiang.xui.widget.picker.widget.OptionsPickerView;
+import com.xuexiang.xui.widget.picker.widget.builder.OptionsPickerBuilder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -100,6 +101,9 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     AskVO detail;
     List<AnswerVO> remarkList;
     List<AnswerVO> firstList;
+    List<String> LevelList=new ArrayList<>();
+
+
     List<List<AnswerVO>> orderRemarkVO;
     IdAndType idAndType;
 
@@ -108,7 +112,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     Integer commentTopID;//评论链首ID
 
     Integer detailType;
-
+    Integer Level;
 
     private int offsetY;
 
@@ -163,6 +167,12 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
 
         imageGridView.setVerticalScrollBarEnabled(false);
         imageGridView.setHorizontalScrollBarEnabled(false);
+
+        LevelList.add("很容易");
+        LevelList.add("较容易");
+        LevelList.add("适中");
+        LevelList.add("较困难");
+        LevelList.add("很困难");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -209,12 +219,18 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
                 }
             }
         });
+
         collectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Thread(()->{
+
+                if(user.getType().equals(1)){
+                    showTeamPickerView();
+                    OkHttpUtils.collectTeacherAsk(detail.getId(),Level);
+                }else {
                     OkHttpUtils.collectAsk(detail.getId());
-                }).start();
+
+                }
                 detail.setIsCollected(detail.getIsCollected()==1?0:1);
                 updateButtonState();
             }
@@ -831,4 +847,20 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
         bottomSheetAdapter = null;
         super.onDestroy();
     }
+
+    private void showTeamPickerView() {
+        OptionsPickerView pvOptions = new OptionsPickerBuilder(this, (v, options1, options2, options3) -> {
+//            tv_team.setText(s_team[options1]);
+//            teamSelectOption = options1;
+            LevelList.get(options1);
+            Level = options1+1;
+            return false;
+        })
+                .setTitleText("难度选择")
+                .setSelectOptions(Level)
+                .build();
+        pvOptions.setPicker(LevelList);
+        pvOptions.show();
+    }
+
 }

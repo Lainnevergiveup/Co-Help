@@ -13,8 +13,6 @@ import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.biz.UserBiz;
 import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
-import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
-import com.cohelp.task_for_stu.net.OKHttpTools.ToJsonString;
 import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
@@ -22,7 +20,6 @@ import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.leon.lfilepickerlibrary.utils.StringUtils;
 import com.xuexiang.xui.widget.alpha.XUIAlphaTextView;
@@ -30,14 +27,10 @@ import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
 import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
-import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 
@@ -53,7 +46,7 @@ public class LoginActivity extends BaseActivity {
     XUIAlphaTextView toUserFound;
     UserBiz userBiz;
     LoginRequest loginRequest;
-    User user;
+
 
 
     @Override
@@ -96,7 +89,7 @@ public class LoginActivity extends BaseActivity {
         loginRequest = new LoginRequest();
         loginRequest.setUserAccount(username.getText().toString());
         loginRequest.setUserPassword( password.getText().toString());
-        loginRequest.setUserAccount("1234567895");//debug
+        loginRequest.setUserAccount("1234567894");//debug
         loginRequest.setUserPassword( "1234567890");//debug
 
         if(StringUtils.isEmpty(loginRequest.getUserAccount()) || StringUtils.isEmpty(loginRequest.getUserPassword())){

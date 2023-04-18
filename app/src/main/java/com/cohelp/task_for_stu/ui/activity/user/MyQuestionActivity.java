@@ -67,8 +67,8 @@ public class MyQuestionActivity extends BaseActivity {
         initTools();
         initView();
         initEvent();
-        setTitle("我的发布");
-//        title.setText("我的发布");
+        setTitle("");
+        title.setText("我的发布");
     }
 
     private void initTools(){
@@ -182,7 +182,7 @@ public class MyQuestionActivity extends BaseActivity {
         refreshLayout = findViewById(R.id.refreshLayout);
         btn_delete = findViewById(R.id.btn_delete);
         mTvSwitch = findViewById(R.id.id_tv_manager);
-//        title = findViewById(R.id.id_title);
+        title = findViewById(R.id.tv_title);
         getTaskList();
         System.out.println("tasklist"+taskList);
         mAdapter = new MyTaskListEditAdapter(isSelectAll -> {

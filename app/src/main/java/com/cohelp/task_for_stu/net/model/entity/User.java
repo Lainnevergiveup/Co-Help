@@ -89,6 +89,20 @@ public class User implements Serializable {
      */
     private String animalSign;
 
+    /**
+     *  类型
+     * @return
+     */
+    private Integer type;
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     public Integer getId() {
         return id;
     }

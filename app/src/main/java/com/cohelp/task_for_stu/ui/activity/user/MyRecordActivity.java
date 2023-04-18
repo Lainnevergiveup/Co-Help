@@ -8,22 +8,27 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
+import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
+import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.vo.ResultVO;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.NewsListEditAdapter;
 import com.cohelp.task_for_stu.ui.adpter.TaskAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
-import com.cohelp.task_for_stu.utils.SessionUtils;
+import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.utils.ViewUtils;
 import com.xuexiang.xui.utils.WidgetUtils;
@@ -31,10 +36,16 @@ import com.xuexiang.xui.widget.button.SmoothCheckBox;
 import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class MyRecordActivity extends BasicInfoActivity {
 
 
@@ -45,7 +56,7 @@ public class MyRecordActivity extends BasicInfoActivity {
 
     SwipeRefreshLayout eSwipeRefreshLayout;
     RecyclerView eRecyclerView;
-
+    TextView titile;
     private TextView mTvSwitch;
     SmartRefreshLayout refreshLayout;
     RecyclerView recyclerView;
@@ -58,7 +69,7 @@ public class MyRecordActivity extends BasicInfoActivity {
 
 
     CardViewListAdapter cardViewListAdapter;
-    List<ResultVO> collectList;
+    List<ResultVO> recordList;
     String delCollectList;
     OkHttpUtils okHttpUtils;
 
@@ -66,6 +77,10 @@ public class MyRecordActivity extends BasicInfoActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_record);
+
+
+        initView();
+        initEvent();
     }
 
 
@@ -153,9 +168,8 @@ public class MyRecordActivity extends BasicInfoActivity {
 
         //下拉刷新
         refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-            getRecordList();
-            mAdapter.refresh(collectList);
-            refreshLayout.finishRefresh();
+            refreshRecordList();
+            
         }, 300));
         //上拉加载
 //        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
@@ -198,23 +212,15 @@ public class MyRecordActivity extends BasicInfoActivity {
         refreshLayout = findViewById(R.id.refreshLayout);
         btn_delete = findViewById(R.id.btn_delete);
         mTvSwitch = findViewById(R.id.id_tv_manager);
-
+        titile = findViewById(R.id.tv_title);
+        titile.setText("我的记录");
         mAdapter = new NewsListEditAdapter(isSelectAll -> {
             if (scbSelectAll != null) {
                 scbSelectAll.setCheckedSilent(isSelectAll);
             }
-        },collectList);
-        getRecordList();
-        System.out.println("collect"+collectList);
-//        cardViewListAdapter = new CardViewListAdapter(collectList);
+        },recordList);
+        refreshRecordList();
 
-//        eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
-//        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
-//        eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-//
-//        eRecyclerView = findViewById(R.id.id_recyclerview);
-//        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        eRecyclerView.setAdapter(cardViewListAdapter);
     }
 
     private void refreshManageMode() {
@@ -238,13 +244,14 @@ public class MyRecordActivity extends BasicInfoActivity {
         startActivity(intent);
         finish();
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void toDetailActivity(int postion){
         Intent intent = new Intent(MyRecordActivity.this,DetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("detailResponse",collectList.get(postion).getDetailResponse());
+        bundle.putSerializable("detailResponse",recordList.get(postion).getDetailResponse());
         intent.putExtras(bundle);
 
-        ResultVO resultVO = collectList.get(postion);
+        ResultVO resultVO = recordList.get(postion);
         DetailResponse detailResponse = resultVO.getDetailResponse();
         Integer type = detailResponse.getType();
         IdAndType idAndType = new IdAndType(detailResponse.getIdByType(type),type);
@@ -265,41 +272,63 @@ public class MyRecordActivity extends BasicInfoActivity {
         startActivity(intent);
         finish();
     }
-    private synchronized void getRecordList(){
-        Thread t1 = new Thread(()->{
-            collectList = okHttpUtils.getHistoryList();
+    private void refreshRecordList(){
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/history/gethistorylist/1/10", null, 0);
+        OKHttp.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String res = null;
+                try {
+                    res = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //转换数据
+                Result<List<ResultVO>> result = GSON.gson.fromJson(res, new TypeToken<Result<List<ResultVO>>>() {}.getType());
+                recordList = result.getData();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        mAdapter.refresh(recordList);
+                        refreshLayout.finishRefresh();
+                    }
+                });
+
+            }
         });
-        t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
     }
-    private synchronized void delRecordList(){
-        Thread t1 = new Thread(()->{
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void delRecordList(){
+
             List<ResultVO> selectedDetailResponseList = mAdapter.getSelectedDetailResponseList();
             List<Integer> deleteIdList=new ArrayList<>();
             for (ResultVO i:selectedDetailResponseList){
 
                 deleteIdList.add(i.getId());
             }
+            Request request = OKHttp.buildPostRequest(OkHttpUtils.baseURL+"/history/deletehistoryrecords", GSON.gson.toJson(deleteIdList), 0);
+            OKHttp.client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
+                }
 
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    refreshRecordList();
+                }
+            });
 
-            System.out.println(deleteIdList);
-            delCollectList = okHttpUtils.delCollectList(deleteIdList);
-        });
-        t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     private synchronized void refreshCollectListData(){
-        getRecordList();
-        cardViewListAdapter.setDetailResponseListList(collectList.stream().map(i->i.getDetailResponse()).collect(Collectors.toList()));
+        refreshRecordList();
+        cardViewListAdapter.setDetailResponseListList(recordList.stream().map(i->i.getDetailResponse()).collect(Collectors.toList()));
         eRecyclerView.setAdapter(cardViewListAdapter);
         eSwipeRefreshLayout.postDelayed(new Runnable() {
             @Override
@@ -319,14 +348,12 @@ public class MyRecordActivity extends BasicInfoActivity {
                 .positiveText(R.string.lab_yes)
                 .negativeText(R.string.lab_no)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 //                        XToastUtils.toast("sssssss");
                         System.out.println("List"+mAdapter.getSelectedIndexList());
                         delRecordList();
-                        getRecordList();
-                        mAdapter.refresh(collectList);
-                        refreshLayout.finishRefresh();
 
                         mAdapter.switchManageMode();
                         refreshManageMode();
@@ -335,4 +362,6 @@ public class MyRecordActivity extends BasicInfoActivity {
                 })
                 .show();
     }
+    
+    
 }

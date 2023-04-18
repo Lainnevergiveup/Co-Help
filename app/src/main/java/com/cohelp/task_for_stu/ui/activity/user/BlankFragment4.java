@@ -1,5 +1,7 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
+import static com.xuexiang.xutil.XUtil.runOnUiThread;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -7,28 +9,40 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
+import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
-import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
+import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
-import com.cohelp.task_for_stu.ui.adpter.MyTaskAdapter;
+import com.cohelp.task_for_stu.net.model.domain.Result;
+import com.cohelp.task_for_stu.net.model.vo.AskVO;
+import com.cohelp.task_for_stu.ui.adpter.MyAskAdapter;
 import com.cohelp.task_for_stu.ui.view.MyListViewForScrollView;
-import com.cohelp.task_for_stu.utils.SessionUtils;
+import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -44,15 +58,18 @@ public class BlankFragment4 extends Fragment implements View.OnClickListener{
     SmoothCheckBox scbSelectAll;
     Button btn_delete;
     OkHttpUtils okHttpUtils = new OkHttpUtils();
-    List<DetailResponse> taskList;
+    Integer id;
+    List<AskVO> askList;
+
     MyListViewForScrollView scrollView;
     private TextView mTvSwitch;
-    MyTaskAdapter myTaskAdapter = new MyTaskAdapter();
+    MyAskAdapter myAskAdapter;
     private void initTools(){
 
     }
-    public BlankFragment4(Context context){
+    public BlankFragment4(Context context, Integer id){
         this.context = context;
+        this.id = id;
     }
     public BlankFragment4(){
 
@@ -77,62 +94,72 @@ public class BlankFragment4 extends Fragment implements View.OnClickListener{
         }
         initTools();
         initView();
-        getTaskList();
-        initEvent();
+        initAskList(id);
 
         return root;
     }
 
+
+
     private void initView(){
-        flEdit = root.findViewById(R.id.fl_edit);
-        scbSelectAll = root.findViewById(R.id.scb_select_all);
-        recyclerView = root.findViewById(R.id.recyclerView);
-        refreshLayout = root.findViewById(R.id.refreshLayout);
-        btn_delete = root.findViewById(R.id.btn_delete);
-        mTvSwitch = root.findViewById(R.id.id_tv_manager);
+        recyclerView = root.findViewById(R.id.recyclerview);
         scrollView = root.findViewById(R.id.lv_task_list);
-
-
-
-
-//        Bundle arguments = getArguments();
-//        String name = arguments.getString("detailResponse");
-
     }
 
     private void initEvent(){
-        myTaskAdapter = new MyTaskAdapter(getContext(),this,taskList.stream().filter(i->i.getType().equals(7)).collect(Collectors.toList()));
-        scrollView.setAdapter(myTaskAdapter);
-        myTaskAdapter.setOnItemClickListener(new MyTaskAdapter.OnItemListenter() {
+        myAskAdapter = new MyAskAdapter(getContext(),this,askList);
+        scrollView.setAdapter(myAskAdapter);
+        scrollView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int postion) {
-                toDetailActivity(postion);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                toDetailAsk(position);
+            }
+        });
+
+    }
+    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext()) {
+        @Override
+        public boolean canScrollVertically() {
+            return false;
+        }
+    };
+
+    private void initAskList(Integer id){
+
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/course/list/ask/1/50/"+id+"/2022-2023-2/2" , null, 120);
+        //执行请求
+        OKHttp.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String res = null;
+                try {
+                    res = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Result<List<AskVO>> result = GSON.gson.fromJson(res, new TypeToken<Result<List<AskVO>>>(){}.getType());
+                askList =  result.getData();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        initEvent();
+                    }
+                });
             }
         });
     }
 
 
 
-
-    private synchronized void getTaskList(){
-        Thread t1 = new Thread(()->{
-            taskList = okHttpUtils.searchPublic();
-            System.out.println(taskList);
-        });
-        t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void toDetailActivity(int postion){
-        Intent intent = new Intent(context,DetailActivity.class);
+    private void toDetailAsk(int postion){
+        Intent intent = new Intent(context,DetailAskActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("detailResponse",taskList.get(postion));
+        bundle.putSerializable("detailResponse",askList.get(postion));
         intent.putExtras(bundle);
-        IdAndType idAndType = new IdAndType(taskList.get(postion).getActivityVO().getId(),1);
+        IdAndType idAndType = new IdAndType(askList.get(postion).getId(),1);
         new Thread(()->{
             System.out.println(okHttpUtils.getDetail(idAndType));
         }).start();

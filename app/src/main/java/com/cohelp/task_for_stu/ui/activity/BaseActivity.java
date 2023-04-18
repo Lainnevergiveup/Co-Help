@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.biz.UserBiz;
 import com.cohelp.task_for_stu.listener.ClickListener;
+import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.activity.manager.ManagerCreateNewUserActivity;
 import com.cohelp.task_for_stu.ui.activity.manager.ManagerQuestionCenterActivity;
 import com.cohelp.task_for_stu.ui.activity.manager.ManagerTaskCenterActivity;
@@ -27,6 +28,7 @@ public class BaseActivity extends AppCompatActivity {
     private Toolbar toolbar,toolbar1;
     private MaterialSearchView materialSearchView;
     private UserBiz userBiz;
+    public static User user;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

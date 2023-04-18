@@ -33,7 +33,6 @@ import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.ui.adpter.MyTaskAdapter;
 import com.cohelp.task_for_stu.ui.view.MyListViewForScrollView;
 import com.cohelp.task_for_stu.ui.view.MyRecyclerView;
-import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
@@ -78,27 +77,6 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
 
     }
 
-//    private Handler handler = new Handler() {
-//        @SuppressLint("HandlerLeak")
-//        @Override
-//        public void handleMessage(Message msg) {
-//            switch (msg.what){
-//                case GET_DATA_SUCCESS:
-//                    helplist = (List<AskVO>) msg.obj;
-////                    myAskAdapter.setAskVOList(helplist);
-//                    mRecyclerView.setLayoutManager(mLayoutManager);
-//                    mRecyclerView.setAdapter(myAskAdapter);
-//                    System.out.println("ask_list"+helplist);
-//                    break;
-//                case NETWORK_ERROR:
-//                    Toast.makeText(getContext(),"网络连接失败",Toast.LENGTH_SHORT).show();
-//                    break;
-//                case SERVER_ERROR:
-//                    Toast.makeText(getContext(),"服务器发生错误",Toast.LENGTH_SHORT).show();
-//                    break;
-//            }
-//        }
-//    };
 
     public BlankFragment3(Context context , String tag){
         this.context = context;

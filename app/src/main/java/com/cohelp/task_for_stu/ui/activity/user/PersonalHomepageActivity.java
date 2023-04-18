@@ -17,7 +17,6 @@ import com.cohelp.task_for_stu.net.model.entity.Team;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.view.AvatorImageView;
-import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
 import com.xuexiang.xui.widget.picker.widget.OptionsPickerView;
 import com.xuexiang.xui.widget.picker.widget.builder.OptionsPickerBuilder;
@@ -255,7 +254,7 @@ public class PersonalHomepageActivity extends BaseActivity {
 
     private synchronized void getUser(){
         Thread t1 = new Thread(()->{
-            user=okHttpUtils.getUser();
+            user=OkHttpUtils.getUser();
             System.out.println(user);
         });
         t1.start();

@@ -1,7 +1,11 @@
 package com.cohelp.task_for_stu.net.OKHttpTools;
 
-import android.os.Build;
+import static com.xuexiang.xutil.XUtil.runOnUiThread;
 
+import android.os.Build;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.cohelp.task_for_stu.MyCoHelp;
@@ -12,7 +16,6 @@ import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
 import com.cohelp.task_for_stu.net.model.domain.PublishDeleteRequest;
 import com.cohelp.task_for_stu.net.model.domain.RemarkRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
-import com.cohelp.task_for_stu.net.model.domain.SearchRequest;
 import com.cohelp.task_for_stu.net.model.domain.TeamUpdateRequest;
 import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.net.model.entity.Answer;
@@ -28,7 +31,6 @@ import com.cohelp.task_for_stu.net.model.vo.QuestionBankVO;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.net.model.vo.ResultVO;
 import com.cohelp.task_for_stu.net.model.vo.ScoreVO;
-import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -39,10 +41,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.Cache;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.internal.cache.DiskLruCache;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class OkHttpUtils {
@@ -712,14 +714,41 @@ public class OkHttpUtils {
         return result.getData()==null?false:(Boolean) result.getData();
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static Boolean collectAsk(Integer id){
-        Response response = okHttp.sendPostRequest(baseURL+"/course/collect/"+id,"",0);
-        String res = null;
-        try {
-            res = response.body().string();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }        Result<Boolean> result = gson.fromJson(res, new TypeToken<Result<Boolean>>(){}.getType());
-        return result.getData()==null?false:(Boolean) result.getData();
+    public static void collectAsk(Integer id){
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/course/collect/"+id, null, 0);
+        OKHttp.client.newCall(request).enqueue(new Callback() {
+       @Override
+       public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+       }
+       @Override
+       public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+
+       }
+   });
     }
+
+    public static void collectTeacherAsk(Integer id,Integer level){
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/teach/addquestion/"+id+"/"+level, null, 0);
+        OKHttp.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+            }
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String string = response.body().string();
+                Result<String> json = GSON.gson.fromJson(string, new TypeToken<Result<List<String>>>() {
+                }.getType());
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(MyCoHelp.getAppContext(), json.getData(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+    }
+
+
 }
