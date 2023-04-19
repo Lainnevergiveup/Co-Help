@@ -68,7 +68,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
-
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class DetailActivity extends BaseActivity implements BaseQuickAdapter.RequestLoadMoreListener{
     private  int INITBEANNUM = 5;
     private long totalCount = 5;
@@ -218,6 +218,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
             }
         });
         collectButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 Collect collect = new Collect();

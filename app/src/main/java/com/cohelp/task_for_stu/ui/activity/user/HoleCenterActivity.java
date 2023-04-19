@@ -221,9 +221,9 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
         UserCenter = findViewById(R.id.id_ll_userCenter);
         searchBtn = findViewById(R.id.id_iv_search);
         question_bank = findViewById(R.id.id_tv_manager);
-        if(user.getType().equals(0)){
-            question_bank.setVisibility(View.GONE);
-        }
+//        if(user.getType().equals(0)){
+//            question_bank.setVisibility(View.GONE);
+//        }
 //        mScrollView=findViewById(R.id.interceptScrollView);
         tabLayout=findViewById(R.id.tabLayout);
         viewPager=findViewById(R.id.viewPager);
@@ -235,6 +235,9 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
 
 
         if(user.getType().equals(0)){
+
+            question_bank.setVisibility(View.GONE);
+
             //初始化学期列表，并获取默认当前学期的课程列表
             niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
             niceSpinner.setTextColor(0xFFFFFFFF);
@@ -297,6 +300,13 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
                     item = (String) niceSpinner.getItemAtPosition(position);
                     courseList.clear();
                     refreshCourseList(item);
+                }
+            });
+        }else{
+            question_bank.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   toQuestionActivity();
                 }
             });
         }
@@ -502,6 +512,12 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
 
     private void toTaskCenterActivity() {
         Intent intent = new Intent(this,TaskCenterActivity.class);
+        startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
+        finish();
+    }
+    private void toQuestionActivity(){
+        Intent intent = new Intent(this,QuestionStoreActivity.class);
         startActivity(intent);
         overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();

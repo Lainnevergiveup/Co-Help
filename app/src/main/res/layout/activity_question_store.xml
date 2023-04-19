@@ -77,6 +77,7 @@
             <Button
                 android:id="@+id/btn_publish"
                 style="@style/Button.Primary.wrap"
+
                 android:layout_gravity="center_vertical|end"
 
                 android:textColor="@color/xui_config_color_white"
@@ -84,6 +85,7 @@
                 android:text="发布" />
             <Button
                 android:id="@+id/btn_delete"
+                android:layout_marginLeft="20dp"
                 style="@style/Button.Primary.wrap"
                 android:layout_gravity="center_vertical|end"
                 android:textColor="@color/xui_config_color_white"

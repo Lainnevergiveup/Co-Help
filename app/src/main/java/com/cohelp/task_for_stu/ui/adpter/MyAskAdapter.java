@@ -10,6 +10,10 @@ import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.model.vo.AskVO;
 import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
@@ -86,9 +90,14 @@ public class MyAskAdapter extends BaseAdapter {
 
 
         if (askVO!=null){
+            RequestOptions options = new RequestOptions()
+                    .centerCrop()
+                    .placeholder(R.drawable.tuku)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+            Glide.with(MyCoHelp.getAppContext()).load(askVO.getAvatarUrl()).apply(options).into(authorAvator);
             System.out.println("id="+askVO.getId());
             authorName.setText(askVO.getUserName());
-            title.setText(askVO.getUserName());
+            title.setText(askVO.getQuestion());
             summary.setText("");
             commentNumber.setText(askVO.getAnswerCount().toString());
             praiseNumber.setText(askVO.getLikeCount().toString());

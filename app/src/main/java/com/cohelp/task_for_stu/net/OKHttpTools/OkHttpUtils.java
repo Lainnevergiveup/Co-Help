@@ -3,12 +3,10 @@ package com.cohelp.task_for_stu.net.OKHttpTools;
 import static com.xuexiang.xutil.XUtil.runOnUiThread;
 
 import android.os.Build;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
@@ -672,19 +670,29 @@ public class OkHttpUtils {
         Result<List<AskVO>> result = gson.fromJson(res, new TypeToken<Result<List<AskVO>>>(){}.getType());
         return result.getData();
     }
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public static Boolean answerPublish(Answer answer, Map<String,String> nameAndPath){
+
+    public static Boolean answerPublish(Answer answer, Map<String,String> nameAndPath) {
         String ans = gson.toJson(answer);
-        Response response = okHttp.sendPostRequest(baseURL+"/course/answer","help",ans,nameAndPath,0);
-        String res = response.toString();
-        Result<List<Object>> result = gson.fromJson(res, new TypeToken<Result<List<Object>>>(){}.getType());
+        Response response = okHttp.sendPostRequest(baseURL+"/course/answer","answer",ans,nameAndPath,0);
+        String res = null;
+        try {
+            res = response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Result<Boolean> result = gson.fromJson(res, new TypeToken<Result<Boolean>>(){}.getType());
         return result.getData()==null?false:true;
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static Boolean askPublish(Ask ask, Map<String,String> nameAndPath){
         String askJson = gson.toJson(ask);
-        Response response = okHttp.sendPostRequest(baseURL+"/course/ask","help",askJson,nameAndPath,0);
-        String res = response.toString();
+        Response response = okHttp.sendPostRequest(baseURL+"/course/ask","ask",askJson,nameAndPath,0);
+        String res = null;
+        try {
+            res = response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Result<List<Object>> result = gson.fromJson(res, new TypeToken<Result<List<Object>>>(){}.getType());
         return result.getData()==null?false:true;
     }
@@ -729,6 +737,7 @@ public class OkHttpUtils {
     }
 
     public static void collectTeacherAsk(Integer id,Integer level){
+        System.out.println("levelokhttp"+level);
         Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/teach/addquestion/"+id+"/"+level, null, 0);
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override
@@ -742,7 +751,7 @@ public class OkHttpUtils {
                 }.getType());
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(MyCoHelp.getAppContext(), json.getData(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MyCoHelp.getAppContext(), json.getData(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

@@ -112,7 +112,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     Integer commentTopID;//评论链首ID
 
     Integer detailType;
-    Integer Level;
+    int Level;
 
     private int offsetY;
 
@@ -223,10 +223,10 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
         collectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                System.out.println("collectButton");
                 if(user.getType().equals(1)){
-                    showTeamPickerView();
-                    OkHttpUtils.collectTeacherAsk(detail.getId(),Level);
+                    showLevelPickerView();
+
                 }else {
                     OkHttpUtils.collectAsk(detail.getId());
 
@@ -848,12 +848,13 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
         super.onDestroy();
     }
 
-    private void showTeamPickerView() {
+    private void showLevelPickerView() {
         OptionsPickerView pvOptions = new OptionsPickerBuilder(this, (v, options1, options2, options3) -> {
 //            tv_team.setText(s_team[options1]);
 //            teamSelectOption = options1;
             LevelList.get(options1);
             Level = options1+1;
+            OkHttpUtils.collectTeacherAsk(detail.getId(),Level);
             return false;
         })
                 .setTitleText("难度选择")
@@ -861,6 +862,9 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
                 .build();
         pvOptions.setPicker(LevelList);
         pvOptions.show();
+
+
+
     }
 
 }

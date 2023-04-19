@@ -160,6 +160,7 @@ public class BlankFragment4 extends Fragment implements View.OnClickListener{
         bundle.putSerializable("detailResponse",askList.get(postion));
         intent.putExtras(bundle);
         IdAndType idAndType = new IdAndType(askList.get(postion).getId(),1);
+        System.out.println("详情");
         new Thread(()->{
             System.out.println(okHttpUtils.getDetail(idAndType));
         }).start();

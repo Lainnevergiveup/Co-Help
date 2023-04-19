@@ -23,19 +23,15 @@ import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
-import com.cohelp.task_for_stu.net.OKHttpTools.ToJsonString;
 import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.domain.Result;
-import com.cohelp.task_for_stu.net.model.domain.SearchRequest;
-import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.ActivityAdapter;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
-import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.google.gson.reflect.TypeToken;
 import com.leon.lfilepickerlibrary.utils.StringUtils;
@@ -44,7 +40,6 @@ import com.wyt.searchbox.custom.IOnSearchClickListener;
 import com.xuexiang.xui.widget.button.switchbutton.SwitchButton;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +76,6 @@ public class TaskCenterActivity extends BaseActivity {
     ActivityAdapter activityAdapter;
     CardViewListAdapter cardViewListAdapter;
 
-    private View.OnClickListener onClickListener;
     Integer conditionState = 0;
 
     public static final int GET_DATA_SUCCESS = 1;
@@ -139,6 +133,7 @@ public class TaskCenterActivity extends BaseActivity {
         eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
         cardViewListAdapter = new CardViewListAdapter();
         refreshActivityList();
+
     }
 
     private void initToolbar(){
@@ -156,7 +151,12 @@ public class TaskCenterActivity extends BaseActivity {
 //                toCreateNewTaskActivity();
 //            }
 //        });
-        onClickListener = v -> toCreateNewTaskActivity();
+//        toolbar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                toCreateNewTaskActivity();
+//            }
+//        });
         searchFragment.setOnSearchClickListener(new IOnSearchClickListener() {
             @Override
             public void OnSearchClick(String keyword) {
@@ -253,6 +253,7 @@ public class TaskCenterActivity extends BaseActivity {
 
         return false;
     };
+    private View.OnClickListener onClickListener = v -> toCreateNewTaskActivity();
 
 
 

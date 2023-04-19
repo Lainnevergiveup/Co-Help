@@ -31,6 +31,7 @@
         android:textColor="@color/white"
         android:spinnerMode="dropdown"
         app:arrowTint="@color/white"
+
         />
 
     <TextView

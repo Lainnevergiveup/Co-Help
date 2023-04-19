@@ -10,6 +10,10 @@ import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.vo.ActivityVO;
@@ -89,9 +93,17 @@ public class MyTaskAdapter extends BaseAdapter {
         collectNumber = view.findViewById(R.id.cardView_collectNumber);
         commentNumber = view.findViewById(R.id.cardView_commentNumber);
         readNumber = view.findViewById(R.id.cardView_readNumber);
-
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.tuku)
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
 
         if (activityVO!=null){
+            Glide.with(MyCoHelp.getAppContext())
+                    .load(detailResponse.getPublisherAvatarUrl())
+                    .apply(options)
+                    .into(authorAvator);
+
             System.out.println("id="+activityVO.getId());
             System.out.println(activityVO.getActivityComment());
             authorName.setText(activityVO.getUserName());
@@ -103,6 +115,13 @@ public class MyTaskAdapter extends BaseAdapter {
             tag.setText(activityVO.getActivityLabel());
         }
         if (helpVO!=null){
+
+            Glide.with(MyCoHelp.getAppContext())
+                    .load(detailResponse.getPublisherAvatarUrl())
+                    .apply(options)
+                    .into(authorAvator);
+
+
             System.out.println("id="+helpVO.getId());
             authorName.setText(helpVO.getUserName());
             title.setText(helpVO.getHelpTitle());
@@ -116,6 +135,7 @@ public class MyTaskAdapter extends BaseAdapter {
 
         }
         if (askVO!=null){
+            Glide.with(MyCoHelp.getAppContext()).load(askVO.getAvatarUrl()).apply(options).into(authorAvator);
             System.out.println("id="+askVO.getId());
             authorName.setText(askVO.getUserName());
             title.setText(askVO.getUserName());

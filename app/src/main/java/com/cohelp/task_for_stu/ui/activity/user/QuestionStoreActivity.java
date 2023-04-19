@@ -190,7 +190,9 @@ public class QuestionStoreActivity extends BasicInfoActivity {
             }
         });
 
-
+        niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
+        niceSpinner.setTextColor(0xFFFFFFFF);
+        niceSpinner.setArrowTintColor(0xFFFFFFFF);
         niceSpinner.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override

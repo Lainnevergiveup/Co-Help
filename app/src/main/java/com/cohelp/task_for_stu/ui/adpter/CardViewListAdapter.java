@@ -113,16 +113,13 @@ public class CardViewListAdapter extends RecyclerView.Adapter<CardViewListAdapte
                 .apply(options)
                 .into(holder.authorAvator);
         List<String> imageList = detailResponse.getImagesUrl();
-//        System.out.println("imagelist="+imageList);
+        holder.firstImage.setImageDrawable(null);
         if (imageList!=null&&imageList.size()>0){
-//            System.out.println(1);
-            holder.firstImage.setImageURL(imageList.get(0));
+            Glide.with(MyCoHelp.getAppContext()).load(imageList.get(0)).into(holder.firstImage);
         }
 //        System.out.println(detailResponse.getReadNum());
         holder.readNumber.setText("阅读量 "+detailResponse.getReadNum().toString());
         if (activityVO!=null){
-//            System.out.println("id="+activityVO.getId());
-//            System.out.println(activityVO.getActivityComment());
             holder.authorName.setText(activityVO.getUserName());
             holder.title.setText(activityVO.getActivityTitle());
             holder.summary.setText(activityVO.getActivityDetail());

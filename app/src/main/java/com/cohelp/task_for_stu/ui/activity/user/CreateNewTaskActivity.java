@@ -34,7 +34,6 @@ import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.FullyGridLayoutManager;
 import com.cohelp.task_for_stu.ui.adpter.GridImageAdapter;
 import com.cohelp.task_for_stu.ui.vo.Task;
-import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -138,7 +137,7 @@ public class CreateNewTaskActivity extends BaseActivity  {
 //                        Ask ask = new Ask(te, 1, "2019-2020-2");
 //                        System.out.println(okHttpUtils.askPublish(ask,stringStringHashMap));
 //                        Answer answer =new Answer(te,1,2,1);
-//                        System.out.println(okHttpUtils.answerPublish(answer,stringStringHashMap));
+
                         okHttpUtils.activityPublish(activity,stringStringHashMap);
                     }).start();
                     Toast.makeText(CreateNewTaskActivity.this, "发布成功~", Toast.LENGTH_LONG).show();

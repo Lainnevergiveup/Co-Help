@@ -1,26 +1,20 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -31,22 +25,14 @@ import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.MyFragmentPagerAdapter;
-import com.cohelp.task_for_stu.ui.adpter.MyPagerAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
-import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.wyt.searchbox.SearchFragment;
-import com.xuexiang.xui.widget.tabbar.TabSegment;
-
-import org.angmarch.views.NiceSpinner;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /*
 问答中心
@@ -362,90 +348,6 @@ public class HelpCenterActivity extends BaseActivity {
             }
         });
 
-//        lb1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startLoadingProgress();
-//                conditionState = 0;
-//                refreshHelpListData();
-//                stopLoadingProgress();
-//            }
-//        });
-//
-//        lb2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startLoadingProgress();
-//                conditionState = 1;
-//                refreshHelpListData();
-//                stopLoadingProgress();
-//            }
-//        });
-//
-//        lb3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startLoadingProgress();
-//                conditionState = 2;
-//                refreshHelpListData();
-//                stopLoadingProgress();
-//            }
-//        });
-//
-//        lb4.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startLoadingProgress();
-//                conditionState = 3;
-//                refreshHelpListData();
-//                stopLoadingProgress();
-//            }
-//        });
-//
-//        lb5.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startLoadingProgress();
-//                conditionState = 4;
-//                refreshHelpListData();
-//                stopLoadingProgress();
-//            }
-//        });
-
-
-
-
-
-//        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if(aSwitch.isChecked()){
-////
-//                    SearchBox.setVisibility(buttonView.VISIBLE);
-//                }else {
-////
-//                    SearchBox.setVisibility(buttonView.GONE);
-//                }
-//
-//            }
-//        });
-
-//        searchBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //TODO 从服务端搜索
-//                String s = searchedContent.getText().toString();
-//                if (StringUtils.isEmpty(s)) {
-//                    T.showToast("查询的标题不能为空哦~");
-//                } else {
-//                    startLoadingProgress();
-//                    refreshHelpListData();
-//                    stopLoadingProgress();
-//                }
-//
-//
-//            }
-//        });
         eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
             @Override
             public void onRefresh() {
