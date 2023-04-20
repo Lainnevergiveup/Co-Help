@@ -43,6 +43,7 @@ import com.cohelp.task_for_stu.ui.adpter.MyAskFragmentPagerAdapter;
 import com.cohelp.task_for_stu.ui.adpter.MyFragmentPagerAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.reflect.TypeToken;
@@ -75,6 +76,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
     LinearLayout SearchHot;
     LinearLayout SearchTime;
     RelativeLayout SearchBox;
+    FloatingActionButton floatingActionButton;
     Switch aSwitch;
     NiceSpinner niceSpinner;
     String item;
@@ -215,6 +217,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
 
     @SuppressLint({"WrongViewCast", "ResourceAsColor"})
     private void initView(){
+
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
@@ -232,7 +235,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
         viewPlace=findViewById(R.id.view_place);
         niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
         mContentViewPager = findViewById(R.id.contentViewPager);
-
+        floatingActionButton = findViewById(R.id.fab);
 
         if(user.getType().equals(0)){
 
@@ -288,6 +291,13 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View view) {
                 toUserCenterActivity();
+            }
+        });
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toCreateAskActivity();
             }
         });
 
@@ -518,6 +528,13 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
     }
     private void toQuestionActivity(){
         Intent intent = new Intent(this,QuestionStoreActivity.class);
+        startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
+        finish();
+    }
+
+    private void toCreateAskActivity(){
+        Intent intent = new Intent(this,CreateNewAskActivity.class);
         startActivity(intent);
         overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();

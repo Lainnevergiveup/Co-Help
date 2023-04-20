@@ -387,7 +387,6 @@ public class CreateNewTaskActivity extends BaseActivity  {
 
 
 
-
     private void toTaskCenterActivity() {
         Intent intent = new Intent(this,TaskCenterActivity.class);
         startActivity(intent);

@@ -57,6 +57,9 @@
         tools:ignore="ExtraText"
         tools:replace="android:theme">
         <activity
+            android:name=".ui.activity.user.CreateNewAskActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.user.AskDetailActivity"
             android:exported="false">
             <meta-data

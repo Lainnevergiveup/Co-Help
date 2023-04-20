@@ -97,7 +97,8 @@ public class LoginActivity extends BaseActivity {
             return;
         }
         else{
-            Request request = OKHttp.buildPostRequest("http://43.143.90.226:9090/user/login", GSON.gson.toJson(loginRequest), 0);
+            Request request = OKHttp.buildPostRequest("http://43.143.90.226:9090/user/login", GSON.gson.toJson(loginRequest), 60*60*24*15);
+
             OKHttp.client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {

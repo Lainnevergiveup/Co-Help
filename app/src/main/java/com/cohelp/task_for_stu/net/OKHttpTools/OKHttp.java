@@ -2,6 +2,7 @@ package com.cohelp.task_for_stu.net.OKHttpTools;
 
 import android.os.Build;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
@@ -28,7 +29,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.internal.cache.DiskLruCache;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class OKHttp {
@@ -38,7 +38,7 @@ public class OKHttp {
 
 
     static {
-        File httpCacheDirectory = new File(MyCoHelp.getAppContext().getCacheDir(), "okhttpCache");
+        File httpCacheDirectory = new File(MyCoHelp.getAppContext().getExternalCacheDir(), "okhttpCache");
         int cacheSize = 100 * 1024 * 1024; // 100 MiB
         cache = new Cache(httpCacheDirectory, cacheSize);
 

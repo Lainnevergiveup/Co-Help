@@ -15,7 +15,7 @@
 <!--        android:layout_height="40dp"-->
 <!--        app:ts_normal_color="@color/xui_config_color_pure_black"-->
 <!--        android:background="@color/xui_config_color_white"/>-->
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="@integer/material_motion_duration_long_1">
@@ -73,6 +73,20 @@
             </LinearLayout>
 
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/add_img"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:id="@+id/fab"
+
+            >
+
+        </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+
 
         <!-- 悬浮在屏幕上方的顶部空布局-->
         <LinearLayout
@@ -84,9 +98,7 @@
         </LinearLayout>
 
 
-    </RelativeLayout>
-
-
+    </FrameLayout>
 
 
     <View
