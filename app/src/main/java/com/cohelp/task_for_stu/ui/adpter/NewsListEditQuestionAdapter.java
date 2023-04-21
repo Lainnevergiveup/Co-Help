@@ -1,17 +1,20 @@
 package com.cohelp.task_for_stu.ui.adpter;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
+import com.cohelp.task_for_stu.net.model.vo.AnswerVO;
 import com.cohelp.task_for_stu.net.model.vo.QuestionBankVO;
 import com.cohelp.task_for_stu.ui.adpter.base.broccoli.BroccoliRecyclerAdapter;
 import com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder;
@@ -26,6 +29,8 @@ import java.util.List;
 
 import me.samlss.broccoli.Broccoli;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
+
 public class NewsListEditQuestionAdapter extends BroccoliRecyclerAdapter<QuestionBankVO> {
 
     private static final String KEY_SELECT_STATUS = "key_select_status";
@@ -39,6 +44,9 @@ public class NewsListEditQuestionAdapter extends BroccoliRecyclerAdapter<Questio
 
     private OnAllSelectStatusChangedListener mListener;
     public OnItemListenter mItemClickListener;
+
+    private List<AnswerVO> answerList = new ArrayList<>();
+
     public interface OnItemListenter{
         void onItemClick(View view, int postion);
     }
@@ -54,12 +62,22 @@ public class NewsListEditQuestionAdapter extends BroccoliRecyclerAdapter<Questio
 
     @Override
     protected void onBindData(RecyclerViewHolder holder, QuestionBankVO model, int position) {
-        System.out.println(model.toString());
+//        System.out.println(model.toString());
         if (model!=null){
 //            holder.text(R.id.cardView_course, model.getCourseName());
 //            holder.text(R.id.cardView_tag, model.getContent());
+//            ExpandableCardView cardView = holder.itemView.findViewById(R.id.card_question);
+//            LinearLayout[] linearLayouts = new LinearLayout[3];
+//            TextView[] textViews = new TextView[3];
+//            linearLayouts[0] = holder.itemView.findViewById(R.id.ll_card_ans1);
+//            linearLayouts[1] = holder.itemView.findViewById(R.id.ll_card_ans2);
+//            linearLayouts[2] = holder.itemView.findViewById(R.id.ll_card_ans3);
+//            textViews[0] = holder.itemView.findViewById(R.id.tv_card_ans1);
+//            textViews[1] = holder.itemView.findViewById(R.id.tv_card_ans2);
+//            textViews[2] = holder.itemView.findViewById(R.id.tv_card_ans3);
             holder.text(R.id.cardView_difficulity, model.getDifficulty());
             System.out.println(model.getContent());
+//            cardView.setTitle(model.getContent().toString());
             holder.text(R.id.cardView_summary, model.getContent().toString());
             List<String> imageUrl = model.getImageUrl();
             if (imageUrl!=null){
@@ -79,6 +97,35 @@ public class NewsListEditQuestionAdapter extends BroccoliRecyclerAdapter<Questio
                     holder.getImageView(R.id.cardView_firstImage).setVisibility(View.GONE);
                 }
             }
+//            Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/teach/listanswerbankbyquestionbankid/" + model.getId().toString(), null, 300);
+//            OKHttp.client.newCall(request).enqueue(new Callback() {
+//                @Override
+//                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+//
+//                }
+//                @Override
+//                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+//                    String string = response.body().string();
+//                    Result<List<AnswerVO>> result = GSON.gsonSetter().fromJson(string, new TypeToken<Result<List<AnswerVO>>>(){}.getType());
+//                    runOnUiThread(new Runnable() {
+//                        public void run() {
+//                            answerList = result.getData();
+//                            for (int i=0;i<answerList.size()&&i<3;i++){
+//                                AnswerVO answerVO = answerList.get(i);
+//                                if (answerVO!=null){
+//                                    textViews[i].setText(answerVO.getContent());
+//                                }
+//                                else {
+//                                    linearLayouts[i].setVisibility(View.GONE);
+//                                }
+//                            }
+////                        Toast.makeText(MyCoHelp.getAppContext(), json.getData(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//
+//                }
+//            });
+
         }
         holder.visible(R.id.scb_select, mIsManageMode ? View.VISIBLE : View.GONE);
         if (mIsManageMode) {
@@ -95,19 +142,23 @@ public class NewsListEditQuestionAdapter extends BroccoliRecyclerAdapter<Questio
     @Override
     protected void onBindBroccoli(RecyclerViewHolder holder, Broccoli broccoli) {
         broccoli.addPlaceholders(
-                holder.findView(R.id.cardView_firstImage),
-//                holder.findView(R.id.cardView_author_name),
+//                holder.findView(R.id.card_question),
+//                holder.findView(R.id.ll_card_ans1),
+//                holder.findView(R.id.ll_card_ans2),
+//                holder.findView(R.id.ll_card_ans3)
+
+                holder.findView(R.id.cardView_author_name),
                 holder.findView(R.id.cardView_difficulity),
 //                holder.findView(R.id.cardView_course),
-                holder.findView(R.id.cardView_summary)
-//                holder.findView(R.id.cardView_praiseIcon),
-//                holder.findView(R.id.cardView_praiseNumber),
-//                holder.findView(R.id.cardView_commentIcon),
-//                holder.findView(R.id.cardView_commentNumber),
-//                holder.findView(R.id.cardView_readNumber),
-//                holder.findView(R.id.cardView_collectIcon),
-//                holder.findView(R.id.cardView_collectNumber),
-//                holder.findView(R.id.cardView_author_pic)
+                holder.findView(R.id.cardView_summary),
+                holder.findView(R.id.cardView_praiseIcon),
+                holder.findView(R.id.cardView_praiseNumber),
+                holder.findView(R.id.cardView_commentIcon),
+                holder.findView(R.id.cardView_commentNumber),
+                holder.findView(R.id.cardView_readNumber),
+                holder.findView(R.id.cardView_collectIcon),
+                holder.findView(R.id.cardView_collectNumber),
+                holder.findView(R.id.cardView_author_pic)
         );
     }
 

@@ -589,14 +589,14 @@ public class OkHttpUtils {
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static String teacherAddAnswer(Integer answerID, Integer recommendedDegree){
-        Response response = okHttp.sendGetRequest(baseURL+"/teach/addanswer/"+answerID+'/'+recommendedDegree,null,0);
+        Response response = okHttp.sendGetRequest(baseURL+"/teach/addanswer/"+answerID.toString()+'/'+recommendedDegree.toString(),null,0);
         String res = null;
         try {
             res = response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Result<List<Object>> result = gson.fromJson(res, new TypeToken<Result<List<Object>>>(){}.getType());
+        Result<Object> result = gson.fromJson(res, new TypeToken<Result<Object>>(){}.getType());
         return result.getMessage();
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
