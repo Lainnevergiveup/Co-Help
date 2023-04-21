@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/ll_card_ans1"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            style="@style/TextStyle.Content"
+
+            android:text="答案1："
+            android:gravity="center">
+
+        </TextView>
+        <TextView
+            android:id="@+id/tv_card_ans1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            style="@style/TextStyle.Content"
+            android:text="ans1awdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwad"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:maxLines="3"
+            android:singleLine="false">
+
+
+        </TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_card_ans2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            style="@style/TextStyle.Content"
+
+            android:text="答案2："
+            android:gravity="center">
+
+        </TextView>
+        <TextView
+            android:id="@+id/tv_card_ans2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextStyle.Content"
+            android:text="ans1awdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwad"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:maxLines="3"
+            android:singleLine="false">
+
+        </TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_card_ans3"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            style="@style/TextStyle.Content"
+
+            android:text="答案3："
+            android:gravity="center">
+
+        </TextView>
+        <TextView
+            android:id="@+id/tv_card_ans3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            style="@style/TextStyle.Content"
+            android:text="ans1awdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwadawdwadwadwad"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:maxLines="3"
+            android:singleLine="false">
+
+
+        </TextView>
+    </LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

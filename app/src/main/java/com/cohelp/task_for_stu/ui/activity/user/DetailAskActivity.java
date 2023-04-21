@@ -39,7 +39,7 @@ import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.net.model.vo.AnswerVO;
 import com.cohelp.task_for_stu.net.model.vo.AskVO;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
-import com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter;
+import com.cohelp.task_for_stu.ui.adpter.AnswerDialogAdapter;
 import com.cohelp.task_for_stu.ui.adpter.GridViewImageAdapter;
 import com.cohelp.task_for_stu.ui.listener.SoftKeyBoardListener;
 import com.cohelp.task_for_stu.ui.view.InputTextMsgDialog;
@@ -120,7 +120,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     private List<FirstLevelBean> datas = new ArrayList<>();
 
     private RecyclerViewUtil mRecyclerViewUtil;
-    private CommentDialogMutiAdapter bottomSheetAdapter;
+    private AnswerDialogAdapter bottomSheetAdapter;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -201,10 +201,12 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Integer type = TYPE_ANSWER;
+                Integer type = TYPE_QUESTION;
                 new Thread(()->{
                     OkHttpUtils.askLike(type,detail.getId());
                 }).start();
+//                System.out.println(12131);
+                System.out.println(detail.getIsLiked());
                 detail.setIsLiked(detail.getIsLiked()==1?0:1);
                 updateButtonState();
             }
@@ -213,6 +215,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
             @Override
             public void onClick(View view) {
                 if (bottomSheetDialog!=null){
+                    refreshComment();
                     bottomSheetAdapter.notifyDataSetChanged();
                     slideOffset = 0;
                     bottomSheetDialog.show();
@@ -347,8 +350,6 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
             titleBar.setText("");
             topicTitle.setText(detail.getQuestion());
             topicDetail.setText("");
-
-
 
         }
     }
@@ -664,7 +665,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
         });
 
         //adapter
-        bottomSheetAdapter = new CommentDialogMutiAdapter(data);
+        bottomSheetAdapter = new AnswerDialogAdapter(data);
         rv_dialog_lists.setHasFixedSize(true);
         rv_dialog_lists.setLayoutManager(new LinearLayoutManager(this));
         closeDefaultAnimator(rv_dialog_lists);
@@ -862,9 +863,6 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
                 .build();
         pvOptions.setPicker(LevelList);
         pvOptions.show();
-
-
-
     }
 
 }

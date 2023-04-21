@@ -36,14 +36,14 @@ import java.util.List;
  * 描述：
  */
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class CommentDialogMutiAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, BaseViewHolder> {
+public class AnswerDialogAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, BaseViewHolder> {
 
     public static final int TYPE_COMMENT_PARENT = 1;
     public static final int TYPE_COMMENT_CHILD = 2;
     public static final int TYPE_COMMENT_MORE = 3;
     public static final int TYPE_COMMENT_EMPTY = 4;
     public static final int TYPE_COMMENT_OTHER = 5;
-    public CommentDialogMutiAdapter(List list) {
+    public AnswerDialogAdapter(List list) {
         super(list);
         addItemType(TYPE_COMMENT_PARENT, R.layout.item_comment_new);
         addItemType(TYPE_COMMENT_CHILD, R.layout.item_comment_child_new);
@@ -77,13 +77,18 @@ public class CommentDialogMutiAdapter extends BaseMultiItemQuickAdapter<MultiIte
         TextView tv_like_count = helper.getView(R.id.tv_like_count);
         TextView tv_content = helper.getView(R.id.tv_content);
 
-        ll_like.setOnClickListener(new View.OnClickListener() {
+        iv_like.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
+                System.out.println("1232312");
+                iv_like.setImageResource(item.getIsLike() == 1 ? R.mipmap.icon_topic_post_item_like : R.mipmap.icon_topic_post_item_like_blue);
+                item.setIsLike(item.getIsLike() == 1 ?0:1);
                 new Thread(()->{
-                    OkHttpUtils.remark(item.getItemType(),Integer.valueOf(item.getId()));
+                    OkHttpUtils.askLike(8,Integer.valueOf(item.getId()));
+//                if (item.getIsLike() == 1)
+                    OkHttpUtils.teacherAddAnswer(Integer.valueOf(item.getId()),(int) (Math.random()*100));
                 }).start();
-
             }
         });
         ll_like.setTag(item.getItemType());

@@ -162,7 +162,8 @@ dependencies {
     //九宫格布局
     implementation 'com.lzy.widget:ninegridview:0.2.1'
     implementation 'com.github.lzyzsd:circleprogress:1.2.1@aar'
-
+    //可扩展卡片
+    implementation 'com.alespero:expandable-cardview:0.8'
 
 }
 

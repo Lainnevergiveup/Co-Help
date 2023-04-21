@@ -74,4 +74,11 @@
             app:riv_corner_radius="5dp" />
 
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cardView_ansList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </androidx.recyclerview.widget.RecyclerView>
+
 </androidx.cardview.widget.CardView>
