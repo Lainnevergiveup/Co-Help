@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.cohelp.task_for_stu.R;
@@ -25,7 +24,6 @@ import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.MyFragmentPagerAdapter;
-import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -65,6 +63,7 @@ public class HelpCenterActivity extends BaseActivity {
 //    private final int TAB_COUNT = 10;
 //    private int mCurrentItemCount = TAB_COUNT;
     String[] pages = MultiPage.getPageNames();
+    String currentTab;
 //    private MultiPage mDestPage = MultiPage.组团招人;
 
 //    private Map<MultiPage, View> mPageMap = new HashMap<>();
@@ -81,54 +80,6 @@ public class HelpCenterActivity extends BaseActivity {
     public static final int GET_DATA_SUCCESS = 1;
     public static final int NETWORK_ERROR = 2;
     public static final int SERVER_ERROR = 3;
-//    private Handler handler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            switch (msg.what){
-//                case GET_DATA_SUCCESS:
-//                    helpList = (List<DetailResponse>) msg.obj;
-//
-//                    cardViewListAdapter.setDetailResponseListList(helpList);
-//                    System.out.println("handler's working");
-//
-////                    eRecyclerView.setLayoutManager(new LinearLayoutManager(HelpCenterActivity.this));
-////                    eRecyclerView.setAdapter(cardViewListAdapter);
-//                    break;
-//                case NETWORK_ERROR:
-//                    Toast.makeText(HelpCenterActivity.this,"网络连接失败",Toast.LENGTH_SHORT).show();
-//                    break;
-//                case SERVER_ERROR:
-//                    Toast.makeText(HelpCenterActivity.this,"服务器发生错误",Toast.LENGTH_SHORT).show();
-//                    break;
-//            }
-//        }
-//    };
-
-
-//    private View getPageView(MultiPage page) {
-//
-//        View view = mPageMap.get(page);
-//        if (view == null) {
-//
-//
-//            RecyclerView recyclerView = new RecyclerView(HelpCenterActivity.this,null);
-////            swipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
-////            swipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-////            swipeRefreshLayout.addView(recyclerView);
-//            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//            recyclerView.setAdapter(cardViewListAdapter);
-////            swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
-////                @Override
-////                public void onRefresh() {
-////                    System.out.println("isrefreshing");
-////                }
-////            });
-//            view = recyclerView;
-//            mPageMap.put(page, view);
-//
-//        }
-//        return view;
-//    }
 
 
     @Override
@@ -312,6 +263,7 @@ public class HelpCenterActivity extends BaseActivity {
 
                 int[] colors = new int[]{activeColor, normalColor};
 //                ColorStateList colorStateList = new ColorStateList(states, colors);
+                currentTab = pages[position];
                 textView.setText(pages[position]);
                 textView.setTextSize(normalSize);
                 textView.setGravity(1);
@@ -348,12 +300,6 @@ public class HelpCenterActivity extends BaseActivity {
             }
         });
 
-        eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshHelpListData();
-            }
-        });
 
         cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
             @Override
@@ -414,25 +360,7 @@ public class HelpCenterActivity extends BaseActivity {
     };
 
 
-    private synchronized void refreshHelpListData(){
 
-        int currentItem = viewPager.getCurrentItem();
-        System.out.println("current"+currentItem);
-        getHelpList();
-//        cardViewListAdapter.setDetailResponseListList(helpList);
-        RecyclerView childAt = (RecyclerView) viewPager.getChildAt(currentItem);
-        childAt.setAdapter(cardViewListAdapter);
-//        helpAdapter.setHelpList(helpList);
-//        cardViewListAdapter.setDetailResponseListList(helpList);
-//        eRecyclerView.setAdapter(cardViewListAdapter);
-        eSwipeRefreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //关闭刷新
-                eSwipeRefreshLayout.setRefreshing(false);
-            }
-        },1000);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -455,11 +383,11 @@ public class HelpCenterActivity extends BaseActivity {
         searchBtn = findViewById(R.id.id_iv_search);
 
         viewPager = findViewById(R.id.contentViewPager);
-        eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
+//        eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
 //        eRecyclerView = findViewById(R.id.id_recyclerview);
         tabLayout = findViewById(R.id.tabLayout);
-        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.PULL_FROM_START);
-        eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
+//        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.PULL_FROM_START);
+//        eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
 //        getHelpList();
 //        cardViewListAdapter = new CardViewListAdapter(helpList);
 

@@ -55,6 +55,7 @@ import org.angmarch.views.NiceSpinner;
 import org.angmarch.views.OnSpinnerItemSelectedListener;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,6 +103,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
     private int normalColor = Color.parseColor("#666666");
     int activeSize = 16;
     int normalSize = 14;
+
 
 //    private InterceptScrollView mScrollView;
     private TabLayout tabLayout;
@@ -228,6 +230,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
 //            question_bank.setVisibility(View.GONE);
 //        }
 //        mScrollView=findViewById(R.id.interceptScrollView);
+
         tabLayout=findViewById(R.id.tabLayout);
         viewPager=findViewById(R.id.viewPager);
         container_top = findViewById(R.id.container_top);
@@ -321,6 +324,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
             });
         }
 
+
 //        cardViewListAdapter.setOnItemClickListener(new CardViewAskListAdapter.OnItemListenter() {
 //            @Override
 //            public void onItemClick(View view, int postion) {
@@ -396,8 +400,32 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
 //        });
 
         viewPager.setAdapter(pagerAdapter);
+        System.out.println("courseList"+courseList.size());
         viewPager.setOffscreenPageLimit(courseList.size());
         viewPager.registerOnPageChangeCallback(changeCallback);
+
+        try {
+            Field recyclerViewField = ViewPager2.class.getDeclaredField("mRecyclerView");
+            recyclerViewField.setAccessible(true);
+
+            RecyclerView recyclerView = (RecyclerView) recyclerViewField.get(viewPager);
+
+            Field touchSlopField = RecyclerView.class.getDeclaredField("mTouchSlop");
+            touchSlopField.setAccessible(true);
+
+            int touchSlop = (int) touchSlopField.get(recyclerView);
+            touchSlopField.set(recyclerView, touchSlop * 2);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        viewPager.setPageTransformer(new ViewPager2.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View view, float position) {
+                view.setAlpha(Math.abs(1 - Math.abs(position)));
+            }
+        });
+
         meditor = new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
@@ -535,9 +563,13 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
 
     private void toCreateAskActivity(){
         Intent intent = new Intent(this,CreateNewAskActivity.class);
+        Bundle bundle = new Bundle();
+        System.out.println("semester"+currentSemster);
+        bundle.putString("semester",currentSemster);
+        bundle.putInt("course",currentCourse);
+        intent.putExtra("data",bundle);
         startActivity(intent);
         overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
-        finish();
     }
 
     private void toHelpCenterActivity() {
@@ -644,6 +676,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
                     public void run() {
                         niceSpinner.attachDataSource(semesterList);
                         //获取当前学期的课程
+                        currentSemster = (String) niceSpinner.getSelectedItem();
                         refreshCourseList((String) niceSpinner.getSelectedItem());
                     }
                 });

@@ -1,9 +1,13 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
+import static com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils.baseURL;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -16,15 +20,22 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.bean.BaseTask;
 import com.cohelp.task_for_stu.biz.TaskBiz;
+import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
+import com.cohelp.task_for_stu.net.gsonTools.GSON;
+import com.cohelp.task_for_stu.net.model.domain.Result;
+import com.cohelp.task_for_stu.net.model.entity.Ask;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.FullyGridLayoutManager;
 import com.cohelp.task_for_stu.ui.adpter.GridImageAdapter;
+import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -32,9 +43,17 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.permissions.Permission;
 import com.luck.picture.lib.permissions.RxPermissions;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
+
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class CreateNewAskActivity extends BaseActivity {
 
     EditText title;
@@ -45,7 +64,7 @@ public class CreateNewAskActivity extends BaseActivity {
 
 
     BaseTask baseTask;
-
+    Ask ask;
     TextView title1;
     private int maxSelectNum = 9;
     private List<LocalMedia> selectList = new ArrayList<>();
@@ -60,7 +79,7 @@ public class CreateNewAskActivity extends BaseActivity {
     //    private GridAdapter adapterr;
 //    private GVAdapter adapter;
     private ImageView img;
-    private List<String> list = new ArrayList<>();
+    private List<String> pahtList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,19 +106,34 @@ public class CreateNewAskActivity extends BaseActivity {
 //        });
 
         publish.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 String te = title.getText().toString();
-                String ct = content.getText().toString();
 
 //                String lb = label.getText().toString();
                 System.out.println("te" + te);
-                System.out.println("ct" + ct);
-                if (te.isEmpty() || ct.isEmpty()) {
+
+                if (te.isEmpty()) {
                     Toast.makeText(CreateNewAskActivity.this, "您输入的信息不完整\n请再次检查!", Toast.LENGTH_LONG).show();
                     System.out.println("ssss");
                 } else {
                     getPath();
+                    Intent intent = getIntent();
+                    Bundle bundle = intent.getBundleExtra("data");
+
+
+                    ask = new Ask();
+                    ask.setQuestion(te);
+                    ask.setCourseId(bundle.getInt("course"));
+                    ask.setSemester(bundle.getString("semester"));
+                    String s = GSON.gson.toJson(ask);
+                    HashMap<String ,String > map=new HashMap<>();
+                    for (int i =0;i<pahtList.size();i++){
+                        map.put(i+"",pahtList.get(i));
+                    }
+                    publishask(s,map);
+                    toHoleCenterActivity();
                 }
 
             }
@@ -107,7 +141,27 @@ public class CreateNewAskActivity extends BaseActivity {
 
 //        initData();
     }
+    private void  publishask(String  ask,HashMap<String,String> map){
 
+        Request request = OKHttp.buildPostRequest(baseURL + "/course/ask", "ask", ask, map, 0);
+        OKHttp.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String string = response.body().string();
+                Result<Boolean> result = GSON.gson.fromJson(string,new TypeToken<Result<Boolean>>(){}.getType());
+            }
+        });
+
+    }
+
+    private void refreshAskList(){
+
+    }
     private void initWidget() {
         FullyGridLayoutManager manager = new FullyGridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(manager);
@@ -170,7 +224,6 @@ public class CreateNewAskActivity extends BaseActivity {
     private void initView() {
         title1 = findViewById(R.id.id_title2);
         title = findViewById(R.id.id_et_title);
-        content = findViewById(R.id.id_et_content);
         publish = findViewById(R.id.id_btn_publish);
 
 //        endTime = findViewById(R.id.id_et_endDate);
@@ -251,9 +304,45 @@ public class CreateNewAskActivity extends BaseActivity {
     }
 
     private void getPath() {
-        for (int i = 0; i < selectList.size() - 1; i++) {
-            list.add(selectList.get(i).getPath());
-            System.out.println(list.get(i));
+        for (int i = 0; i < selectList.size(); i++) {
+            pahtList.add(selectList.get(i).getPath());
+            System.out.println("pathlist"+pahtList.get(i));
         }
     }
+
+    private void toHoleCenterActivity() {
+        Intent intent = new Intent(this,HoleCenterActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        List<LocalMedia> images;
+        System.out.println("rc"+resultCode+requestCode);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PictureConfig.CHOOSE_REQUEST) {// 图片选择结果回调
+                System.out.println("p1111");
+                System.out.println(data);
+                images = PictureSelector.obtainMultipleResult(data);
+                System.out.println(images);
+                selectList.addAll(images);
+                System.out.println(selectList);
+                //selectList = PictureSelector.obtainMultipleResult(data);
+
+                // 例如 LocalMedia 里面返回三种path
+                // 1.media.getPath(); 为原图path
+                // 2.media.getCutPath();为裁剪后path，需判断media.isCut();是否为true
+                // 3.media.getCompressPath();为压缩后path，需判断media.isCompressed();是否为true
+                // 如果裁剪并压缩了，以取压缩路径为准，因为是先裁剪后压缩的
+                adapter.setList(selectList);
+                adapter.notifyDataSetChanged();
+            }
+        }
+
+    }
+
 }

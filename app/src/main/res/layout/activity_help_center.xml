@@ -23,11 +23,11 @@
         app:tabSelectedTextColor="@android:color/black" />
 
 
-    <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout
-        android:id="@+id/id_swiperefresh"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+<!--    <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout-->
+<!--        android:id="@+id/id_swiperefresh"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_weight="1">-->
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/contentViewPager"
             android:layout_width="match_parent"
@@ -39,7 +39,7 @@
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="match_parent">-->
 <!--        </androidx.recyclerview.widget.RecyclerView>-->
-    </com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout>
+<!--    </com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout>-->
 
 
     <View

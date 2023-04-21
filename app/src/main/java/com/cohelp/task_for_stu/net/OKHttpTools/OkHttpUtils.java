@@ -687,6 +687,7 @@ public class OkHttpUtils {
     public static Boolean askPublish(Ask ask, Map<String,String> nameAndPath){
         String askJson = gson.toJson(ask);
         Response response = okHttp.sendPostRequest(baseURL+"/course/ask","ask",askJson,nameAndPath,0);
+
         String res = null;
         try {
             res = response.body().string();
@@ -758,6 +759,8 @@ public class OkHttpUtils {
         });
 
     }
+
+
 
 
 }

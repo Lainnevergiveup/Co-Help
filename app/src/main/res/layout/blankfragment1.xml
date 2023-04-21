@@ -6,38 +6,44 @@
     android:orientation="vertical"
     tools:context=".ui.activity.user.BlankFragment1">
 
-
-
-    <com.cohelp.task_for_stu.ui.view.MyScrollView
-        android:layout_width="fill_parent"
+    <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:layout_marginTop="15sp"
-        android:layout_marginLeft="12sp"
-
-        android:layout_marginRight="12sp"
-        android:fadingEdge="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        android:id="@+id/refreshLayout">
+        <com.cohelp.task_for_stu.ui.view.MyScrollView
+            android:layout_width="fill_parent"
             android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:layout_marginTop="15sp"
+            android:layout_marginLeft="12sp"
 
-            android:orientation="vertical">
+            android:layout_marginRight="12sp"
+            android:fadingEdge="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 
-
-            <com.cohelp.task_for_stu.ui.view.MyListViewForScrollView
-                android:id="@+id/lv_task_list"
-                android:divider="@null"
-                android:dividerHeight="8dp"
-
-                android:layout_width="fill_parent"
-                android:padding="8dp"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
+                android:orientation="vertical">
 
 
-    </com.cohelp.task_for_stu.ui.view.MyScrollView>
+
+                <com.cohelp.task_for_stu.ui.view.MyListViewForScrollView
+                    android:id="@+id/lv_task_list"
+                    android:divider="@null"
+                    android:dividerHeight="8dp"
+
+                    android:layout_width="fill_parent"
+                    android:padding="8dp"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+
+        </com.cohelp.task_for_stu.ui.view.MyScrollView>
+
+    </com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout>
+
+
 
 </LinearLayout>

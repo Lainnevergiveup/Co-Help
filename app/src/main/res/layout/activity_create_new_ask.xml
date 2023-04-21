@@ -38,21 +38,7 @@
 
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/id_et_content"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20dp"
-        android:gravity="top"
-        android:background="@null"
-        android:hint="活动详情描述..."
-        android:singleLine="false"
-        android:inputType="textMultiLine"
-        android:scrollHorizontally="false"
-        android:maxLines="5"
-        android:textSize="15sp" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
