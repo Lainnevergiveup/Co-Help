@@ -16,17 +16,24 @@ import com.bumptech.glide.request.RequestOptions;
 import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.UserInfoHolder;
-import com.cohelp.task_for_stu.bean.User;
 import com.cohelp.task_for_stu.biz.UserBiz;
 import com.cohelp.task_for_stu.config.Config;
 import com.cohelp.task_for_stu.net.CommonCallback;
+import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.CircleTransform;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
+import com.cohelp.task_for_stu.utils.ACache;
 import com.cohelp.task_for_stu.utils.T;
 import com.squareup.picasso.Picasso;
 import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
+import com.zhy.http.okhttp.cookie.CookieJarImpl;
+import com.zhy.http.okhttp.cookie.store.CookieStore;
+
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
 
 /**
  * 普通用户的基本信息展示页
@@ -47,10 +54,8 @@ public class BasicInfoActivity extends BaseActivity {
     LinearLayout UserCenter;
     LinearLayout HelpCenter;
     LinearLayout HoleCenter;
-    User user;
-
     com.cohelp.task_for_stu.net.model.entity.User transferUser;
-    UserBiz userBiz;
+
 
     Intent intent;
     String userIcon;
@@ -84,7 +89,6 @@ public class BasicInfoActivity extends BaseActivity {
 
         Setting = findViewById(R.id.id_ll_setting);
         Personal_homepage = findViewById(R.id.id_ll_personal_homepage);
-        userBiz = new UserBiz();
 
 
         RequestOptions options = new RequestOptions()
@@ -120,27 +124,14 @@ public class BasicInfoActivity extends BaseActivity {
 
     private void updateUser() {
         startLoadingProgress();
-        userBiz.userGet(UserInfoHolder.getInstance().geteUser().getId(), new CommonCallback<User>() {
-            @Override
-            public void onError(Exception e) {
-                stopLoadingProgress();
-                T.showToast(e.getMessage());
-            }
-            @Override
-            public void onSuccess(User response) {
-                stopLoadingProgress();
-                UserInfoHolder.getInstance().setUser(response);
-                user = response;
-                Picasso.get()
-                        .load(Config.rsUrl + user.getIcon())
-                        .placeholder(R.drawable.pictures_no)
-                        .transform(new CircleTransform())
-                        .into(icon);
-                nickname.setText(user.getNickName());
-                team.setText(user.getGrade() + "");
-                T.showToast("用户数据更新完成！");
-            }
-        });
+
+        Picasso.get()
+                .load(user.getAvatarUrl())
+                .placeholder(R.drawable.pictures_no)
+                .transform(new CircleTransform())
+                .into(icon);
+        nickname.setText(user.getUserName());
+        team.setText(user.getId() + "");
     }
 
     private void initEvent() {
@@ -166,6 +157,9 @@ public class BasicInfoActivity extends BaseActivity {
         bt_logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ACache cache = ACache.get(MyCoHelp.getAppContext(), "loginUser");
+                cache.clear();
+                OKHttp.cookieJar.getCookieStore().removeAll();
                 toLoginActivity();
             }
         });
@@ -293,32 +287,14 @@ public class BasicInfoActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        userBiz.onDestory();
     }
     private void initTools(){
         intent = getIntent();
     }
-    private synchronized void getUser(){
-        Thread t1 = new Thread(()->{
-            transferUser=OkHttpUtils.getUser();
-        });
-        t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    private void getUser(){
+        transferUser = user;
     }
-    private synchronized void getUserIcon(){
-        Thread t1 = new Thread(()->{
-            userIcon = OkHttpUtils.getImageById(transferUser.getAvatar());
-            System.out.println(userIcon);
-        });
-        t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    private void getUserIcon(){
+        userIcon = user.getAvatarUrl();
     }
 }

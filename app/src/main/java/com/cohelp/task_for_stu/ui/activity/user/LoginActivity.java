@@ -18,6 +18,7 @@ import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
+import com.cohelp.task_for_stu.utils.ACache;
 import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.google.gson.reflect.TypeToken;
@@ -97,8 +98,7 @@ public class LoginActivity extends BaseActivity {
             return;
         }
         else{
-            Request request = OKHttp.buildPostRequest("http://43.143.90.226:9090/user/login", GSON.gson.toJson(loginRequest), 60*60*24*15);
-
+            Request request = OKHttp.buildPostRequest("http://43.143.90.226:9090/user/login", GSON.gson.toJson(loginRequest), 0);
             OKHttp.client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -128,6 +128,9 @@ public class LoginActivity extends BaseActivity {
                     }
                     else {
                         user = userResult.getData();
+                        //将当前登录用户的数据加入缓存
+                        ACache currentLoginUser = ACache.get(MyCoHelp.getAppContext(), "loginUser");
+                        currentLoginUser.put("loginUser",GSON.gson.toJson(user),15*ACache.TIME_DAY);
                         toBasicInfoActivity();
                     }
                 }

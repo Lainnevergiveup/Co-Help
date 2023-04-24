@@ -667,6 +667,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
                 String res = null;
                 try {
                     res = response.body().string();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

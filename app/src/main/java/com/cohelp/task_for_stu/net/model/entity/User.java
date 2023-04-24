@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 import lombok.Data;
 
 /**
@@ -38,6 +37,11 @@ public class User implements Serializable {
      * 头像
      */
     private Integer avatar;
+
+    /**
+     * 头像
+     */
+    private String avatarUrl;
 
     /**
      * 性别（0：男 1：女）
@@ -94,6 +98,12 @@ public class User implements Serializable {
      * @return
      */
     private Integer type;
+
+    public String getAvatarUrl(){return avatarUrl;}
+
+
+    public void setAvatarUrl(String avatarUrl){this.avatarUrl = avatarUrl;}
+
 
     public Integer getType() {
         return type;

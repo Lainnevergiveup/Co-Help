@@ -182,6 +182,9 @@
             android:exported="false" />
         <activity
             android:name=".ui.activity.user.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.user.InitActivity"
             android:exported="true"
             android:theme="@style/Theme.Task_for_stu">
             <intent-filter>

@@ -36,6 +36,8 @@ public class OKHttp {
 
     public static Cache cache;
 
+    public static CookieJarImpl cookieJar;
+
 
     static {
         File httpCacheDirectory = new File(MyCoHelp.getAppContext().getExternalCacheDir(), "okhttpCache");
@@ -74,8 +76,9 @@ public class OKHttp {
 
 
         //初始化OkHttpClient
+        cookieJar = new CookieJarImpl(new PersistentCookieStore(MyCoHelp.getAppContext()));
         client = new OkHttpClient.Builder()
-                .cookieJar(new CookieJarImpl(new PersistentCookieStore(MyCoHelp.getAppContext())))
+                .cookieJar(cookieJar)
                 .addNetworkInterceptor(NetCacheInterceptor)
                 .addInterceptor(OfflineCacheInterceptor)
                 .cache(cache)
@@ -305,10 +308,6 @@ public class OKHttp {
                 .url(url)
                 .method("GET", null);
 
-//        //添加cookie
-//        if (cookie != null) {
-//            requestBuilder.addHeader("Cookie", cookie);
-//        }
 
         //缓存控制
         CacheControl cacheControl = new CacheControl.Builder()
@@ -336,6 +335,7 @@ public class OKHttp {
                 }
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    Response responseCache = response.cacheResponse();
                     Log.i("缓存刷新成功",request.url().toString());
                 }
             });

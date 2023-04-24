@@ -214,7 +214,7 @@ public class OkHttpUtils {
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static User getUser(){
-        Response response = okHttp.sendGetRequest(baseURL+"/user/current",null,0);
+        Response response = okHttp.sendGetRequest(baseURL+"/user/current",null,300);
         String res = null;
         try {
             res = response.body().string();

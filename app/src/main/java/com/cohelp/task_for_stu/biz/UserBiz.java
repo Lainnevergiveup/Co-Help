@@ -56,6 +56,15 @@ public class UserBiz {
                 .execute(commonCallback);
     }
 
+    public void userGet(Integer id,CommonCallback<User> commonCallback){
+        OkHttpUtils
+                .post()
+                .url(Config.baseUrl + "getUserById")
+                .tag(this)
+                .addParams("id",id+"")
+                .build()
+                .execute(commonCallback);
+    }
     public void userGet(Long id,CommonCallback<User> commonCallback){
         OkHttpUtils
                 .post()
