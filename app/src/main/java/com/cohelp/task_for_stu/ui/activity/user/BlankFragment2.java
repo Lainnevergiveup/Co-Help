@@ -161,7 +161,7 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
 
     private void initAskList(Integer id , String semester){
 
-        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/course/list/ask/1/5/" + id + "/" + semester + "/2", null, 120);
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/course/list/ask/1/10/" + id + "/" + semester + "/2", null, 120);
         //执行请求
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override

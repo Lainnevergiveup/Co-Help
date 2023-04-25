@@ -29,6 +29,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.internal.cache.DiskLruCache;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class OKHttp {
@@ -95,11 +96,6 @@ public class OKHttp {
         Response response = null;
         //创建请求
         Request.Builder requestBuilder = new Request.Builder().url(ip);
-
-//        //添加Cookie
-//        if(cookie!=null){
-//            requestBuilder.addHeader("Cookie", cookie);
-//        }
 
         //添加body参数
         RequestBody body = RequestBody.create( MediaType.parse("application/json"), jsonBody);
@@ -258,10 +254,6 @@ public class OKHttp {
                 .url(url)
                 .method("GET",null);
 
-//        //添加cookie
-//        if(cookie!=null){
-//            requestBuilder.addHeader("Cookie",cookie);
-//        }
 
         //缓存控制
         CacheControl cacheControl = new CacheControl.Builder()
@@ -277,10 +269,10 @@ public class OKHttp {
             e.printStackTrace();
         }
 
-        //缓存命中则刷新缓存
-        if(response.networkResponse()==null&&response.cacheResponse()!=null){
-            refreshCache(request);
-        }
+//        //缓存命中则刷新缓存
+//        if(response.networkResponse()==null&&response.cacheResponse()!=null){
+//            refreshCache(request);
+//        }
 
         return response;
     }
@@ -341,4 +333,6 @@ public class OKHttp {
             });
         }
     }
+
+
 }

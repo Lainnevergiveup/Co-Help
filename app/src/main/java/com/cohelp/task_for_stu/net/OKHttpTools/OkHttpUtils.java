@@ -383,7 +383,11 @@ public class OkHttpUtils {
             e.printStackTrace();
         }
         Result<List<DetailResponse>> userResult = gson.fromJson(res,new TypeToken<Result<List<DetailResponse>>>(){}.getType());
-        return userResult.getData();
+        if(userResult!=null){
+            return userResult.getData();
+        }else {
+            return new ArrayList<>();
+        }
     }
     /**
      * 获取我的参与
@@ -759,8 +763,4 @@ public class OkHttpUtils {
         });
 
     }
-
-
-
-
 }

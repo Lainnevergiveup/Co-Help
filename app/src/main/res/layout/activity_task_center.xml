@@ -10,21 +10,50 @@
 
 
 
-
-    <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout
-        android:id="@+id/id_swiperefresh"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="15sp"
-        android:layout_marginTop="15sp"
-        android:layout_marginRight="15sp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:layout_weight="@integer/material_motion_duration_long_1">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/id_recyclerview"
+        <LinearLayout
+            android:id="@+id/container_normal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
-    </com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout>
+            android:layout_height="wrap_content"
+            android:descendantFocusability="beforeDescendants"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout
+                android:id="@+id/id_swiperefresh"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="15sp"
+                android:layout_marginTop="15sp"
+                android:layout_marginRight="15sp"
+                android:layout_weight="1">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/id_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </androidx.recyclerview.widget.RecyclerView>
+            </com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout>
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/add"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:id="@+id/fab"
+            >
+        </com.google.android.material.floatingactionbutton.FloatingActionButton>
+    </FrameLayout>
+
 
     <View
         android:layout_width="match_parent"
