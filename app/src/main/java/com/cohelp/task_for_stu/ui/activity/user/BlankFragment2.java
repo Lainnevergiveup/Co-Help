@@ -191,6 +191,7 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
         Intent intent = new Intent(context,DetailAskActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("detailResponse",askList.get(postion));
+
         intent.putExtras(bundle);
         IdAndType idAndType = new IdAndType(askList.get(postion).getId(),1);
         new Thread(()->{

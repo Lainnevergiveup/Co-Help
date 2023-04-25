@@ -163,12 +163,13 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:src="@drawable/dis2" />
+                android:src="@drawable/dis1" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="#1296db"
                 android:text="讨论"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -184,13 +185,13 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:src="@drawable/person1" />
+                android:src="@drawable/person2" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="#1296db"
+
                 android:text="个人中心"
                 android:textStyle="bold" />
         </LinearLayout>

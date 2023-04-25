@@ -74,6 +74,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
     String delCollectList;
     OkHttpUtils okHttpUtils;
     Intent intent;
+    TextView manager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,7 +180,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
             if (mAdapter.isManageMode()) {
                 mAdapter.updateSelectStatus(position);
             } else {
-//                toDetailActivity(position);
+                toDetailActivity(position);
 //                Utils.goWeb(getContext(), item.getDetailUrl());
             }
         });
@@ -219,7 +220,8 @@ public class QuestionStoreActivity extends BasicInfoActivity {
         niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
         niceSpinner.attachDataSource(courseList);
         niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
-
+        manager = findViewById(R.id.id_tv_manager);
+        manager.setText("管理");
         mAdapter = new NewsListEditQuestionAdapter(isSelectAll -> {
             if (scbSelectAll != null) {
                 scbSelectAll.setCheckedSilent(isSelectAll);
@@ -247,7 +249,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
         finish();
     }
     private void toDetailActivity(int postion){
-        intent = new Intent(QuestionStoreActivity.this,DetailAskActivity.class);
+        intent = new Intent(QuestionStoreActivity.this,DetailAskandAnswerActivity.class);
         Bundle bundle = new Bundle();
         QuestionBankVO questionBankVO = questionList.get(postion);
         bundle.putSerializable("question",questionBankVO);

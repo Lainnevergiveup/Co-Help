@@ -90,7 +90,7 @@ public class LoginActivity extends BaseActivity {
         loginRequest = new LoginRequest();
         loginRequest.setUserAccount(username.getText().toString());
         loginRequest.setUserPassword( password.getText().toString());
-        loginRequest.setUserAccount("1234567895");//debug
+        loginRequest.setUserAccount("1234567894");//debug
         loginRequest.setUserPassword( "1234567890");//debug
 
         if(StringUtils.isEmpty(loginRequest.getUserAccount()) || StringUtils.isEmpty(loginRequest.getUserPassword())){

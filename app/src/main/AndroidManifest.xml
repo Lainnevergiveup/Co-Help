@@ -57,6 +57,14 @@
         tools:ignore="ExtraText"
         tools:replace="android:theme">
         <activity
+            android:name=".ui.activity.user.ScoreActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.user.DetailAskandAnswerActivity"
+            android:exported="false"
+            android:label="@string/title_activity_detail_askand_answer"
+            android:theme="@style/Theme.Task_for_stu.NoActionBar" />
+        <activity
             android:name=".ui.activity.user.CreateNewAskActivity"
             android:exported="false" />
         <activity

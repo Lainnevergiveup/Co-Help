@@ -33,7 +33,6 @@ import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
-import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.vo.AskVO;
 import com.cohelp.task_for_stu.net.model.vo.CourseVO;
@@ -47,8 +46,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.reflect.TypeToken;
-import com.xuexiang.xui.utils.DensityUtils;
-import com.xuexiang.xui.utils.XToastUtils;
 import com.xuexiang.xui.widget.tabbar.TabSegment;
 
 import org.angmarch.views.NiceSpinner;
@@ -485,62 +482,6 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
         }
     };
 
-//    @Override
-//    public void onClick(View view) {
-//        switch (view.getId()){
-//            case :R.id.tv
-//        }
-//
-//    }
-
-    private void initTab(){
-
-        mTabSegment.reset();
-//        mContentViewPager.setAdapter(mPagerAdapter);
-        mContentViewPager.setCurrentItem(mTabSegment.getSelectedIndex(), false);
-        for (int i = 0; i < courseList.size(); i++) {
-            mTabSegment.addTab(new TabSegment.Tab(courseList.get(i).getName()));
-            listFragment.add(new BlankFragment2(this,courseList.get(i).getId(),(String) niceSpinner.getSelectedItem()));
-        }
-        int space = DensityUtils.dp2px(HoleCenterActivity.this, 16);
-        myFragmentPagerAdapter = new MyAskFragmentPagerAdapter(getSupportFragmentManager(),getLifecycle(),listFragment);
-        mContentViewPager.setAdapter(myFragmentPagerAdapter);
-        mTabSegment.setHasIndicator(true);
-        mTabSegment.setMode(TabSegment.MODE_SCROLLABLE);
-        mTabSegment.setItemSpaceInScrollMode(space);
-        mTabSegment.setupWithViewPager(mContentViewPager, false);
-        mTabSegment.setPadding(space, 0, space, 0);
-        mTabSegment.addOnTabSelectedListener(new TabSegment.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(int index) {
-//                currentCourse =courseList.get(index).getId();
-//                getAskList(currentCourse,(String)niceSpinner.getSelectedItem());
-//                System.out.println("asklist"+askList);
-//                cardViewListAdapter = new CardViewAskListAdapter();
-//                cardViewListAdapter.setAskVOList(askList);
-//                View pageView = getPageView((String) niceSpinner.getSelectedItem());
-//                RecyclerView pageView1 = (RecyclerView) pageView;
-//                pageView1.setAdapter(cardViewListAdapter);
-                XToastUtils.toast("select " + courseList.get(index).getName());
-            }
-
-            @Override
-            public void onTabUnselected(int index) {
-//                XToastUtils.toast("unSelect " +courseList.get(index).getName());
-            }
-
-            @Override
-            public void onTabReselected(int index) {
-                XToastUtils.toast("reSelect " + courseList.get(index).getName());
-            }
-
-            @Override
-            public void onDoubleTap(int index) {
-                XToastUtils.toast("double tap " + courseList.get(index).getName());
-            }
-        });
-    }
-
     private void toUserCenterActivity() {
         Intent intent = new Intent(this,BasicInfoActivity.class);
         startActivity(intent);
@@ -722,17 +663,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
 
 
     }
-    private void toDetailActivity(int postion){
-        Intent intent = new Intent(HoleCenterActivity.this,DetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("detailResponse",holeList.get(postion));
-        intent.putExtras(bundle);
-        IdAndType idAndType = new IdAndType(holeList.get(postion).getIdByType(holeList.get(postion).getType()),1);
-        new Thread(()->{
-            System.out.println(okHttpUtils.getDetail(idAndType));
-        }).start();
-        startActivity(intent);
-    }
+
     @Override
     protected void onDestroy() {
         meditor.detach();

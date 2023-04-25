@@ -24,7 +24,6 @@ import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.ui.adpter.MyTaskAdapter;
 import com.cohelp.task_for_stu.ui.view.MyListViewForScrollView;
-import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
 
@@ -84,7 +83,7 @@ public class BlankFragment1 extends Fragment implements View.OnClickListener {
         flEdit = root.findViewById(R.id.fl_edit);
         scbSelectAll = root.findViewById(R.id.scb_select_all);
         recyclerView = root.findViewById(R.id.recyclerView);
-        refreshLayout = root.findViewById(R.id.refreshLayout);
+//        refreshLayout = root.findViewById(R.id.refreshLayout);
         btn_delete = root.findViewById(R.id.btn_delete);
         mTvSwitch = root.findViewById(R.id.id_tv_manager);
         scrollView = root.findViewById(R.id.lv_task_list);

@@ -29,17 +29,22 @@ import androidx.recyclerview.widget.SimpleItemAnimator;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.cohelp.task_for_stu.R;
+import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
+import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.entity.Answer;
 import com.cohelp.task_for_stu.net.model.entity.CommentMoreBean;
 import com.cohelp.task_for_stu.net.model.entity.FirstLevelBean;
 import com.cohelp.task_for_stu.net.model.entity.SecondLevelBean;
 import com.cohelp.task_for_stu.net.model.entity.User;
+import com.cohelp.task_for_stu.net.model.vo.AnswerBankVO;
 import com.cohelp.task_for_stu.net.model.vo.AnswerVO;
 import com.cohelp.task_for_stu.net.model.vo.AskVO;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.AnswerDialogAdapter;
+import com.cohelp.task_for_stu.ui.adpter.CardViewAskAnswerListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.GridViewImageAdapter;
 import com.cohelp.task_for_stu.ui.listener.SoftKeyBoardListener;
 import com.cohelp.task_for_stu.ui.view.InputTextMsgDialog;
@@ -48,16 +53,24 @@ import com.cohelp.task_for_stu.utils.RecyclerViewUtil;
 import com.cohelp.task_for_stu.utils.TimeUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.reflect.TypeToken;
 import com.lzy.ninegrid.ImageInfo;
 import com.lzy.ninegrid.NineGridView;
 import com.lzy.ninegrid.preview.NineGridViewClickAdapter;
 import com.xuexiang.xui.widget.picker.widget.OptionsPickerView;
 import com.xuexiang.xui.widget.picker.widget.builder.OptionsPickerBuilder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
+
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.RequestLoadMoreListener{
     private  int INITBEANNUM = 5;
@@ -83,9 +96,9 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     ImageButton commentButton;
     EditText commentText;
     View view;
-
+    CardViewAskAnswerListAdapter cardViewAskAnswerListAdapter;
     BottomSheetDialog bottomSheetDialog;
-
+    List<AnswerBankVO> answerBankVOList;
     BottomSheetBehavior bottomSheetBehavior;
 
     InputTextMsgDialog inputTextMsgDialog;
@@ -102,7 +115,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     List<AnswerVO> remarkList;
     List<AnswerVO> firstList;
     List<String> LevelList=new ArrayList<>();
-
+    RecyclerView recyclerView;
 
     List<List<AnswerVO>> orderRemarkVO;
     IdAndType idAndType;
@@ -164,7 +177,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
         topicTitle = (TextView) findViewById(R.id.text_MessageTitle);
         topicDetail = (TextView) findViewById(R.id.text_TopicDetail);
         imageGridView = (NineGridView) findViewById(R.id.grid_item_image);
-
+        recyclerView = findViewById(R.id.id_recyclerview);
         imageGridView.setVerticalScrollBarEnabled(false);
         imageGridView.setHorizontalScrollBarEnabled(false);
 
@@ -173,12 +186,14 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
         LevelList.add("适中");
         LevelList.add("较困难");
         LevelList.add("很困难");
+
+        cardViewAskAnswerListAdapter = new CardViewAskAnswerListAdapter();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initData(){
         setDetailData();
-
+        getAnswerBank();
         getUser();
 
         refreshComment();
@@ -246,7 +261,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
             imageInfos.add(imageInfo);
         }
         imageGridView.setGridSpacing(10);
-        imageGridView.setSingleImageSize(1200);
+        imageGridView.setSingleImageSize(300);
         imageGridView.setMaxSize((imageInfos.size()<=9?imageInfos.size():9));
         imageGridView.setAdapter(new NineGridViewClickAdapter(this, imageInfos));
         // 点击事件
@@ -340,6 +355,41 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
 //        initCommentTarget();
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
+    private void getAnswerBank(){
+
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/teach/listanswerfrombank/"+detail.getId() +"/1/20", null, 0);
+        OKHttp.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String res = null;
+                try {
+                    res = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Result<List<AnswerBankVO>> result = GSON.gson.fromJson(res, new TypeToken<Result<List<AnswerBankVO>>>(){}.getType());
+                answerBankVOList =  result.getData();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        cardViewAskAnswerListAdapter.setAnswerVOList(answerBankVOList);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(DetailAskActivity.this));
+                        recyclerView.setAdapter(cardViewAskAnswerListAdapter);
+                    }
+                });
+
+            }
+        });
+
+
+
+    }
+
     private void setDetailData(){
 
         if (detail!=null){
@@ -352,6 +402,8 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
             topicDetail.setText("");
 
         }
+
+
     }
     private int getWindowHeight() {
         Resources res = getResources();

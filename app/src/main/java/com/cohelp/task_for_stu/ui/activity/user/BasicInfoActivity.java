@@ -15,25 +15,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
-import com.cohelp.task_for_stu.UserInfoHolder;
-import com.cohelp.task_for_stu.biz.UserBiz;
-import com.cohelp.task_for_stu.config.Config;
-import com.cohelp.task_for_stu.net.CommonCallback;
 import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
-import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
-import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.CircleTransform;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
 import com.cohelp.task_for_stu.utils.ACache;
-import com.cohelp.task_for_stu.utils.T;
 import com.squareup.picasso.Picasso;
 import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
-import com.zhy.http.okhttp.cookie.CookieJarImpl;
-import com.zhy.http.okhttp.cookie.store.CookieStore;
-
-import okhttp3.CookieJar;
-import okhttp3.HttpUrl;
 
 /**
  * 普通用户的基本信息展示页
@@ -54,6 +42,7 @@ public class BasicInfoActivity extends BaseActivity {
     LinearLayout UserCenter;
     LinearLayout HelpCenter;
     LinearLayout HoleCenter;
+    LinearLayout ScoreList;
     com.cohelp.task_for_stu.net.model.entity.User transferUser;
 
 
@@ -86,7 +75,7 @@ public class BasicInfoActivity extends BaseActivity {
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
-
+        ScoreList = findViewById(R.id.id_ll_score);
         Setting = findViewById(R.id.id_ll_setting);
         Personal_homepage = findViewById(R.id.id_ll_personal_homepage);
 
@@ -196,6 +185,13 @@ public class BasicInfoActivity extends BaseActivity {
                 toSettingActivity();
             }
         });
+        ScoreList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toScoreListActivity();
+            }
+        });
+
         Personal_homepage.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -274,7 +270,10 @@ public class BasicInfoActivity extends BaseActivity {
         Intent intent = new Intent(this,QuestionStoreActivity.class);
         startActivity(intent);
     }
-
+    private void toScoreListActivity(){
+        Intent intent = new Intent(this,ScoreActivity.class);
+        startActivity(intent);
+    }
 
     private void toPersonalHomepageActivity(){
         Intent intent = new Intent(this,PersonalHomepageActivity.class);
