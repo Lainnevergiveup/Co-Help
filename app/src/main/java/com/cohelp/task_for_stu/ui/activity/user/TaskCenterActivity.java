@@ -328,7 +328,12 @@ public class TaskCenterActivity extends BaseActivity {
                 }
                 //转换数据
                 Result<List<DetailResponse>> result = GSON.gson.fromJson(res, new TypeToken<Result<List<DetailResponse>>>() {}.getType());
-                activityVOList = result.getData();
+                if(result!=null){
+                    activityVOList = result.getData();
+                }else{
+                    activityVOList = new ArrayList<>();
+                }
+
                 runOnUiThread(new Runnable() {
                     public void run() {
                         cardViewListAdapter.setDetailResponseListList(activityVOList);

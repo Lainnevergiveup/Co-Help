@@ -24,7 +24,6 @@ import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.MyTaskListEditAdapter;
 import com.cohelp.task_for_stu.ui.adpter.TaskAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
-import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.utils.ViewUtils;
 import com.xuexiang.xui.utils.WidgetUtils;
@@ -84,18 +83,14 @@ public class MyQuestionActivity extends BaseActivity {
                 toQuestionCenterActivity();
             }
         });
-
+        HoleCenter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {toHoleCenterActivity();}
+        });
         TaskCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toTaskCenterActivity();
-            }
-        });
-
-        UserCenter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toUserCenterActivity();
             }
         });
 
@@ -194,7 +189,12 @@ public class MyQuestionActivity extends BaseActivity {
         startActivity(intent);
         finish();
     }
-
+    private void toHoleCenterActivity(){
+        Intent intent = new Intent(this, HoleCenterActivity.class);
+        startActivity(intent);
+        overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
+        finish();
+    }
 
     private void toDetailActivity(int postion){
         Intent intent = new Intent(MyQuestionActivity.this,DetailActivity.class);

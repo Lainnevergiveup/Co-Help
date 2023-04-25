@@ -109,27 +109,7 @@ public class MyCollectActivity extends BasicInfoActivity {
             }
         });
 
-        UserCenter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toUserCenterActivity();
-            }
-        });
-//        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
-//            @Override
-//            public void onItemClick(View view, int postion) {
-//                System.out.println("lisetn in act");
-//                Intent intent = new Intent(MyCollectActivity.this,DetailActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("detailResponse",collectList.get(postion));
-//                intent.putExtras(bundle);
-//                IdAndType idAndType = new IdAndType(collectList.get(postion).getActivityVO().getId(),1);
-//                new Thread(()->{
-//                    System.out.println(okHttpUtils.getDetail(idAndType));
-//                }).start();
-//                startActivity(intent);
-//            }
-//        });
+
 
         mTvSwitch.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -121,8 +121,6 @@ public class CreateNewAskActivity extends BaseActivity {
                     getPath();
                     Intent intent = getIntent();
                     Bundle bundle = intent.getBundleExtra("data");
-
-
                     ask = new Ask();
                     ask.setQuestion(te);
                     ask.setCourseId(bundle.getInt("course"));

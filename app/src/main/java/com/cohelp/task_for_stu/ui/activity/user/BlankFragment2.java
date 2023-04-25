@@ -138,6 +138,8 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                System.out.println("讨论界面");
+
                 initAskList(id,semester);
                 swipeRefreshLayout.postDelayed(new Runnable() {
                     @Override
@@ -178,8 +180,10 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
                 }
                 Result<List<AskVO>> result = GSON.gson.fromJson(res, new TypeToken<Result<List<AskVO>>>(){}.getType());
                 askList =  result.getData();
+
                 runOnUiThread(new Runnable() {
                     public void run() {
+                        System.out.println("讨论1111");
                         initEvent();
                     }
                 });

@@ -66,7 +66,6 @@ public class BasicInfoActivity extends BaseActivity {
         nickname = findViewById(R.id.id_tv_nickname);
         team = findViewById(R.id.id_tv_userTeam);
         bt_logOut = findViewById(R.id.id_btn_logout);
-        bt_switch = findViewById(R.id.id_btn_switch);
         myTask = findViewById(R.id.id_ll_myTask);
         myQuestion = findViewById(R.id.id_ll_myquestion);
         myCollect = findViewById(R.id.id_ll_myCollect);

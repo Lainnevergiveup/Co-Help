@@ -38,7 +38,6 @@ import com.cohelp.task_for_stu.ui.adpter.FlowTagPaidAdapter;
 import com.cohelp.task_for_stu.ui.adpter.FullyGridLayoutManager;
 import com.cohelp.task_for_stu.ui.adpter.GridImageAdapter;
 import com.cohelp.task_for_stu.ui.vo.Task;
-import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -46,7 +45,6 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.permissions.Permission;
 import com.luck.picture.lib.permissions.RxPermissions;
 import com.xuexiang.xui.utils.ResUtils;
-import com.xuexiang.xui.utils.XToastUtils;
 import com.xuexiang.xui.widget.flowlayout.FlowTagLayout;
 
 import java.io.ByteArrayOutputStream;
@@ -69,14 +67,14 @@ public class CreateNewHelpActivity extends BaseActivity{
     String Label;
     RadioButton lb1,lb2,lb3,lb4,lb5;
     EditText lb_diy;
-
+    TextView title1;
     Button publish;
     TaskBiz taskBiz;
     Task task;
     Help help;
     BaseTask baseTask;
     TimePickerView pickerView;
-    FlowTagLayout mSingleFlowTagLayout;
+    FlowtagLayout mSingleFlowTagLayout;
     FlowTagLayout mPaidFlowTagLayout;
     OkHttpUtils okHttpUtils = new OkHttpUtils();
     private static final int IMG_COUNT = 8;
@@ -100,48 +98,14 @@ public class CreateNewHelpActivity extends BaseActivity{
 //        askPermissions();
         setUpToolBar();
         setTitle("创建互助");
+
         initView();
+        title1.setText("互助发布");
         initEvent();
         initWidget();
     }
     private void initEvent() {
 
-//        paid.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                switch (checkedId){
-//                    case R.id.id_rb_paid:
-//                        Paid = 1;
-//                        break;
-//                    case R.id.id_rb_nopaid:
-//                        Paid = 0;
-//                        break;
-//                }
-//            }
-//        });
-
-//        label.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                switch (checkedId){
-//                    case R.id.id_rb_1:
-//                        Label = lb1.getText().toString();
-//                        break;
-//                    case R.id.id_rb_2:
-//                        Label = lb2.getText().toString();
-//                        break;
-//                    case R.id.id_rb_3:
-//                        Label = lb3.getText().toString();
-//                        break;
-//                    case R.id.id_rb_4:
-//                        Label = lb4.getText().toString();
-//                        break;
-//                    case R.id.id_rb_5:
-//                        Label = lb_diy.getText().toString();
-//                        break;
-//                }
-//            }
-//        });
 
 
         publish.setOnClickListener(new View.OnClickListener() {
@@ -180,9 +144,10 @@ public class CreateNewHelpActivity extends BaseActivity{
     }
 
     private void initView() {
+        title1 = findViewById(R.id.id_title2);
         title = findViewById(R.id.id_et_title);
         content = findViewById(R.id.id_et_content);
-        publish = findViewById(R.id.id_btn_submit);
+        publish = findViewById(R.id.id_btn_publish);
         startTime = findViewById(R.id.id_et_startDate);
         mPaidFlowTagLayout = findViewById(R.id.flowlayout_single_select_paid);
         initPaidFlowTagLayout();
@@ -192,13 +157,7 @@ public class CreateNewHelpActivity extends BaseActivity{
 //        paid = findViewById(R.id.id_rg_paid);
         mSingleFlowTagLayout = findViewById(R.id.flowlayout_single_select);
         initLabelFlowTagLayout();
-//        lb1 = findViewById(R.id.id_rb_1);
-//        lb2 = findViewById(R.id.id_rb_2);
-//        lb3 = findViewById(R.id.id_rb_3);
-//        lb4 = findViewById(R.id.id_rb_4);
-//        lb5 = findViewById(R.id.id_rb_5);
-//        label = findViewById(R.id.id_rg_label);
-//        lb_diy = findViewById(R.id.id_et_diy);
+
         mRecyclerView = findViewById(R.id.id_recycler_view);
         task = new Task();
         taskBiz = new TaskBiz();
@@ -249,7 +208,11 @@ public class CreateNewHelpActivity extends BaseActivity{
         FlowTagPaidAdapter tagAdapter = new FlowTagPaidAdapter(CreateNewHelpActivity.this);
         mPaidFlowTagLayout.setAdapter(tagAdapter);
         mPaidFlowTagLayout.setTagCheckedMode(FlowTagLayout.FLOW_TAG_CHECKED_SINGLE);
-        mPaidFlowTagLayout.setOnTagSelectListener((parent, position, selectedList) -> XToastUtils.toast(getSelectedText(parent, selectedList)));
+        mPaidFlowTagLayout.setOnTagSelectListener((parent, position, selectedList) -> {
+            if (selectedList.size()>0){
+                Paid = position;
+            }
+        });
         tagAdapter.addTags(ResUtils.getStringArray(CreateNewHelpActivity.this, R.array.tags_values_paid));
 //        tagAdapter.setSelectedPositions(null);
 
@@ -259,20 +222,22 @@ public class CreateNewHelpActivity extends BaseActivity{
         FlowTagAdapter tagAdapter = new FlowTagAdapter(CreateNewHelpActivity.this);
         mSingleFlowTagLayout.setAdapter(tagAdapter);
         mSingleFlowTagLayout.setTagCheckedMode(FlowTagLayout.FLOW_TAG_CHECKED_SINGLE);
-        mSingleFlowTagLayout.setOnTagSelectListener((parent, position, selectedList) -> XToastUtils.toast(getSelectedText(parent, selectedList)));
+        mSingleFlowTagLayout.setOnTagSelectListener((parent, position, selectedList) -> {
+            if (selectedList.size()>0){
+                Label = (String)parent.getAdapter().getItem(position);
+            }
+            System.out.println("label"+Label);
+        });
         tagAdapter.addTags(ResUtils.getStringArray(CreateNewHelpActivity.this, R.array.tags_values));
 //        tagAdapter.setSelectedPositions(null);
 
     }
 
 
-    private String getSelectedText(FlowTagLayout parent, List<Integer> selectedList) {
-        StringBuilder sb = new StringBuilder("选中的内容：\n");
-        for (int index : selectedList) {
-            sb.append(parent.getAdapter().getItem(index));
-            sb.append(";");
-        }
-        return sb.toString();
+    private void setSelectedText(FlowTagLayout parent, List<Integer> selectedList) {
+
+
+
     }
 
     private void initWidget() {

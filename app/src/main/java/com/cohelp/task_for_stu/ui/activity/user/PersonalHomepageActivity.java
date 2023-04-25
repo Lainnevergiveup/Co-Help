@@ -11,12 +11,16 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.model.entity.Team;
 import com.cohelp.task_for_stu.net.model.entity.User;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
-import com.cohelp.task_for_stu.ui.view.AvatorImageView;
+import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
 import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
 import com.xuexiang.xui.widget.picker.widget.OptionsPickerView;
 import com.xuexiang.xui.widget.picker.widget.builder.OptionsPickerBuilder;
@@ -36,7 +40,7 @@ public class PersonalHomepageActivity extends BaseActivity {
     TextView tv_sex,tv_team,tv_account;
     EditText et_nick,et_age,et_tel;
     RoundButton btn_save;
-    AvatorImageView iv_icon;
+    NetRadiusImageView iv_icon;
     String[] s_sex = new String[2];
     String[] s_team = new String[20];
     List<Team> teamList;
@@ -293,7 +297,17 @@ public class PersonalHomepageActivity extends BaseActivity {
         et_age.setText(user.getAge().toString());
         et_tel.setText(user.getPhoneNumber());
         tv_team.setText(user.getTeamName());
-        iv_icon.setImageURL(userIcon);
+
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.tuku)
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
+        Glide.with(MyCoHelp.getAppContext())
+                .load(userIcon)
+                .apply(options)
+                .into(iv_icon);
+
+
 
         if (teamChangeState==null||teamChangeState.isEmpty()||teamChangeState.equals(user.getTeamName())){
             teamChangeTerminalLayout.setVisibility(View.GONE);

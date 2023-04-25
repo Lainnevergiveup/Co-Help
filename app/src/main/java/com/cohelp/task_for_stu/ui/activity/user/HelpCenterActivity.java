@@ -24,7 +24,6 @@ import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.MyFragmentPagerAdapter;
-import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -42,11 +41,9 @@ public class HelpCenterActivity extends BaseActivity {
     LinearLayout TaskCenter;
     LinearLayout HoleCenter;
     LinearLayout UserCenter;
-//    TextView lb1,lb2,lb3,lb4,lb5;
-//    NiceSpinner niceSpinner;
-//    String item;
+
     TextView title;
-//    TabSegment mTabSegment;
+
     ViewPager2 viewPager;
 
     FloatingActionButton floatingActionButton;
@@ -54,26 +51,20 @@ public class HelpCenterActivity extends BaseActivity {
     SearchFragment searchFragment = SearchFragment.newInstance();
     EditText searchedContent;
     ImageView searchBtn,search;
-    SwipeRefreshLayout eSwipeRefreshLayout;
-//    RecyclerView eRecyclerView;
-//    Integer conditionState = 0;
+
+
     List<DetailResponse> helpList = new ArrayList<>();
 
-//    HelpAdapter helpAdapter;
+
     CardViewListAdapter cardViewListAdapter = new CardViewListAdapter();
-//    String helpTag = "组团招人";
-//    private final int TAB_COUNT = 10;
-//    private int mCurrentItemCount = TAB_COUNT;
+
     String[] pages = MultiPage.getPageNames();
     String currentTab;
-//    private MultiPage mDestPage = MultiPage.组团招人;
 
-//    private Map<MultiPage, View> mPageMap = new HashMap<>();
-//    private MyPagerAdapter mPagerAdapter ;
     private TabLayout tabLayout;
     private int activeColor = Color.parseColor("#ff678f");
     private int normalColor = Color.parseColor("#666666");
-//    private ArrayList<String> titleList = new ArrayList<>();
+
     private ArrayList<Fragment> fragmentList=new ArrayList<>();
     private TabLayoutMediator meditor;
     int activeSize = 16;

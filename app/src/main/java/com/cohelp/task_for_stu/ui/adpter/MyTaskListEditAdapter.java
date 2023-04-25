@@ -115,16 +115,18 @@ public class MyTaskListEditAdapter extends BroccoliRecyclerAdapter<DetailRespons
         System.out.println("ask"+askVO);
         NetRadiusImageView imageView = holder.findViewById(R.id.cardView_author_pic);
         ImageLoader.get().loadImage(imageView, model.getPublisherAvatarUrl());
+        NetRadiusImageView firstImage = holder.findViewById(R.id.cardView_firstImage);
 
         List<String> imageList = model.getImagesUrl();
 //        System.out.println("imagelist="+imageList);
         if (imageList!=null&&imageList.size()>0){
-            NetRadiusImageView firstImage = holder.findViewById(R.id.cardView_firstImage);
+            firstImage.setImageDrawable(null);
             ImageLoader.get().loadImage(firstImage, model.getImagesUrl().get(0));
         }
 //        System.out.println(detailResponse.getReadNum());
 //        System.out.println("model"+model.getReadNum().toString());
 //        holder.text(R.id.cardView_readNumber, "阅读量 " +model.getReadNum().toString());
+
         if (activityVO!=null){
             System.out.println("id=22"+activityVO.getId());
             System.out.println(activityVO.getActivityComment());

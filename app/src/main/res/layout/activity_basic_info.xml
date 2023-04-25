@@ -6,17 +6,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.activity.user.BasicInfoActivity">
+    <include layout="@layout/toolsearchbar">
 
+    </include>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="130dp">
+        android:layout_height="100dp">
         <com.cohelp.task_for_stu.ui.view.NetRadiusImageView
             android:id="@+id/id_iv_icon"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@drawable/pictures_no"
             app:riv_corner_radius="80dp"/>
         <LinearLayout
@@ -28,19 +30,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="20dp"
                 android:text="用户昵称"
                 android:textStyle="bold"
-                android:textSize="25sp"/>
+                android:textSize="20sp"/>
             <TextView
                 android:id="@+id/id_tv_userTeam"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="20dp"
                 android:text="用户id"
-                android:textStyle="bold"
-                android:textSize="25sp"
+
+                android:textSize="18sp"
                 />
         </LinearLayout>
     </LinearLayout>
@@ -168,13 +170,23 @@
             android:orientation="horizontal"
             >
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/geren"
+                >
+
+
+            </TextView>
+            <TextView
                 android:id="@+id/id_tv_personal_homepage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:text="个人主页"
-                android:textStyle="bold"
+
                 android:textSize="20dp"
                 />
         </LinearLayout>
@@ -190,13 +202,23 @@
             android:orientation="horizontal"
             >
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/ti"
+                >
+
+
+            </TextView>
+            <TextView
                 android:id="@+id/id_tv_setting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:text="设    置"
-                android:textStyle="bold"
+                android:text="题      库"
+
                 android:textSize="20dp"
                 />
         </LinearLayout>
@@ -212,13 +234,23 @@
             android:orientation="horizontal"
             >
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/kecheng"
+                >
+
+
+            </TextView>
+            <TextView
                 android:id="@+id/id_tv_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:text="课程积分"
-                android:textStyle="bold"
+
                 android:textSize="20dp"
                 />
         </LinearLayout>
@@ -230,18 +262,6 @@
 
 
         <com.xuexiang.xui.widget.button.roundbutton.RoundButton
-            android:id="@+id/id_btn_switch"
-            style="@style/RoundButton.Blue"
-            android:layout_width="match_parent"
-            android:layout_height="40sp"
-            android:layout_marginTop="120dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:text="切换"
-            android:textSize="20sp"
-            android:textColor="@color/xui_config_color_red"
-            />
-        <com.xuexiang.xui.widget.button.roundbutton.RoundButton
             android:id="@+id/id_btn_logout"
             style="@style/RoundButton.Blue"
             android:layout_width="match_parent"
@@ -250,7 +270,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:textSize="20sp"
-            android:textColor="@color/xui_config_color_red"
+            android:textColor="@color/white"
             android:text="退出登录"
             />
     </LinearLayout>

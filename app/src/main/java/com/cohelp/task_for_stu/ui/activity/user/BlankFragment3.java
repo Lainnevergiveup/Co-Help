@@ -141,6 +141,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                System.out.println("互助界面");
                 initHelplist(tag);
                 swipeRefreshLayout.postDelayed(new Runnable() {
                     @Override
@@ -189,7 +190,11 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
                     e.printStackTrace();
                 }
                 Result<List<DetailResponse>> result = GSON.gson.fromJson(res, new TypeToken<Result<List<DetailResponse>>>(){}.getType());
-                helplist = result.getData();
+                if(result!=null){
+                    helplist = result.getData();
+                }else{
+                    helplist = new ArrayList<>();
+                }
                 runOnUiThread(new Runnable() {
                     public void run() {
                        initEvent();

@@ -29,7 +29,6 @@ import com.cohelp.task_for_stu.ui.adpter.MyFragmentPagerAdapter;
 import com.cohelp.task_for_stu.ui.adpter.NewsListEditAdapter;
 import com.cohelp.task_for_stu.ui.adpter.TaskAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
-import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.utils.ViewUtils;
 import com.xuexiang.xui.widget.button.SmoothCheckBox;
@@ -108,12 +107,7 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
             }
         });
 
-        UserCenter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toUserCenterActivity();
-            }
-        });
+
 
 
 //        for (int i = 0; i < 4; i++) {

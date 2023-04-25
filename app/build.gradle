@@ -165,5 +165,11 @@ dependencies {
     //可扩展卡片
     implementation 'com.alespero:expandable-cardview:0.8'
 
+    //字体
+    //用以设置App全局字体
+    implementation 'uk.co.chrisjenx:calligraphy:2.2.0'
+
+
+
 }
 

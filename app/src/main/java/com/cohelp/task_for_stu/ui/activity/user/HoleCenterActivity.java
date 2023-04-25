@@ -204,13 +204,13 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hole_center);
-        initTools();
+
         initView();
         initEvent();
         setUpToolBar();
         setTitle("");
     }
-    private void initTools(){}
+
 
 
 
@@ -345,61 +345,43 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
 
 
         }
-        for(int i=0;i<titleList.size();i++){
-            scrollMap.put(i,0);
-        }
-        MyFragmentPagerAdapter pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),getLifecycle(),fragmentList);
-//        mPageAdapter=new FragmentPagerAdapter(getSupportFragmentManager()) {
-//            @Override
-//            public Fragment getItem(int i) {
-//                return fragmentList.get(i);
-//            }
-//
-//            @Nullable
-//            @Override
-//            public CharSequence getPageTitle(int position) {
-//                return titleList.get(position);
-//            }
-//
-//            @Override
-//            public long getItemId(int position) {
-//                return position;
-//            }
-//
-//            @Override
-//            public int getCount() {
-//                return titleList.size();
-//            }
-//        };
 
-//        viewPager.setAdapter(new FragmentStateAdapter(getSupportFragmentManager(), getLifecycle()) {
-//            @NonNull
-//            @Override
-//            public Fragment createFragment(int position) {
-//                //FragmentStateAdapter内部自己会管理已实例化的fragment对象。
-//                // 所以不需要考虑复用的问题
-//                BlankFragment2 blankFragment2 = BlankFragment2.newInstance(courseList.get(position).getName());
-//                Bundle bundle = new Bundle();
-//                bundle.putString("detail",new GSON().gsonSetter().toJson(askList));
-//                blankFragment2.setArguments(bundle);
-//                FragmentManager fragmentManager = getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.addToBackStack(null)
-//                        .add(R.id.,blankFragment2)
-//                        .commit();
-//                return blankFragment2;
-//            }
-//
-//            @Override
-//            public int getItemCount() {
-//                return tabs.length;
-//            }
-//        });
+        MyFragmentPagerAdapter pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),getLifecycle(),fragmentList);
 
         viewPager.setAdapter(pagerAdapter);
-        System.out.println("courseList"+courseList.size());
-        viewPager.setOffscreenPageLimit(courseList.size());
-        viewPager.registerOnPageChangeCallback(changeCallback);
+        if(courseList.size()!=0){
+            viewPager.setOffscreenPageLimit(courseList.size());
+            viewPager.registerOnPageChangeCallback(changeCallback);
+            viewPager.setPageTransformer(new ViewPager2.PageTransformer() {
+                @Override
+                public void transformPage(@NonNull View view, float position) {
+                    view.setAlpha(Math.abs(1 - Math.abs(position)));
+                }
+            });
+
+            meditor = new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
+                @Override
+                public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                    TextView textView = new TextView(HoleCenterActivity.this);
+//                textView.setText(tabs[position]);
+                    tab.setCustomView(textView);
+
+                    int[][] states = new int[2][];
+                    states[0] = new int[]{android.R.attr.state_selected};
+                    states[1] = new int[]{};
+
+                    int[] colors = new int[]{activeColor, normalColor};
+                    ColorStateList colorStateList = new ColorStateList(states, colors);
+                    textView.setText(courseList.get(position).getName());
+                    textView.setTextSize(normalSize);
+                    textView.setGravity(1);
+//                textView.setTextColor(colorStateList);
+                    tab.setCustomView(textView);
+
+                }
+            });
+            meditor.attach();
+        }
 
         try {
             Field recyclerViewField = ViewPager2.class.getDeclaredField("mRecyclerView");
@@ -411,40 +393,10 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
             touchSlopField.setAccessible(true);
 
             int touchSlop = (int) touchSlopField.get(recyclerView);
-            touchSlopField.set(recyclerView, touchSlop * 2);
+            touchSlopField.set(recyclerView, touchSlop * 4);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
-
-        viewPager.setPageTransformer(new ViewPager2.PageTransformer() {
-            @Override
-            public void transformPage(@NonNull View view, float position) {
-                view.setAlpha(Math.abs(1 - Math.abs(position)));
-            }
-        });
-
-        meditor = new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                TextView textView = new TextView(HoleCenterActivity.this);
-//                textView.setText(tabs[position]);
-                tab.setCustomView(textView);
-
-                int[][] states = new int[2][];
-                states[0] = new int[]{android.R.attr.state_selected};
-                states[1] = new int[]{};
-
-                int[] colors = new int[]{activeColor, normalColor};
-                ColorStateList colorStateList = new ColorStateList(states, colors);
-                textView.setText(courseList.get(position).getName());
-                textView.setTextSize(normalSize);
-                textView.setGravity(1);
-//                textView.setTextColor(colorStateList);
-                tab.setCustomView(textView);
-
-            }
-        });
-        meditor.attach();
 
 
     }
@@ -523,20 +475,10 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
         Intent intent = new Intent(this,CreateNewHoleActivity.class);
         startActivity(intent);
     }
-//    private synchronized void getAskList(Integer id , String semester){
-//        Thread t1 = new Thread(()->{
-//            askList = okHttpUtils.getAskList(id, semester);
-//        });
-//        t1.start();
-//        try {
-//            t1.join();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     private void refreshCourseList(String semester){
-
+        if (semester==null||semester.equals(""))
+            return;
         //创建请求
         Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/course/list/" + semester, null, 300);
         //执行请求
@@ -554,7 +496,11 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
                     e.printStackTrace();
                 }
                 Result<List<CourseVO>> result = GSON.gson.fromJson(res,new TypeToken<Result<List<CourseVO>>>(){}.getType());
-                courseList =  result.getData();
+                if(result!=null){
+                    courseList =  result.getData();
+                }else{
+                    courseList = new ArrayList<>();
+                }
                 runOnUiThread(new Runnable() {
                     public void run() {
                         currentCourse = courseList!=null&&!courseList.isEmpty()?courseList.get(0).getId():0;
@@ -583,7 +529,11 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
                     e.printStackTrace();
                 }
                 Result<List<CourseVO>> result = GSON.gson.fromJson(res,new TypeToken<Result<List<CourseVO>>>(){}.getType());
-                courseList =  result.getData();
+                if(result!=null){
+                    courseList = result.getData();
+                }else{
+                    courseList = new ArrayList<>();
+                }
                 runOnUiThread(new Runnable() {
                     public void run() {
                         currentCourse = courseList!=null&&!courseList.isEmpty()?courseList.get(0).getId():0;
@@ -613,7 +563,12 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
                     e.printStackTrace();
                 }
                 Result<List<String>> result = GSON.gson.fromJson(res,new TypeToken<Result<List<String>>>(){}.getType());
-                semesterList =  result.getData();
+                if(result!=null){
+                    semesterList = result.getData();
+                }else{
+                    semesterList = new ArrayList<>();
+
+                }
                 runOnUiThread(new Runnable() {
                     public void run() {
                         niceSpinner.attachDataSource(semesterList);
@@ -666,8 +621,10 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
 
     @Override
     protected void onDestroy() {
-        meditor.detach();
-        viewPager.unregisterOnPageChangeCallback(changeCallback);
+        if (meditor!=null && viewPager !=null){
+            meditor.detach();
+            viewPager.unregisterOnPageChangeCallback(changeCallback);
+        }
         super.onDestroy();
     }
 

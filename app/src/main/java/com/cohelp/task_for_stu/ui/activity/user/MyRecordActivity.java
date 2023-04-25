@@ -77,8 +77,8 @@ public class MyRecordActivity extends BasicInfoActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_record);
-
-
+        setUpToolBar();
+        setTitle("");
         initView();
         initEvent();
     }
@@ -124,12 +124,7 @@ public class MyRecordActivity extends BasicInfoActivity {
             }
         });
 
-        UserCenter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toUserCenterActivity();
-            }
-        });
+
 //        cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
 //            @Override
 //            public void onItemClick(View view, int postion) {
