@@ -33,6 +33,7 @@ import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.cohelp.task_for_stu.utils.T;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.reflect.TypeToken;
 import com.leon.lfilepickerlibrary.utils.StringUtils;
 import com.wyt.searchbox.SearchFragment;
@@ -61,6 +62,8 @@ public class TaskCenterActivity extends BaseActivity {
     LinearLayout UserCenter;
 
     TextView title;
+
+    FloatingActionButton floatingActionButton;
     androidx.appcompat.widget.Toolbar toolbar;
     EditText searchedContent;
     ImageView searchBtn,search;
@@ -120,6 +123,7 @@ public class TaskCenterActivity extends BaseActivity {
     private void initView() {
         toolbar = findViewById(R.id.tool_bar_2);
         title = findViewById(R.id.tv_title);
+        floatingActionButton = findViewById(R.id.fab);
         HoleCenter = findViewById(R.id.id_ll_holeCenter);
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
         TaskCenter = findViewById(R.id.id_ll_taskCenter);
@@ -137,26 +141,19 @@ public class TaskCenterActivity extends BaseActivity {
     }
 
     private void initToolbar(){
-        toolbar.setNavigationOnClickListener(onClickListener);
+//        toolbar.setNavigationOnClickListener(onClickListener);
         toolbar.inflateMenu(R.menu.menu);
         toolbar.setOnMenuItemClickListener(menuItemClickListener);
         title.setText("活动");
     }
 
     private void initEvent() {
-//        setToolbar(R.drawable.common_add, new ClickListener() {
-//            @RequiresApi(api = Build.VERSION_CODES.O)
-//            @Override
-//            public void click() {
-//                toCreateNewTaskActivity();
-//            }
-//        });
-//        toolbar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                toCreateNewTaskActivity();
-//            }
-//        });
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toCreateNewTaskActivity();
+            }
+        });
         searchFragment.setOnSearchClickListener(new IOnSearchClickListener() {
             @Override
             public void OnSearchClick(String keyword) {

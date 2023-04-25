@@ -33,6 +33,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 
 /**
@@ -90,7 +91,7 @@ public class LoginActivity extends BaseActivity {
         loginRequest = new LoginRequest();
         loginRequest.setUserAccount(username.getText().toString());
         loginRequest.setUserPassword( password.getText().toString());
-        loginRequest.setUserAccount("1234567895");//debug
+        loginRequest.setUserAccount("1234567894");//debug
         loginRequest.setUserPassword( "1234567890");//debug
 
         if(StringUtils.isEmpty(loginRequest.getUserAccount()) || StringUtils.isEmpty(loginRequest.getUserPassword())){
@@ -113,7 +114,8 @@ public class LoginActivity extends BaseActivity {
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     String res = null;
                     try {
-                        res = response.body().string();
+                        ResponseBody body = response.body();
+                        res = body.string();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

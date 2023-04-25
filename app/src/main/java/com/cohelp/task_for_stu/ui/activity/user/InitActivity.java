@@ -1,6 +1,7 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
 
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,18 +12,22 @@ import androidx.annotation.RequiresApi;
 
 import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
+import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
 import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.LoginRequest;
 import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.entity.User;
+import com.cohelp.task_for_stu.net.model.vo.ScoreVO;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.utils.ACache;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.OkHttp;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -47,7 +52,7 @@ public class InitActivity extends BaseActivity {
         }
     }
     private void toBasicInfoActivity() {
-        Intent intent = new Intent(this,BasicInfoActivity.class);
+        Intent intent = new Intent(this,TaskCenterActivity.class);
         startActivity(intent);
         finish();
     }
@@ -101,4 +106,6 @@ public class InitActivity extends BaseActivity {
             }
         });
     }
+
+
 }

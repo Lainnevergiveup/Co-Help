@@ -25,6 +25,7 @@ import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.MyFragmentPagerAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.wyt.searchbox.SearchFragment;
@@ -48,6 +49,7 @@ public class HelpCenterActivity extends BaseActivity {
 //    TabSegment mTabSegment;
     ViewPager2 viewPager;
 
+    FloatingActionButton floatingActionButton;
     androidx.appcompat.widget.Toolbar toolbar;
     SearchFragment searchFragment = SearchFragment.newInstance();
     EditText searchedContent;
@@ -101,143 +103,13 @@ public class HelpCenterActivity extends BaseActivity {
     }
 
     private void initToolbar(){
-        toolbar.setNavigationOnClickListener(onClickListener);
+//        toolbar.setNavigationOnClickListener(onClickListener);
         toolbar.inflateMenu(R.menu.menu_help);
         toolbar.setOnMenuItemClickListener(menuItemClickListener);
         title.setText("互助");
     }
 
     private void initTab(){
-//        mPagerAdapter = new PagerAdapter() {
-//            private RecyclerView recyclerView;
-//            @Override
-//            public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-//                this.recyclerView = (RecyclerView) object;
-//            }
-//            public RecyclerView getPrimaryItem() {
-//                return this.recyclerView;
-//            }
-//
-//            @Override
-//            public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-//                return view == object;
-//            }
-//
-//            @Override
-//            public int getCount() {
-//                return mDestPage.size();
-//            }
-//
-//            @Override
-//            public Object instantiateItem(final ViewGroup container, int position) {
-//                MultiPage page = MultiPage.getPage(position);
-//                System.out.println("position"+position);
-//                View view = getPageView(page);
-//                view.setTag(page);
-//                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//                container.addView(view, params);
-//                return view;
-//            }
-//
-//            @Override
-//            public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
-//                container.removeView((View) object);
-//            }
-//
-//            @Override
-//            public int getItemPosition(@NonNull Object object) {
-//                View view = (View) object;
-//                Object page = view.getTag();
-//                if (page instanceof MultiPage) {
-//                    int pos = ((MultiPage) page).getPosition();
-//                    System.out.println("pos"+pos);
-//                    if (pos >= mCurrentItemCount) {
-//                        return POSITION_NONE;
-//                    }
-//                    return POSITION_UNCHANGED;
-//                }
-//                return POSITION_NONE;
-//            }
-//        };
-//        mPagerAdapter = new MyPagerAdapter(){
-//            private RecyclerView recyclerView;
-//            public RecyclerView getPrimaryItem() {
-//                return this.recyclerView;
-//            }
-//            @Override
-//            public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-//                this.recyclerView = (RecyclerView) object;
-//            }
-//
-//
-//            @Override
-//            public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-//                return view == object;
-//            }
-//
-//            @Override
-//            public int getCount() {
-//                return mDestPage.size();
-//            }
-//
-//            @Override
-//            public Object instantiateItem(final ViewGroup container, int position) {
-//                MultiPage page = MultiPage.getPage(position);
-//                System.out.println("position"+position);
-//                View view = getPageView(page);
-//                view.setTag(page);
-//                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//                container.addView(view, params);
-//                return view;
-//            }
-//
-//            @Override
-//            public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
-//                container.removeView((View) object);
-//            }
-//
-//            @Override
-//            public int getItemPosition(@NonNull Object object) {
-//                View view = (View) object;
-//                Object page = view.getTag();
-//                if (page instanceof MultiPage) {
-//                    int pos = ((MultiPage) page).getPosition();
-//                    System.out.println("pos"+pos);
-//                    if (pos >= mCurrentItemCount) {
-//                        return POSITION_NONE;
-//                    }
-//                    return POSITION_UNCHANGED;
-//                }
-//                return POSITION_NONE;
-//            }
-//
-//
-//            @RequiresApi(api = Build.VERSION_CODES.O)
-//            private View getPageView(MultiPage page) {
-//
-//                View view = mPageMap.get(page);
-//                if (view == null) {
-//
-//
-//                    RecyclerView recyclerView = new RecyclerView(HelpCenterActivity.this,null);
-////            swipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
-////            swipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-////            swipeRefreshLayout.addView(recyclerView);
-//                    recyclerView.setLayoutManager(new LinearLayoutManager(HelpCenterActivity.this));
-//                    recyclerView.setAdapter(cardViewListAdapter);
-////            swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
-////                @Override
-////                public void onRefresh() {
-////                    System.out.println("isrefreshing");
-////                }
-////            });
-//                    view = recyclerView;
-//                    mPageMap.put(page, view);
-//
-//                }
-//                return view;
-//            }
-//        };
         fragmentList.clear();
 
         fragmentList.add(new BlankFragment3(this,"组团招人"));
@@ -254,7 +126,6 @@ public class HelpCenterActivity extends BaseActivity {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 TextView textView = new TextView(HelpCenterActivity.this);
-//                textView.setText(tabs[position]);
                 tab.setCustomView(textView);
 
                 int[][] states = new int[2][];
@@ -262,12 +133,10 @@ public class HelpCenterActivity extends BaseActivity {
                 states[1] = new int[]{};
 
                 int[] colors = new int[]{activeColor, normalColor};
-//                ColorStateList colorStateList = new ColorStateList(states, colors);
                 currentTab = pages[position];
                 textView.setText(pages[position]);
                 textView.setTextSize(normalSize);
                 textView.setGravity(1);
-//                textView.setTextColor(colorStateList);
                 tab.setCustomView(textView);
 
             }
@@ -278,6 +147,8 @@ public class HelpCenterActivity extends BaseActivity {
     private View.OnClickListener onClickListener = v -> toCreateNewHelpActivity();
 
     private void initEvent() {
+
+
 
         TaskCenter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -300,6 +171,13 @@ public class HelpCenterActivity extends BaseActivity {
             }
         });
 
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toCreateNewHelpActivity();
+            }
+        });
+
 
         cardViewListAdapter.setOnItemClickListener(new CardViewListAdapter.OnItemListenter(){
             @Override
@@ -311,45 +189,6 @@ public class HelpCenterActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-//        mTabSegment.addOnTabSelectedListener(new TabSegment.OnTabSelectedListener() {
-//            @Override
-//            public void onTabSelected(int index) {
-//
-//                helpTag = pages[index];
-//                System.out.println("tag"+helpTag);
-////                getHelpList();
-//                List<DetailResponse> list = changeTag();
-//                System.out.println(list);
-//                for (DetailResponse i:list){
-//                    System.out.println(i.getHelpVO().getHelpLabel());
-//                }
-//                cardViewListAdapter.setDetailResponseListList(list);
-//                RecyclerView primaryItem = mPagerAdapter.getPrimaryItem();
-//                primaryItem.setAdapter(cardViewListAdapter);
-////                int currentItem = mContentViewPager.getCurrentItem();
-////                System.out.println("current"+currentItem);
-////                getHelpList();
-//////        cardViewListAdapter.setDetailResponseListList(helpList);
-////                RecyclerView childAt = (RecyclerView) mContentViewPager.get(currentItem);
-////                childAt.setAdapter(cardViewListAdapter);
-////                refreshHelpListData();
-//            }
-//
-//            @Override
-//            public void onTabUnselected(int index) {
-//
-//            }
-//
-//            @Override
-//            public void onTabReselected(int index) {
-//
-//            }
-//
-//            @Override
-//            public void onDoubleTap(int index) {
-//
-//            }
-//        });
     }
 
     androidx.appcompat.widget.Toolbar.OnMenuItemClickListener menuItemClickListener = item -> {
@@ -379,20 +218,12 @@ public class HelpCenterActivity extends BaseActivity {
         HelpCenter = findViewById(R.id.id_ll_helpCenter);
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
+        floatingActionButton = findViewById(R.id.fab);
         searchedContent = findViewById(R.id.id_et_search);
         searchBtn = findViewById(R.id.id_iv_search);
 
         viewPager = findViewById(R.id.contentViewPager);
-//        eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
-//        eRecyclerView = findViewById(R.id.id_recyclerview);
         tabLayout = findViewById(R.id.tabLayout);
-//        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.PULL_FROM_START);
-//        eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-//        getHelpList();
-//        cardViewListAdapter = new CardViewListAdapter(helpList);
-
-//        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        eRecyclerView.setAdapter(cardViewListAdapter);
 
     }
 
@@ -401,12 +232,7 @@ public class HelpCenterActivity extends BaseActivity {
 
     private synchronized void getHelpList(){
         Thread t1 = new Thread(()->{
-//            helpList = okHttpUtils.helpListByTag(helpTag);
             helpList =OkHttpUtils.helpList(0);
-//            Message msg = Message.obtain();
-//            msg.obj = helpList;
-//            msg.what = GET_DATA_SUCCESS;
-//            handler.sendMessage(msg);
             cardViewListAdapter.setDetailResponseListList(helpList);
         });
         t1.start();

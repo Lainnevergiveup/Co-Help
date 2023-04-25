@@ -7,8 +7,6 @@
     style="@style/ToolbarStyle"
 
     android:layout_marginTop="0dp"
-
-    app:navigationIcon="@drawable/pubish_1"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     >
 
