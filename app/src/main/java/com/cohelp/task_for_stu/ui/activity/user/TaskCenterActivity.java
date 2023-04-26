@@ -69,47 +69,21 @@ public class TaskCenterActivity extends BaseActivity {
     ImageView searchBtn,search;
     SwipeRefreshLayout eSwipeRefreshLayout;
     RecyclerView eRecyclerView;
-    RelativeLayout SearchBox;
-
-    SwitchButton switchButton;
     List<DetailResponse> activityVOList;
-    OkHttpUtils okHttpUtils;
-    Intent intent;
     SearchFragment searchFragment = SearchFragment.newInstance();
-    ActivityAdapter activityAdapter;
     CardViewListAdapter cardViewListAdapter;
 
-    Integer conditionState = 0;
+    Integer conditionState = 1;
 
     public static final int GET_DATA_SUCCESS = 1;
     public static final int NETWORK_ERROR = 2;
     public static final int SERVER_ERROR = 3;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what){
-                case GET_DATA_SUCCESS:
-                    activityVOList = (List<DetailResponse>) msg.obj;
-                    cardViewListAdapter.setDetailResponseListList(activityVOList);
-                    eRecyclerView.setLayoutManager(new LinearLayoutManager(TaskCenterActivity.this));
-                    eRecyclerView.setAdapter(cardViewListAdapter);
-                    break;
-                case NETWORK_ERROR:
-                    Toast.makeText(TaskCenterActivity.this,"网络连接失败",Toast.LENGTH_SHORT).show();
-                    break;
-                case SERVER_ERROR:
-                    Toast.makeText(TaskCenterActivity.this,"服务器发生错误",Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        }
-    };
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_center);
-//        activityVOList = SessionUtils.getActivityPreference(TaskCenterActivity.this);
         initTools();
         initView();
         initToolbar();
@@ -141,7 +115,6 @@ public class TaskCenterActivity extends BaseActivity {
     }
 
     private void initToolbar(){
-//        toolbar.setNavigationOnClickListener(onClickListener);
         toolbar.inflateMenu(R.menu.menu);
         toolbar.setOnMenuItemClickListener(menuItemClickListener);
         title.setText("活动");
@@ -220,16 +193,6 @@ public class TaskCenterActivity extends BaseActivity {
                 toDetailActivity(postion);
             }
         });
-
-////        search.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View v) {
-//                searchFragment.showFragment(getSupportFragmentManager(),SearchFragment.TAG);
-////
-////
-////            }
-////        });
-
     }
 
 
@@ -310,12 +273,11 @@ public class TaskCenterActivity extends BaseActivity {
         Map<String, List<String>> map = new HashMap<>();
         List<String> list = new ArrayList<>();list.add(conditionState.toString());map.put("conditionType",list);
         //创建请求
-        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/activity/list/1/20", map, 300);
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/activity/list/1/30", map, 30);
 
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -351,11 +313,10 @@ public class TaskCenterActivity extends BaseActivity {
         List<String> keyStr = new ArrayList<>();keyStr.add(key);map.put("key",keyStr);
         List<String> types = new ArrayList<>();types.add("1");map.put("types",types);
 
-        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/general/search/1/5", map, 300);
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/general/search/1/20", map, 120);
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {

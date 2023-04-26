@@ -109,8 +109,6 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     OkHttpUtils okHttpUtils;
     Intent intent;
 
-    User user;
-
     AskVO detail;
     List<AnswerVO> remarkList;
     List<AnswerVO> firstList;
@@ -155,7 +153,6 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
             Bundle bundle = intent.getExtras();
             if (bundle!=null){
                 detail = (AskVO) bundle.getSerializable("detailResponse");
-
             }
         }
 
@@ -194,12 +191,8 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     private void initData(){
         setDetailData();
         getAnswerBank();
-        getUser();
-
         refreshComment();
-
         updateButtonState();
-
     }
     private void initEvent(){
 
@@ -220,8 +213,6 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
                 new Thread(()->{
                     OkHttpUtils.askLike(type,detail.getId());
                 }).start();
-//                System.out.println(12131);
-                System.out.println(detail.getIsLiked());
                 detail.setIsLiked(detail.getIsLiked()==1?0:1);
                 updateButtonState();
             }
@@ -357,7 +348,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void getAnswerBank(){
 
-        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/teach/listanswerfrombank/"+detail.getId() +"/1/20", null, 0);
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/teach/listanswerfrombank/"+detail.getId() +"/1/20", null, 60);
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -382,7 +373,6 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
                         recyclerView.setAdapter(cardViewAskAnswerListAdapter);
                     }
                 });
-
             }
         });
 
@@ -415,9 +405,7 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
 
         try {
             Thread t1 = new Thread(()->{
-                System.out.println("id"+detail.getId());
                 remarkList = OkHttpUtils.getAnswerList(1,50,detail.getId());
-                System.out.println(remarkList);
             });
             t1.start();
             t1.join();
@@ -491,11 +479,16 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
         return arrayLists;
     }
 
-    private  void sendRemark(Answer answer){
+    private synchronized void sendRemark(Answer answer){
         Thread thread = new Thread(() -> {
             OkHttpUtils.answerPublish(answer,null);
         });
         thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initCommentTarget(){
@@ -581,8 +574,6 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
             firstLevelBean.setIsLike(i.getIsLiked());
             firstLevelBean.setLikeCount(i.getIsLiked());
             firstLevelBean.setUserName(i.getPublisherName());
-//            firstLevelBean.setTotalCount(i + size);
-//            firstLevelBean.setPosition(position);
 
 
             List<SecondLevelBean> beans = new ArrayList<>();
@@ -614,20 +605,9 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
                     }
                 }
             }
-//            if (beanSize <= 10) {
-////                posCount+=2;
-//                CommentMoreBean moreBean = new CommentMoreBean();
-////                moreBean.setPosition(position);
-////                moreBean.setPositionCount(posCount);
-//                moreBean.setTotalCount(firstLevelBean.getTotalCount());
-//                data.add(moreBean);
-//            }
             firstLevelBean.setTotalCount(1+(firstLevelBean.getSecondLevelBeans()==null?0:firstLevelBean.getSecondLevelBeans().size()));
             firstLevelBean.setSecondLevelBeans(beans);
             datas.add(firstLevelBean);
-//            data.add(firstLevelBean);
-
-//            position++;
         }
 
     }
@@ -837,18 +817,6 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
                                 : positionCount, positionCount >= data.size() - 1 ? Integer.MIN_VALUE : rv_dialog_lists.getHeight());
             }
         }, 100);
-    }
-
-    private synchronized void getUser(){
-        Thread t1 = new Thread(()->{
-            user=OkHttpUtils.getUser();
-        });
-        t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
     protected void setUpToolBar() {
         toolbar = findViewById(R.id.id_toolbar);

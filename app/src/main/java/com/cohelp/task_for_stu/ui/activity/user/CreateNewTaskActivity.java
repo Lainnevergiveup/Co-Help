@@ -93,18 +93,10 @@ public class CreateNewTaskActivity extends BaseActivity  {
         setTitle("");
         initView();
         initEvent();
-//        takePhoto();
         title1.setText("活动发布");
         initWidget();
-//        takePhoto();
     }
     private void initEvent() {
-//        endTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                pickerView.show(endTime);
-//            }
-//        });
         startTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,7 +109,6 @@ public class CreateNewTaskActivity extends BaseActivity  {
                 String te = title.getText().toString();
                 String ct = content.getText().toString();
                 String pt = startTime.getText().toString();
-//                String lb = label.getText().toString();
                 System.out.println("te"+te);
                 System.out.println("ct"+ct);
                 if(te.isEmpty() || ct.isEmpty() || pt.isEmpty()) {
@@ -128,16 +119,10 @@ public class CreateNewTaskActivity extends BaseActivity  {
                     LocalDateTime dateTime=LocalDateTime.parse(pt, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
                     activity = new Activity(null,null,te,ct,dateTime,null,null,null,null,null,null);
                     HashMap<String, String> stringStringHashMap = new HashMap<String, String>();
-                    for (int i =0;i<list.size()-1;i++){
+                    for (int i =0;i<list.size();i++){
                         stringStringHashMap.put(i+"",list.get(i));
                     }
-
-
                     new Thread(()->{
-//                        Ask ask = new Ask(te, 1, "2019-2020-2");
-//                        System.out.println(okHttpUtils.askPublish(ask,stringStringHashMap));
-//                        Answer answer =new Answer(te,1,2,1);
-
                         okHttpUtils.activityPublish(activity,stringStringHashMap);
                     }).start();
                     Toast.makeText(CreateNewTaskActivity.this, "发布成功~", Toast.LENGTH_LONG).show();
@@ -146,8 +131,6 @@ public class CreateNewTaskActivity extends BaseActivity  {
 
             }
         });
-
-//        initData();
     }
 
     private void initView() {
@@ -349,7 +332,7 @@ public class CreateNewTaskActivity extends BaseActivity  {
     }
 
     private void getPath(){
-        for (int i = 0;i < selectList.size()-1;i++){
+        for (int i = 0;i < selectList.size();i++){
             list.add(selectList.get(i).getPath());
             System.out.println(list.get(i));
         }

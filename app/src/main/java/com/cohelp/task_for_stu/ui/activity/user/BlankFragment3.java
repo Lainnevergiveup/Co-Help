@@ -56,19 +56,11 @@ import okhttp3.Response;
 public class BlankFragment3 extends Fragment implements View.OnClickListener{
     private Context context;
     private View root;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
 
-
-    SmartRefreshLayout refreshLayout;
     MyRecyclerView recyclerView;
-    FrameLayout flEdit;
-    SmoothCheckBox scbSelectAll;
-    Button btn_delete;
     List<DetailResponse> helplist;
     String tag;
     MyListViewForScrollView scrollView;
-    private TextView mTvSwitch;
     MyTaskAdapter myTaskAdapter;
     public static final int GET_DATA_SUCCESS = 1;
     public static final int NETWORK_ERROR = 2;
@@ -141,14 +133,12 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                System.out.println("互助界面");
                 initHelplist(tag);
                 swipeRefreshLayout.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         //关闭刷新
                         swipeRefreshLayout.setRefreshing(false);
-                        System.out.println("刷新中");
                     }
                 },1000);
             }
@@ -161,9 +151,6 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
             return false;
         }
     };
-    private void refreshHelplist(String tag){
-
-    }
     private void initHelplist(String tag){
 
         //get请求参数预处理
@@ -173,16 +160,15 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener{
         map.put("tag",list);
 
         //创建请求
-        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/help/list/tag/1/20", map, 300);
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/help/list/tag/1/20", map, 30);
 
         //执行请求
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
             }
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response){
                 String res = null;
                 try {
                     res = response.body().string();

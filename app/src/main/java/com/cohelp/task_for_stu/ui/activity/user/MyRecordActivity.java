@@ -268,11 +268,11 @@ public class MyRecordActivity extends BasicInfoActivity {
         finish();
     }
     private void refreshRecordList(){
-        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/history/gethistorylist/1/10", null, 0);
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/history/gethistorylist/1/10", null, 90);
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
@@ -310,7 +310,7 @@ public class MyRecordActivity extends BasicInfoActivity {
             OKHttp.client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
+
                 }
 
                 @Override

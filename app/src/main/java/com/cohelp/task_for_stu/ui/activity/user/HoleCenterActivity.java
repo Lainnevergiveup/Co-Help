@@ -485,7 +485,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
+
             }
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
@@ -518,7 +518,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
+
             }
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
@@ -546,12 +546,12 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
 
     private void initSemesterList(){
         //获取学期列表
-        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/user/semester", null, 0);
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/user/semester", null, 300);
         //执行请求
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
+
             }
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {

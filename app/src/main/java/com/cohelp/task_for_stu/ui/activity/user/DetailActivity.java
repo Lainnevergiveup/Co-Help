@@ -10,8 +10,10 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -32,10 +34,13 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
+import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
 import com.cohelp.task_for_stu.net.model.domain.RemarkRequest;
+import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.entity.Collect;
 import com.cohelp.task_for_stu.net.model.entity.CommentMoreBean;
 import com.cohelp.task_for_stu.net.model.entity.FirstLevelBean;
@@ -48,6 +53,7 @@ import com.cohelp.task_for_stu.net.model.vo.HelpVO;
 import com.cohelp.task_for_stu.net.model.vo.RemarkVO;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CommentDialogMutiAdapter;
+import com.cohelp.task_for_stu.ui.adpter.GridViewImageAdapter;
 import com.cohelp.task_for_stu.ui.listener.SoftKeyBoardListener;
 import com.cohelp.task_for_stu.ui.view.InputTextMsgDialog;
 import com.cohelp.task_for_stu.ui.view.NetRadiusImageView;
@@ -56,16 +62,24 @@ import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.TimeUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.reflect.TypeToken;
 import com.lzy.ninegrid.ImageInfo;
 import com.lzy.ninegrid.NineGridView;
 import com.lzy.ninegrid.preview.NineGridViewClickAdapter;
 
+import java.io.IOException;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
+
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class DetailActivity extends BaseActivity implements BaseQuickAdapter.RequestLoadMoreListener{
     private  int INITBEANNUM = 5;
@@ -98,8 +112,6 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
 
     OkHttpUtils okHttpUtils;
     Intent intent;
-
-    User user;
 
     DetailResponse detail;
     List<RemarkVO> remarkList;
@@ -148,7 +160,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
         }
 
         
-        idAndType = new IdAndType(detail.getIdByType(detail.getType()),1);
+        idAndType = new IdAndType(detail.getIdByType(detail.getType()),detail.getType());
         mRecyclerViewUtil = new RecyclerViewUtil();
 
     }
@@ -174,11 +186,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initData(){
         setDetailData();
-
-        getUser();
-
         refreshComment();
-
         updateButtonState();
 
     }
@@ -199,7 +207,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
             public void onClick(View view) {
                 Integer type = detail.getType();
                 new Thread(()->{
-                    okHttpUtils.remark(type,detail.getIdByType(type));
+                    OkHttpUtils.topicLike(type,detail.getIdByType(type));
                 }).start();
                 detail.setIsLiked(detail.getIsLiked()==1?0:1);
                 updateButtonState();
@@ -226,7 +234,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
                 detail.setIsCollected(detail.getIsCollected()==1?0:1);
                 updateButtonState();
                 new Thread(()->{
-                    okHttpUtils.insertCollection(collect);
+                    OkHttpUtils.insertCollection(collect);
                 }).start();
             }
         });
@@ -336,7 +344,6 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
     private void setDetailData(){
 
         if (detail!=null){
-//            avatorPic.setImageURL(detail.getPublisherAvatarUrl());
             RequestOptions options = new RequestOptions()
                     .centerCrop()
                     .placeholder(R.drawable.tuku)
@@ -375,11 +382,9 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
     }
     //获取评论并排序
     private synchronized void getComment(){
-
         try {
             Thread t1 = new Thread(()->{
-            remarkList = okHttpUtils.getCommentList(idAndType);
-                System.out.println(remarkList);
+            remarkList = OkHttpUtils.getCommentList(idAndType);
             });
             t1.start();
             t1.join();
@@ -448,9 +453,7 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
         }
         return arrayLists;
     }
-    private void changeLocalState(){
-        List<DetailResponse> detailResponses = SessionUtils.getActivityPreference(DetailActivity.this);
-    }
+
     private RemarkActivity remarkActivityBuilder(){
         RemarkActivity remarkActivity = new RemarkActivity();
         remarkActivity.setRemarkTime(new Date());
@@ -489,12 +492,11 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
                 break;
             }
         }
-//        System.out.println(okHttpUtils.getGson().toJson(remarkRequest));
         return remarkRequest;
     }
     private synchronized void sendRemark(RemarkRequest remarkRequest){
         Thread thread = new Thread(() -> {
-            okHttpUtils.sendComment(remarkRequest);
+            OkHttpUtils.sendComment(remarkRequest);
         });
         thread.start();
         try {
@@ -515,16 +517,15 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
     //更新按钮状态
     private void updateButtonState(){
         if (detail.getIsLiked() == 0) {
-            likeButton.setImageResource(R.drawable.ic_dianzan_undo);
+            Glide.with(MyCoHelp.getAppContext()).load(R.drawable.ic_dianzan_undo).into(likeButton);
         } else {
-            likeButton.setImageResource(R.drawable.ic_dianzan_success);
+            Glide.with(MyCoHelp.getAppContext()).load(R.drawable.ic_dianzan_success).into(likeButton);
         }
-
         if (detail.getIsCollected()==1){
-            collectButton.setImageResource(R.drawable.icon_collect_success);
+            Glide.with(MyCoHelp.getAppContext()).load(R.drawable.icon_collect_success).into(collectButton);
         }
         else {
-            collectButton.setImageResource(R.drawable.ic_collect_undo);
+            Glide.with(MyCoHelp.getAppContext()).load(R.drawable.ic_collect_undo).into(collectButton);
         }
     }
     public void closeDefaultAnimator(RecyclerView mRvCustomer) {
@@ -594,7 +595,6 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
             List<SecondLevelBean> beans = new ArrayList<>();
             int beanSize = 0;
             for (List<RemarkVO> j : orderRemarkVO) {
-//                posCount += 2;
                 if (j.size()>0&&j.get(0)== i){
                     j.remove(i);
                     beanSize = j.size();
@@ -635,13 +635,11 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
 
 //            position++;
         }
-
     }
     /**
      * 对数据重新进行排列
      * 目的是为了让一级评论和二级评论同为item
      * 解决滑动卡顿问题
-     *
      * @param position
      */
     private void dataSort(int position) {
@@ -694,7 +692,6 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
                 moreBean.setPosition(i);
                 moreBean.setPositionCount(posCount);
                 moreBean.setTotalCount(firstLevelBean.getTotalCount());
-//                System.out.println(beanNum++);
                 data.add(moreBean);
                 INITBEANNUM++;
             }
@@ -767,7 +764,6 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
         inputTextMsgDialog.show();
     }
     private void addComment(boolean isReply, MultiItemEntity item, final int position, String msg) {
-        final String userName = user.getUserName();
         if (position >= 0) {
             //添加二级评论
             int pos = 0;
@@ -793,7 +789,6 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
                 commentRootType = 0;
                 commentTopID = Integer.valueOf(datas.get(secondLevelBean.getPosition()).getId());
             }
-
 //            SecondLevelBean secondLevelBean = new SecondLevelBean();
 //            secondLevelBean.setReplyUserName(replyUserName);
 //            secondLevelBean.setIsReply(isReply ? 1 : 0);
@@ -804,7 +799,6 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
 //            secondLevelBean.setUserName(userName);
 //            secondLevelBean.setId("");
 //            secondLevelBean.setPosition(positionCount);
-//
 //            datas.get(pos).getSecondLevelBeans().add(secondLevelBean);
 //            DetailActivity.this.dataSort(0);
         } else {
@@ -838,18 +832,6 @@ public class DetailActivity extends BaseActivity implements BaseQuickAdapter.Req
                                 : positionCount, positionCount >= data.size() - 1 ? Integer.MIN_VALUE : rv_dialog_lists.getHeight());
             }
         }, 100);
-    }
-
-    private synchronized void getUser(){
-        Thread t1 = new Thread(()->{
-            user=okHttpUtils.getUser();
-        });
-        t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

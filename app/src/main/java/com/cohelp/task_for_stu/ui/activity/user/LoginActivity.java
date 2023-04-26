@@ -103,12 +103,7 @@ public class LoginActivity extends BaseActivity {
             OKHttp.client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            // 通过Toast 显示信息
-                            Toast.makeText(MyCoHelp.getAppContext(), "网络连接异常", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+
                 }
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {

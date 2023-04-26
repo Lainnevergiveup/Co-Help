@@ -79,7 +79,7 @@ public class DetailAskandAnswerActivity extends BaseActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void getAnswerBank(){
 
-        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/teach/listanswerbankbyquestionbankid/"+questionBankVO.getId(),  null, 300);
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/teach/listanswerbankbyquestionbankid/"+questionBankVO.getId(),  null, 30);
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {

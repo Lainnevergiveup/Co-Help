@@ -107,7 +107,7 @@ public class OkHttpUtils {
         Type responseType = new TypeToken<Result<List<DetailResponse>>>() {}.getType();
 
         //发请求
-        Response response = okHttp.sendGetRequest(baseURL + "/activity/list/1/90", map, 300);
+        Response response = okHttp.sendGetRequest(baseURL + "/activity/list/1/30", map, 300);
         String res = null;
         try {
             res = response.body().string();
@@ -332,8 +332,8 @@ public class OkHttpUtils {
      */
     //点赞评论
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void remark(int type, int id){
-        Response response = okHttp.sendGetRequest(baseURL+"/topic/like/"+type+"/"+id,null,0);
+    public static void topicLike(int type, int id){
+        Response response = okHttp.sendPostRequest(baseURL+"/topic/like/"+type+"/"+id,null,0);
         String res = null;
         try {
             res = response.body().string();
@@ -707,12 +707,15 @@ public class OkHttpUtils {
         Response response = okHttp.sendPostRequest(baseURL+"/course/like/"+type+"/"+id,"",0);
         String res = null;
         try {
-            res = response.body().string();
+            if(response!=null){
+                res = response.body().string();
+                Result<Boolean> result = gson.fromJson(res, new TypeToken<Result<Boolean>>(){}.getType());
+                return result.getData()==null?false:(Boolean) result.getData();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Result<Boolean> result = gson.fromJson(res, new TypeToken<Result<Boolean>>(){}.getType());
-        return result.getData()==null?false:(Boolean) result.getData();
+        return false;
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static Boolean deleteAsk(Integer id){
@@ -742,7 +745,6 @@ public class OkHttpUtils {
     }
 
     public static void collectTeacherAsk(Integer id,Integer level){
-        System.out.println("levelokhttp"+level);
         Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/teach/addquestion/"+id+"/"+level, null, 0);
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override
@@ -751,14 +753,14 @@ public class OkHttpUtils {
             }
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                String string = response.body().string();
-                Result<String> json = GSON.gson.fromJson(string, new TypeToken<Result<List<String>>>() {
-                }.getType());
-                runOnUiThread(new Runnable() {
-                    public void run() {
-//                        Toast.makeText(MyCoHelp.getAppContext(), json.getData(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+//                String string = response.body().string();
+//                Result<String> json = GSON.gson.fromJson(string, new TypeToken<Result<List<String>>>() {
+//                }.getType());
+//                runOnUiThread(new Runnable() {
+//                    public void run() {
+////                        Toast.makeText(MyCoHelp.getAppContext(), json.getData(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
             }
         });
 
