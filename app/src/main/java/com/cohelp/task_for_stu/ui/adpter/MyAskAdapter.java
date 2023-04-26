@@ -90,11 +90,16 @@ public class MyAskAdapter extends BaseAdapter {
 
 
         if (askVO!=null){
+
             RequestOptions options = new RequestOptions()
                     .centerCrop()
                     .placeholder(R.drawable.tuku)
                     .diskCacheStrategy(DiskCacheStrategy.ALL);
             Glide.with(MyCoHelp.getAppContext()).load(askVO.getAvatarUrl()).apply(options).into(authorAvator);
+            if (askVO.getImageUrl().size()>0){
+                Glide.with(MyCoHelp.getAppContext()).load(askVO.getImageUrl().get(0)).apply(options).into(firstImage);
+            }
+
             System.out.println("id="+askVO.getId());
             authorName.setText(askVO.getUserName());
             title.setText(askVO.getQuestion());

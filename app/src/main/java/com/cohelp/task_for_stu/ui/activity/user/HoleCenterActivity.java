@@ -1,7 +1,6 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -22,7 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
@@ -38,9 +36,9 @@ import com.cohelp.task_for_stu.net.model.vo.AskVO;
 import com.cohelp.task_for_stu.net.model.vo.CourseVO;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.CardViewAskListAdapter;
+import com.cohelp.task_for_stu.ui.adpter.CustomArrayAdapter;
 import com.cohelp.task_for_stu.ui.adpter.MyAskFragmentPagerAdapter;
 import com.cohelp.task_for_stu.ui.adpter.MyFragmentPagerAdapter;
-import com.cohelp.task_for_stu.ui.view.SwipeRefresh;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -55,6 +53,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -85,6 +84,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
     OkHttpUtils okHttpUtils;
     List<DetailResponse> holeList;
     List<CourseVO> courseList;
+    List<String> coursename;
     List<AskVO> askList;
     ArrayList<Fragment> listFragment = new ArrayList<>();
     CardViewAskListAdapter cardViewListAdapter;
@@ -116,87 +116,6 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
 
     //存放页面和滑动距离的Map
     private ArrayMap<Integer,Integer> scrollMap=new ArrayMap<>();
-//    //当前页面
-//    private int currentTab=0;
-//    //当前页面的滑动距离
-//    private int currentScrollY=0;
-//    //用于判断，当前页面的导航栏是否悬浮
-//    private boolean isTabLayoutSuspend;
-
-
-
-//    private PagerAdapter mPagerAdapter = new PagerAdapter() {
-//        @Override
-//        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-//            return view == object;
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return courseList.size();
-//        }
-//
-//        @Override
-//        public Object instantiateItem(final ViewGroup container, int position) {
-//            CourseVO courseVO = courseList.get(position);
-//            View view = getPageView(courseVO.getName());
-//            view.setTag(courseVO.getName());
-//            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//            container.addView(view, params);
-//            return view;
-//        }
-//
-//        @Override
-//        public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
-//            container.removeView((View) object);
-//        }
-//
-//        @Override
-//        public int getItemPosition(@NonNull Object object) {
-//            View view = (View) object;
-//            Object page = view.getTag();
-//            if (page instanceof MultiPage) {
-//                int pos = ((MultiPage) page).getPosition();
-//                if (pos >= mCurrentItemCount) {
-//                    return POSITION_NONE;
-//                }
-//                return POSITION_UNCHANGED;
-//            }
-//            return POSITION_NONE;
-//        }
-//    };
-
-
-//    private View getPageView(String semeterName) {
-//
-//        View view = mPageMap.get(semeterName);
-//        if (view == null) {
-////            TextView textView = new TextView(HoleCenterActivity.this);
-////            textView.setTextAppearance(HoleCenterActivity.this, R.style.TextStyle_Content_Match);
-////            textView.setGravity(Gravity.CENTER);
-////            textView.setText(String.format("这个是%s页面的内容", semeterName));
-////            view = textView;
-////            view = initSubView();
-////            RecyclerView recyclerView = findViewById(R.id.id_recyclerview);
-////            SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.id_swiperefresh);
-////            SwipeRefreshLayout swipeRefreshLayout  = new SwipeRefreshLayout(HoleCenterActivity.this);
-//            RecyclerView recyclerView = new RecyclerView(HoleCenterActivity.this,null);
-////            swipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
-////            swipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-////            swipeRefreshLayout.addView(recyclerView);
-//            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//            recyclerView.setAdapter(cardViewListAdapter);
-////            swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
-////                @Override
-////                public void onRefresh() {
-////                    System.out.println("isrefreshing");
-////                }
-////            });
-//            view = recyclerView;
-//            mPageMap.put(semeterName, view);
-//        }
-//        return view;
-//    }
 
 
     @Override
@@ -245,6 +164,8 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
             niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
             niceSpinner.setTextColor(0xFFFFFFFF);
             niceSpinner.setArrowTintColor(0xFFFFFFFF);
+            CustomArrayAdapter customArrayAdapter = new CustomArrayAdapter(this, coursename);
+            niceSpinner.setAdapter(customArrayAdapter);
             initSemesterList();
 
         }else {
@@ -503,6 +424,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
                 }
                 runOnUiThread(new Runnable() {
                     public void run() {
+                        coursename = courseList.stream().map(k -> k.getName()).collect(Collectors.toList());
                         currentCourse = courseList!=null&&!courseList.isEmpty()?courseList.get(0).getId():0;
                         initTab1();
                     }
@@ -586,7 +508,6 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
         int currentItem = mContentViewPager.getCurrentItem();
         RecyclerView childAt = (RecyclerView) mContentViewPager.getChildAt(currentItem);
         childAt.setAdapter(cardViewListAdapter);
-//        eRecyclerView.setAdapter(cardViewListAdapter);
         eSwipeRefreshLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -597,27 +518,6 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
 
-
-    private View initSubView( Context context){
-//        View view = LayoutInflater.from(context).inflate(R.layout.view_discuss_list,null);
-        RecyclerView recyclerView = findViewById(R.id.id_recyclerview);
-        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.id_swiperefresh);
-        swipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
-        swipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-        swipeRefreshLayout.addView(recyclerView);
-        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        eRecyclerView.setAdapter(cardViewListAdapter);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                System.out.println("isrefreshing");
-            }
-        });
-        return swipeRefreshLayout;
-
-
-
-    }
 
     @Override
     protected void onDestroy() {

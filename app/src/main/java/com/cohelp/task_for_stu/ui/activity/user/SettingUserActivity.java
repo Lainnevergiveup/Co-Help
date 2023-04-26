@@ -148,7 +148,7 @@ public class SettingUserActivity extends BaseActivity {
         repassword = findViewById(R.id.id_et_repassword);
         nickname = findViewById(R.id.id_et_nickname);
         realname = findViewById(R.id.id_et_realname);
-        email = findViewById(R.id.id_et_email);
+//        email = findViewById(R.id.id_et_email);
         update = findViewById(R.id.id_btn_update);
         userBiz = new UserBiz();
         user = UserInfoHolder.getInstance().geteUser();

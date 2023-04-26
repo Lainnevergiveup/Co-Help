@@ -91,7 +91,7 @@ public class PasswordFoundActivity extends BaseActivity {
 
     private void initView() {
         username = findViewById(R.id.id_et_username);
-        email = findViewById(R.id.id_et_email);
+//        email = findViewById(R.id.id_et_email);
         password = findViewById(R.id.id_et_password);
         rePassword = findViewById(R.id.id_et_repassword);
         check = findViewById(R.id.id_btn_found);

@@ -40,6 +40,7 @@ import org.angmarch.views.OnSpinnerItemSelectedListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -69,6 +70,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
     CourseVO item;
     List<QuestionBankVO> questionList;
     List<CourseVO> courseList;
+    List<String> coursename;
     Integer currentCourse;
     String semeter = "";
     String delCollectList;
@@ -98,17 +100,6 @@ public class QuestionStoreActivity extends BasicInfoActivity {
     }
     private void initEvent(){
 
-//        eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                //判断是否在刷新
-//                System.out.println("isrefreshing");
-//                Toast.makeText(MyCollectActivity.this,eSwipeRefreshLayout.isRefreshing()?"正在刷新":"刷新完成"
-//                        ,Toast.LENGTH_SHORT).show();
-//                refreshCollectListData();
-//
-//            }
-//        });
 
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,6 +185,9 @@ public class QuestionStoreActivity extends BasicInfoActivity {
         niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
         niceSpinner.setTextColor(0xFFFFFFFF);
         niceSpinner.setArrowTintColor(0xFFFFFFFF);
+//        CustomArrayAdapter customArrayAdapter = new CustomArrayAdapter(this, coursename);
+//        niceSpinner.setAdapter(customArrayAdapter);
+
         niceSpinner.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -218,6 +212,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
         mTvSwitch = findViewById(R.id.id_tv_manager);
         btn_publish = findViewById(R.id.btn_publish);
         niceSpinner = (NiceSpinner) findViewById(R.id.nice_spinner);
+        coursename = courseList.stream().map(k -> k.getName()).collect(Collectors.toList());
         niceSpinner.attachDataSource(courseList);
         niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
         manager = findViewById(R.id.id_tv_manager);

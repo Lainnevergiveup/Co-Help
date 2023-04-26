@@ -1,5 +1,7 @@
 package com.cohelp.task_for_stu.ui.activity.user;
 
+import static com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils.baseURL;
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,22 +10,27 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
+import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.DetailResponse;
 import com.cohelp.task_for_stu.net.model.domain.IdAndType;
+import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.vo.ResultVO;
 import com.cohelp.task_for_stu.ui.adpter.CardViewListAdapter;
 import com.cohelp.task_for_stu.ui.adpter.NewsListEditAdapter;
 import com.cohelp.task_for_stu.ui.adpter.TaskAdapter;
 import com.cohelp.task_for_stu.ui.view.SwipeRefreshLayout;
-import com.cohelp.task_for_stu.utils.SessionUtils;
+import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xui.utils.ViewUtils;
 import com.xuexiang.xui.utils.WidgetUtils;
@@ -31,9 +38,15 @@ import com.xuexiang.xui.widget.button.SmoothCheckBox;
 import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class MyCollectActivity extends BasicInfoActivity {
 
     LinearLayout HoleCenter;
@@ -53,13 +66,14 @@ public class MyCollectActivity extends BasicInfoActivity {
     TaskAdapter taskAdapter;
     Button btn_delete;
     TextView title;
-
+    Integer tag = 1;
 
     CardViewListAdapter cardViewListAdapter;
     List<ResultVO> collectList;
     String delCollectList;
     OkHttpUtils okHttpUtils;
     Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +81,6 @@ public class MyCollectActivity extends BasicInfoActivity {
         setUpToolBar();
         initTools();
         initView();
-        initEvent();
         setTitle("");
     }
 
@@ -77,18 +90,6 @@ public class MyCollectActivity extends BasicInfoActivity {
         
     }
     private void initEvent(){
-
-//        eSwipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                //判断是否在刷新
-//                System.out.println("isrefreshing");
-//                Toast.makeText(MyCollectActivity.this,eSwipeRefreshLayout.isRefreshing()?"正在刷新":"刷新完成"
-//                        ,Toast.LENGTH_SHORT).show();
-//                refreshCollectListData();
-//
-//            }
-//        });
 
         HelpCenter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,8 +109,6 @@ public class MyCollectActivity extends BasicInfoActivity {
                 toTaskCenterActivity();
             }
         });
-
-
 
         mTvSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,13 +135,8 @@ public class MyCollectActivity extends BasicInfoActivity {
             getCollectList();
             mAdapter.refresh(collectList);
             refreshLayout.finishRefresh();
-        }, 300));
-        //上拉加载
-//        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-//
-//       .loadMore(collectList);
-//            refreshLayout.finishLoadMore();
-//        }, 1000));
+        }, 100));
+
         refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
 
         mAdapter.setOnItemClickListener((itemView, item, position) -> {
@@ -188,15 +182,7 @@ public class MyCollectActivity extends BasicInfoActivity {
         },collectList);
         getCollectList();
         System.out.println("collect"+collectList);
-//        cardViewListAdapter = new CardViewListAdapter(collectList);
 
-//        eSwipeRefreshLayout = findViewById(R.id.id_swiperefresh);
-//        eSwipeRefreshLayout.setMode(SwipeRefresh.Mode.BOTH);
-//        eSwipeRefreshLayout.setColorSchemeColors(Color.RED,Color.BLACK,Color.YELLOW,Color.GREEN);
-//
-//        eRecyclerView = findViewById(R.id.id_recyclerview);
-//        eRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        eRecyclerView.setAdapter(cardViewListAdapter);
     }
 
     private void refreshManageMode() {
@@ -251,16 +237,42 @@ public class MyCollectActivity extends BasicInfoActivity {
         startActivity(intent);
         finish();
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private synchronized void getCollectList(){
-        Thread t1 = new Thread(()->{
-            collectList = okHttpUtils.getCollectList();
+
+        //创建请求
+        Request request = OKHttp.buildGetRequest(baseURL+"/collect/getcollectlist/1/5", null, 300);
+        OKHttp.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String res = null;
+                try {
+                    res = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //转换数据
+                Result<List<ResultVO>> result = GSON.gson.fromJson(res, new TypeToken<Result<List<ResultVO>>>() {}.getType());
+                if(result!=null){
+                    collectList = result.getData();
+                }else{
+                    collectList = new ArrayList<>();
+                }
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        initEvent();
+                    }
+                });
+
+            }
         });
-        t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+
     }
     private synchronized void delCollectList(){
         Thread t1 = new Thread(()->{

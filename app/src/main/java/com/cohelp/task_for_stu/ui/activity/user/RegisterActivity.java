@@ -4,12 +4,12 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.cohelp.task_for_stu.MyCoHelp;
 import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.bean.User;
 import com.cohelp.task_for_stu.biz.UserBiz;
@@ -17,17 +17,21 @@ import com.cohelp.task_for_stu.config.Config;
 import com.cohelp.task_for_stu.net.CommonCallback;
 import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.ToJsonString;
+import com.cohelp.task_for_stu.net.gsonTools.GSON;
 import com.cohelp.task_for_stu.net.model.domain.RegisterRequest;
+import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.ui.CircleTransform;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
-import com.cohelp.task_for_stu.utils.SessionUtils;
 import com.cohelp.task_for_stu.utils.T;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.leon.lfilepickerlibrary.LFilePicker;
 import com.leon.lfilepickerlibrary.utils.Constant;
 import com.squareup.picasso.Picasso;
+import com.xuexiang.xui.utils.CountDownButtonHelper;
+import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
+import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
+import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,23 +44,26 @@ import okhttp3.Response;
 public class RegisterActivity extends BaseActivity {
 
     ImageView icon;
-    EditText username;
-    EditText password;
-    EditText repassword;
-    EditText email;
-    EditText comfirmCode;
+    MaterialEditText username;
+    MaterialEditText password;
+    MaterialEditText repassword;
+
+    MaterialEditText comfirmCode;
+    MaterialEditText email;
     User user;
     UserBiz userBiz;
-    Button register,getConfirmCode;
-    RegisterRequest registerRequest;
+    SuperButton register;
+    RoundButton getConfirmCode;
+    RegisterRequest registerRequest ;
     OKHttp okHttp;
     String emailString;
+    private CountDownButtonHelper mCountDownHelper;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        setUpToolBar();
+//        setUpToolBar();
         setTitle("注册");
         initView();
         initEvent();
@@ -68,24 +75,22 @@ public class RegisterActivity extends BaseActivity {
          */
 
         register.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
                 //TODO 发起来自biz的请求
-//                user.setGrade(100);
-//                user.setRepeatCount(0);
-//                user.setTaskCount(0);
-//                user.setManager(false);
-//                user.setEmail(email.getText().toString());
-//                user.setPassword(password.getText().toString());
-//                user.setUserName(username.getText().toString());
                 registerRequest.setUserAccount(username.getText().toString());
                 registerRequest.setUserPassword(password.getText().toString());
-                registerRequest.setUserEmail(email.getText().toString());
+
                 registerRequest.setUserConfirmPassword(repassword.getText().toString());
                 registerRequest.setConfirmCode(comfirmCode.getText().toString());
+                if(password.getText().toString().equals(repassword.getText().toString())){
+                    sendRegistRequest();
+                }else {
+                   Toast.makeText(MyCoHelp.getAppContext(), "请检查密码是否一致", Toast.LENGTH_SHORT).show();
+                }
 
-                sendRegistRequest();
-                String msg;
+
 //                if("合法".equals(msg = BasicUtils.UserInfoLegal(user,repassword.getText().toString()))){
 //                    startLoadingProgress();
 //                    userBiz.register(user, new CommonCallback<User>() {
@@ -111,9 +116,18 @@ public class RegisterActivity extends BaseActivity {
             }
         });
         getConfirmCode.setOnClickListener(new View.OnClickListener(){
+
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public  void onClick(View view){
+                System.out.println("验证码");
+                mCountDownHelper.start();
+//                if (email.validate()) {
+//                    getVerifyCode(email.getEditValue());
+//                }
+
+
+
                 System.out.println(emailString);
                 System.out.println(1);
                 emailString = email.getText().toString();
@@ -131,24 +145,26 @@ public class RegisterActivity extends BaseActivity {
         /**
          * 选择图片
          */
-        icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startPickFile();
-            }
-        });
+//        icon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startPickFile();
+//            }
+//        });
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendComfirmCodeRequest(){
         new Thread(()->{
-             emailString= registerRequest.getUserEmail();
+
+            registerRequest.setUserEmail(email.getText().toString());
+            emailString= registerRequest.getUserEmail();
 
             System.out.println(3);
             Response response = okHttp.sendGetRequest("http://43.143.90.226:9090/user/sendconfirmcode?userEmail=" + emailString, null,  0);
-            String cookieval = response.header("Set-Cookie");
-            SessionUtils.saveCookiePreference(this, cookieval);
 
         }).start();
+
+
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendRegistRequest(){
@@ -164,12 +180,20 @@ public class RegisterActivity extends BaseActivity {
             }
 
             Gson gson = new Gson();
-            JsonObject jsonObject = (JsonObject) new JsonParser().parse(res).getAsJsonObject();
-            String message = jsonObject.get("message").getAsString();
-
+            Result<Integer> json = GSON.gson.fromJson(res, new TypeToken<Result<Integer>>() {
+            }.getType());
+            String message = json.getMessage();
+            if(message.equals("注册成功")){
+                Toast.makeText(MyCoHelp.getAppContext(), "账号注册成功~", Toast.LENGTH_SHORT).show();
+                toLoginActivity();
+            }else{
+                Toast.makeText(MyCoHelp.getAppContext(), message, Toast.LENGTH_SHORT).show();
+            }
             System.out.println(message);
 
         }).start();
+
+
     }
     private void startPickFile() {
         new LFilePicker()
@@ -221,24 +245,34 @@ public class RegisterActivity extends BaseActivity {
     private void initView() {
         okHttp = new OKHttp();
         icon = findViewById(R.id.id_iv_icon);
-        username = findViewById(R.id.id_et_username);
-        password = findViewById(R.id.id_et_password);
-        repassword = findViewById(R.id.id_et_repassword);
-        email = findViewById(R.id.id_et_email);
-        register = findViewById(R.id.id_btn_register);
-        comfirmCode = findViewById(R.id.id_et_idCard_Confirm);
-        userBiz = new UserBiz();
+        username = findViewById(R.id.et_account_number);
+        password = findViewById(R.id.et_password);
+        repassword = findViewById(R.id.et_repassword);
+        email = findViewById(R.id.et_mail_number);
+        register = findViewById(R.id.btn_login);
+        comfirmCode = findViewById(R.id.et_verify_code);
         user = new User();
-        getConfirmCode = findViewById(R.id.id_btn_sendComfirmCode);
-//        registerRequest = new RegisterRequest();
-//        registerRequest.setUserAccount("12345678990");
-//        registerRequest.setUserEmail("2836969767@qq.com");
-//        registerRequest.setUserPassword("12345678");
-//        registerRequest.setUserConfirmPassword("12345678");
+        registerRequest = new RegisterRequest();
+        getConfirmCode = findViewById(R.id.btn_get_verify_code);
 
-        Picasso.get()
-                .load(R.drawable.pictures_no)
-                .transform(new CircleTransform())
-                .into(icon);
+        mCountDownHelper = new CountDownButtonHelper(getConfirmCode, 60,1);
+//        Picasso.get()
+//                .load(R.drawable.pictures_no)
+//                .transform(new CircleTransform())
+//                .into(icon);
+    }
+    /**
+     * 获取验证码
+     */
+    private void getVerifyCode(String phoneNumber) {
+        // TODO: 2019-11-18 这里只是界面演示而已
+//        XToastUtils.warning("只是演示，验证码请随便输");
+        mCountDownHelper.start();
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void toLoginActivity() {
+        Intent intent = new Intent(this,LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

@@ -157,7 +157,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void toRegisterActivity() {
-        Intent intent = new Intent(this,BasicInfoActivity.class);
+        Intent intent = new Intent(this, RegisterActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("user",user);
         intent.putExtras(bundle);

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.activity.user.QuestionStoreActivity">
-    <include layout="@layout/common_toolbar_discussion" />
+    <include layout="@layout/common_toolbar_discussion1" />
 
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout

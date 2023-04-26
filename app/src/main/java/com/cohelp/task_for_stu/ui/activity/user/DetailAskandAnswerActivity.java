@@ -3,6 +3,8 @@ package com.cohelp.task_for_stu.ui.activity.user;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,9 +39,11 @@ public class DetailAskandAnswerActivity extends BaseActivity {
     Intent intent;
     List<AnswerBankVO> answerBankVOList;
     QuestionBankVO questionBankVO;
-    TextView content,hot;
+    TextView content,hot,answer;
+    LinearLayout linearLayout;
     RecyclerView recyclerView;
     NineGridView nineGridView;
+    Integer tag = 1;
     CardViewAskAnswerListAdapter cardViewAskAnswerListAdapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +51,7 @@ public class DetailAskandAnswerActivity extends BaseActivity {
         setContentView(R.layout.activity_detail_askand_answer);
         initTools();
         initView();
+        initEvent();
         setDetailData();
     }
     private void initTools(){
@@ -71,9 +76,26 @@ public class DetailAskandAnswerActivity extends BaseActivity {
 
     private void initView(){
         content = findViewById(R.id.content);
+        answer = findViewById(R.id.tv_answer);
         nineGridView = findViewById(R.id.grid_item_image);
+        linearLayout = findViewById(R.id.ll_answer);
         recyclerView = findViewById(R.id.id_recyclerview);
         cardViewAskAnswerListAdapter = new CardViewAskAnswerListAdapter();
+    }
+
+    private void initEvent(){
+        answer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tag==1){
+                    linearLayout.setVisibility(View.INVISIBLE);
+                    tag = tag-1;
+                }else {
+                    linearLayout.setVisibility(View.VISIBLE);
+                    tag = tag+1;
+                }
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

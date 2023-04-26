@@ -114,7 +114,7 @@ public class ManagerCreateNewUserActivity extends BaseActivity {
         repassword = findViewById(R.id.id_et_repassword);
         nickname = findViewById(R.id.id_et_nickname);
         realname = findViewById(R.id.id_et_realname);
-        email = findViewById(R.id.id_et_email);
+//        email = findViewById(R.id.id_et_email);
         create = findViewById(R.id.id_btn_create);
         grade = findViewById(R.id.id_et_grade);
         radioGroup = findViewById(R.id.id_rg_sy);

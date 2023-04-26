@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.MaterialToolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/id_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:navigationIcon="@drawable/back_white"
+    app:titleTextColor="#000000"
+    style="@style/ToolbarStyle"
+    >
+
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/nice_spinner"
+        android:layout_width="120dp"
+        android:popupBackground="@drawable/shape_for_custom_spinner"
+        android:background="@drawable/selector_for_custom_spinner"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:spinnerMode="dropdown"
+        app:arrowTint="@color/white"
+
+        />
+
+    <TextView
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        style="@style/Button.Radius"
+        android:id="@+id/id_tv_manager"
+        android:layout_marginEnd="20dp"
+        android:text="题库"
+        android:textSize="16dp"
+        android:layout_gravity="right|center_vertical"
+        >
+    </TextView>
+
+</com.google.android.material.appbar.MaterialToolbar>

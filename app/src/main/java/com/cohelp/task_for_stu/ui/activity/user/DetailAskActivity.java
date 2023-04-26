@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -116,14 +117,14 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
     List<AnswerVO> firstList;
     List<String> LevelList=new ArrayList<>();
     RecyclerView recyclerView;
-
+    TextView answer;
     List<List<AnswerVO>> orderRemarkVO;
     IdAndType idAndType;
-
+    LinearLayout linearLayout_anwser;
     Integer commentRootType = 1;//是否为根评论
     Integer commentTargetID;//目标ID
     Integer commentTopID;//评论链首ID
-
+    Integer tag=1;
     Integer detailType;
     int Level;
 
@@ -180,7 +181,8 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
         recyclerView = findViewById(R.id.id_recyclerview);
         imageGridView.setVerticalScrollBarEnabled(false);
         imageGridView.setHorizontalScrollBarEnabled(false);
-
+        answer = findViewById(R.id.tv_answer);
+        linearLayout_anwser = findViewById(R.id.ll_answer);
         LevelList.add("很容易");
         LevelList.add("较容易");
         LevelList.add("适中");
@@ -339,6 +341,20 @@ public class DetailAskActivity extends BaseActivity implements BaseQuickAdapter.
                 dismissInputDialog();
             }
         });
+
+        answer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tag==1){
+                    linearLayout_anwser.setVisibility(View.INVISIBLE);
+                    tag = tag-1;
+                }else {
+                    linearLayout_anwser.setVisibility(View.VISIBLE);
+                    tag = tag+1;
+                }
+            }
+        });
+
 
     }
 

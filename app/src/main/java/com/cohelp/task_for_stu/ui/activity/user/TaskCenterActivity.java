@@ -221,15 +221,6 @@ public class TaskCenterActivity extends BaseActivity {
             }
         });
 
-////        search.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View v) {
-//                searchFragment.showFragment(getSupportFragmentManager(),SearchFragment.TAG);
-////
-////
-////            }
-////        });
-
     }
 
 

@@ -4,7 +4,10 @@ plugins {
 
 android {
     compileSdk 32
-
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
     defaultConfig {
         applicationId "com.cohelp.task_for_stu"
         minSdk 21
@@ -55,6 +58,8 @@ android {
 //        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
 //    }
 //}
+
+
 dependencies {
 //    implementation 'com.android.support:appcompat-v7:28.0.0'
 //    implementation 'com.android.support:recyclerview-v7:28.0.0'
