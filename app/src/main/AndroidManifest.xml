@@ -46,7 +46,7 @@
         android:name=".MyCoHelp"
         android:allowBackup="true"
         android:fitsSystemWindows="true"
-        android:icon="@mipmap/logolauncher"
+        android:icon="@mipmap/ic_launcher"
         android:label="Co-help"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"

@@ -91,27 +91,6 @@ public class RegisterActivity extends BaseActivity {
                 }
 
 
-//                if("合法".equals(msg = BasicUtils.UserInfoLegal(user,repassword.getText().toString()))){
-//                    startLoadingProgress();
-//                    userBiz.register(user, new CommonCallback<User>() {
-//                        @Override
-//                        public void onError(Exception e) {
-//                            stopLoadingProgress();
-//                            T.showToast(e.getMessage());
-//                        }
-//
-//                        @Override
-//                        public void onSuccess(User response) {
-//                            stopLoadingProgress();
-//                            T.showToast("欢迎你~"+user.getNickName() + "，可以登录了哦~");
-//                            finish();
-//                        }
-//                    });
-//
-//                }else{
-//                    T.showToast(msg);
-//                }
-
 
             }
         });
@@ -122,22 +101,10 @@ public class RegisterActivity extends BaseActivity {
             public  void onClick(View view){
                 System.out.println("验证码");
                 mCountDownHelper.start();
-//                if (email.validate()) {
-//                    getVerifyCode(email.getEditValue());
-//                }
-
-
-
-                System.out.println(emailString);
-                System.out.println(1);
                 emailString = email.getText().toString();
                 if (emailString!=null){
-                    System.out.println(2);
                     sendComfirmCodeRequest();
-
-                    System.out.println(4);
                 }
-
                 else T.showToast("请输入合法的邮箱！");
             }
 

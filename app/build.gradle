@@ -4,10 +4,10 @@ plugins {
 
 android {
     compileSdk 32
-    lintOptions {
-        checkReleaseBuilds false
-        abortOnError false
-    }
+//    lintOptions {
+//        checkReleaseBuilds false
+//        abortOnError false
+//    }
     defaultConfig {
         applicationId "com.cohelp.task_for_stu"
         minSdk 21

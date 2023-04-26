@@ -74,22 +74,7 @@
 
                 app:met_regexp="@string/regex_verify_code" />
 
-<!--            <com.xuexiang.xui.widget.button.roundbutton.RoundButton-->
-<!--                android:id="@+id/btn_get_verify_code"-->
-<!--                style="@style/RoundButton"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="end"-->
-<!--                android:paddingStart="10dp"-->
-<!--                android:paddingTop="3dp"-->
-<!--                android:paddingEnd="10dp"-->
-<!--                android:paddingBottom="3dp"-->
-<!--                android:text="@string/action_get_verify_code"-->
-<!--                android:textColor="@color/selector_round_button_main_theme_color"-->
-<!--                android:textSize="13sp"-->
-<!--                app:rb_borderColor="@color/selector_round_button_main_theme_color"-->
-<!--                app:rb_borderWidth="1.5dp"-->
-<!--                app:rb_radius="15dp" />-->
+
 
         </FrameLayout>
 
@@ -107,7 +92,7 @@
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
                 android:text="立即注册"
-                android:textColor="@color/xui_config_color_primary_text" />
+                android:textColor="#223B53" />
 
             <com.xuexiang.xui.widget.alpha.XUIAlphaTextView
                 android:id="@+id/id_tv_found"
@@ -118,7 +103,7 @@
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
                 android:text="忘记密码"
-                android:textColor="@color/xui_config_color_primary_text" />
+                android:textColor="#223B53" />
 
         </FrameLayout>
 
@@ -134,24 +119,4 @@
         android:text="登录" />
 
 
-<!--    <RelativeLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:layout_marginLeft="20dp"-->
-<!--        android:layout_marginRight="20dp"-->
-<!--        android:layout_marginTop="5dp">-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/id_tv_register"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="立即注册" />-->
-<!--        <TextView-->
-<!--            android:id="@+id/id_tv_found"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignParentRight="true"-->
-<!--            android:text="找回密码"/>-->
-<!--    </RelativeLayout>-->
 </LinearLayout>
