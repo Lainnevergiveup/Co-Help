@@ -21,6 +21,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,7 +31,10 @@ import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.bean.BaseTask;
 import com.cohelp.task_for_stu.biz.TaskBiz;
 import com.cohelp.task_for_stu.config.Config;
+import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.gsonTools.GSON;
+import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.entity.Help;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.FlowTagAdapter;
@@ -38,6 +42,7 @@ import com.cohelp.task_for_stu.ui.adpter.FlowTagPaidAdapter;
 import com.cohelp.task_for_stu.ui.adpter.FullyGridLayoutManager;
 import com.cohelp.task_for_stu.ui.adpter.GridImageAdapter;
 import com.cohelp.task_for_stu.ui.vo.Task;
+import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -48,6 +53,7 @@ import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.widget.flowlayout.FlowTagLayout;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -55,6 +61,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.functions.Consumer;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttp;
+import okhttp3.Request;
+import okhttp3.Response;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class CreateNewHelpActivity extends BaseActivity{
@@ -76,7 +87,7 @@ public class CreateNewHelpActivity extends BaseActivity{
     TimePickerView pickerView;
     FlowtagLayout mSingleFlowTagLayout;
     FlowTagLayout mPaidFlowTagLayout;
-    OkHttpUtils okHttpUtils = new OkHttpUtils();
+
     private static final int IMG_COUNT = 8;
     private static final String IMG_ADD_TAG = "a";
     private GridView gridView;
@@ -94,8 +105,7 @@ public class CreateNewHelpActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_help);
-        
-//        askPermissions();
+
         setUpToolBar();
         setTitle("创建互助");
 
@@ -126,21 +136,35 @@ public class CreateNewHelpActivity extends BaseActivity{
                     for (int i =0;i<list.size()-1;i++){
                         stringStringHashMap.put(i+"",list.get(i));
                     }
-                    new Thread(()->{
-                        okHttpUtils.helpPublish(help,stringStringHashMap);
-                    }).start();
-                    toHelpCenterActivity();
+                    String act = GSON.gson.toJson(help);
+                    Request request = OKHttp.buildPostRequest(OkHttpUtils.baseURL + "/help/publish", "help", act, stringStringHashMap, 0);
+                    OKHttp.client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+                        }
+
+                        @Override
+                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                            String string = response.body().string();
+                            Result<Boolean> result = GSON.gson.fromJson(string,new TypeToken<Result<Boolean>>(){}.getType());
+                            if(result!=null&&result.getData()!=null&&result.getData()){
+                                Toast.makeText(CreateNewHelpActivity.this, "发布成功~", Toast.LENGTH_LONG).show();
+                                toHelpCenterActivity();
+                            }else if(result!=null&&result.getMessage()!=null){
+                                Toast.makeText(CreateNewHelpActivity.this,result.getMessage(),Toast.LENGTH_LONG).show();
+                            }else {
+                                Toast.makeText(CreateNewHelpActivity.this,"网络异常",Toast.LENGTH_LONG).show();
+                            }
+                            toHelpCenterActivity();
+                        }
+                    });
+
                 }
 
 
             }
         });
-//        lb_diy.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
     }
 
     private void initView() {
@@ -151,10 +175,7 @@ public class CreateNewHelpActivity extends BaseActivity{
         startTime = findViewById(R.id.id_et_startDate);
         mPaidFlowTagLayout = findViewById(R.id.flowlayout_single_select_paid);
         initPaidFlowTagLayout();
-//        endTime = findViewById(R.id.id_et_endDate);
-//        lb_money = findViewById(R.id.id_rb_paid);
-//        lb_nomoney = findViewById(R.id.id_rb_nopaid);
-//        paid = findViewById(R.id.id_rg_paid);
+
         mSingleFlowTagLayout = findViewById(R.id.flowlayout_single_select);
         initLabelFlowTagLayout();
 
@@ -214,7 +235,6 @@ public class CreateNewHelpActivity extends BaseActivity{
             }
         });
         tagAdapter.addTags(ResUtils.getStringArray(CreateNewHelpActivity.this, R.array.tags_values_paid));
-//        tagAdapter.setSelectedPositions(null);
 
     }
 
@@ -229,7 +249,6 @@ public class CreateNewHelpActivity extends BaseActivity{
             System.out.println("label"+Label);
         });
         tagAdapter.addTags(ResUtils.getStringArray(CreateNewHelpActivity.this, R.array.tags_values));
-//        tagAdapter.setSelectedPositions(null);
 
     }
 

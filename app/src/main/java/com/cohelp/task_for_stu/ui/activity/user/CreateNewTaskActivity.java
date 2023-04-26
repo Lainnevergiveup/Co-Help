@@ -19,6 +19,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,12 +29,16 @@ import com.cohelp.task_for_stu.R;
 import com.cohelp.task_for_stu.bean.BaseTask;
 import com.cohelp.task_for_stu.biz.TaskBiz;
 import com.cohelp.task_for_stu.config.Config;
+import com.cohelp.task_for_stu.net.OKHttpTools.OKHttp;
 import com.cohelp.task_for_stu.net.OKHttpTools.OkHttpUtils;
+import com.cohelp.task_for_stu.net.gsonTools.GSON;
+import com.cohelp.task_for_stu.net.model.domain.Result;
 import com.cohelp.task_for_stu.net.model.entity.Activity;
 import com.cohelp.task_for_stu.ui.activity.BaseActivity;
 import com.cohelp.task_for_stu.ui.adpter.FullyGridLayoutManager;
 import com.cohelp.task_for_stu.ui.adpter.GridImageAdapter;
 import com.cohelp.task_for_stu.ui.vo.Task;
+import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -41,6 +46,7 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.permissions.Permission;
 import com.luck.picture.lib.permissions.RxPermissions;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -50,6 +56,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.functions.Consumer;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class CreateNewTaskActivity extends BaseActivity  {
@@ -122,13 +132,33 @@ public class CreateNewTaskActivity extends BaseActivity  {
                     for (int i =0;i<list.size();i++){
                         stringStringHashMap.put(i+"",list.get(i));
                     }
-                    new Thread(()->{
-                        okHttpUtils.activityPublish(activity,stringStringHashMap);
-                    }).start();
-                    Toast.makeText(CreateNewTaskActivity.this, "发布成功~", Toast.LENGTH_LONG).show();
-                    toTaskCenterActivity();
-                }
+                    String act = GSON.gson.toJson(activity);
+                    Request request = OKHttp.buildPostRequest(OkHttpUtils.baseURL + "/activity/publish", "activity", act, stringStringHashMap, 0);
+                    OKHttp.client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        }
 
+                        @Override
+                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                            String string = response.body().string();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Result<Boolean> result = GSON.gson.fromJson(string,new TypeToken<Result<Boolean>>(){}.getType());
+                                    if(result!=null&&result.getData()!=null&&result.getData()){
+                                        Toast.makeText(CreateNewTaskActivity.this, "发布成功~", Toast.LENGTH_LONG).show();
+                                        toTaskCenterActivity();
+                                    }else if(result!=null&&result.getMessage()!=null){
+                                        Toast.makeText(CreateNewTaskActivity.this,result.getMessage(),Toast.LENGTH_LONG).show();
+                                    }else {
+                                        Toast.makeText(CreateNewTaskActivity.this,"网络异常",Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
             }
         });
     }

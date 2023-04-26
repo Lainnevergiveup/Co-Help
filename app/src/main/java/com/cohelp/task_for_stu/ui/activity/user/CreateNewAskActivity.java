@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.ToString;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
@@ -110,8 +111,6 @@ public class CreateNewAskActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 String te = title.getText().toString();
-
-//                String lb = label.getText().toString();
                 System.out.println("te" + te);
 
                 if (te.isEmpty()) {
@@ -152,9 +151,17 @@ public class CreateNewAskActivity extends BaseActivity {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 String string = response.body().string();
                 Result<Boolean> result = GSON.gson.fromJson(string,new TypeToken<Result<Boolean>>(){}.getType());
+                if(result!=null&&result.getData()!=null&&result.getData()){
+                    Toast.makeText(CreateNewAskActivity.this, "发布成功~", Toast.LENGTH_LONG).show();
+                    toHoleCenterActivity();
+                }else if(result!=null&&result.getMessage()!=null){
+                    Toast.makeText(CreateNewAskActivity.this,result.getMessage(),Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(CreateNewAskActivity.this,"网络异常",Toast.LENGTH_LONG).show();
+                }
+                toHoleCenterActivity();
             }
         });
-
     }
 
     private void refreshAskList(){
@@ -304,7 +311,6 @@ public class CreateNewAskActivity extends BaseActivity {
     private void getPath() {
         for (int i = 0; i < selectList.size(); i++) {
             pahtList.add(selectList.get(i).getPath());
-            System.out.println("pathlist"+pahtList.get(i));
         }
     }
 

@@ -128,7 +128,6 @@ public class OkHttpUtils {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void helpPublish(Help help, Map<String,String> nameAndPath){
         String act = gson.toJson(help);
-        System.out.println(act);
         Response response = okHttp.sendPostRequest(baseURL + "/help/publish", "help", act, nameAndPath, 0);
         String res = null;
         try {

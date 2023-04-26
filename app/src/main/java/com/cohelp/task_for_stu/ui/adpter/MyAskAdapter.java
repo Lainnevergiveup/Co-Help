@@ -67,7 +67,6 @@ public class MyAskAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        System.out.println("getview");
         AskVO askVO = list.get(position);
 
         if(view == null ) {
@@ -100,7 +99,6 @@ public class MyAskAdapter extends BaseAdapter {
                 Glide.with(MyCoHelp.getAppContext()).load(askVO.getImageUrl().get(0)).apply(options).into(firstImage);
             }
 
-            System.out.println("id="+askVO.getId());
             authorName.setText(askVO.getUserName());
             title.setText(askVO.getQuestion());
             summary.setText("");

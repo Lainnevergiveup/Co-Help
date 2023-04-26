@@ -138,7 +138,6 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefresh.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                System.out.println("讨论界面");
 
                 initAskList(id,semester);
                 swipeRefreshLayout.postDelayed(new Runnable() {
@@ -146,7 +145,6 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
                     public void run() {
                         //关闭刷新
                         swipeRefreshLayout.setRefreshing(false);
-                        System.out.println("刷新中");
                     }
                 },1000);
             }
@@ -182,7 +180,6 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
 
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        System.out.println("讨论1111");
                         initEvent();
                     }
                 });
@@ -198,7 +195,7 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
         intent.putExtras(bundle);
         IdAndType idAndType = new IdAndType(askList.get(postion).getId(),1);
         new Thread(()->{
-            System.out.println(okHttpUtils.getDetail(idAndType));
+            OkHttpUtils.getDetail(idAndType);
         }).start();
         startActivity(intent);
     }

@@ -152,8 +152,6 @@ public class BlankFragment1 extends Fragment implements View.OnClickListener {
 
             }
         });
-
-        System.out.println("task_list111"+taskList);
     }
 
     private void toDetailActivity(int postion){
@@ -163,7 +161,7 @@ public class BlankFragment1 extends Fragment implements View.OnClickListener {
         intent.putExtras(bundle);
         IdAndType idAndType = new IdAndType(taskList.get(postion).getActivityVO().getId(),1);
         new Thread(()->{
-            System.out.println(okHttpUtils.getDetail(idAndType));
+            OkHttpUtils.getDetail(idAndType);
         }).start();
         startActivity(intent);
     }
