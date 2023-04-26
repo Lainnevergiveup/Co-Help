@@ -57,19 +57,19 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         setUpToolBar();
         setTitle("登录");
-
-        SessionUtils.deleteActivityPreference(this);
+//
+//        SessionUtils.deleteActivityPreference(this);
         initView();
         initEvent();
     }
 
     private void initEvent() {
-        toRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               toRegisterActivity();
-            }
-        });
+//        toRegister.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//               toRegisterActivity();
+//            }
+//        });
 
         login.setOnClickListener(new View.OnClickListener() {
 
@@ -78,13 +78,13 @@ public class LoginActivity extends BaseActivity {
                 login();
             }
         });
-
-        toUserFound.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toUserFoundActivity();
-            }
-        });
+//
+//        toUserFound.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                toUserFoundActivity();
+//            }
+//        });
     }
 
     private void login(){
@@ -165,6 +165,5 @@ public class LoginActivity extends BaseActivity {
         login = findViewById(R.id.id_btn_login);
         toRegister = findViewById(R.id.id_tv_register);
         toUserFound = findViewById(R.id.id_tv_found);
-        userBiz = new UserBiz();
     }
 }

@@ -48,6 +48,7 @@ public class InitActivity extends BaseActivity {
             }
             toBasicInfoActivity();
         }else {
+//            toBasicInfoActivity();
             toLoginActivity();
         }
     }

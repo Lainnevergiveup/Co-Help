@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- 关于Theme的继承关系：
   由于 Theme 需要在不同 API Level 下有不同的配置，并且继承自不同的系统 Theme，所以多层继承。
@@ -818,6 +818,8 @@
 
         <item name="xui_bottom_sheet_button_height">56dp</item>
         <item name="xui_bottom_sheet_button_text_size">15sp</item>
+
+        <item name="fontFamily" tools:targetApi="jelly_bean">@font/songti</item>
 
     </style>
 

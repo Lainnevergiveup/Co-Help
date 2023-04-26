@@ -51,7 +51,7 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/logolauncher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Task_for_stu"
+        android:theme="@style/XUITheme.Phone"
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize"
         tools:ignore="ExtraText"
