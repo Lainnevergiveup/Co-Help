@@ -77,6 +77,7 @@ public class MyTaskActivity extends BaseActivity implements View.OnClickListener
         initTools();
         initView();
         initEvent();
+        setTitle("");
         initPager();
         title.setText("我的参与");
 
