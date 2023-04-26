@@ -163,12 +163,11 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener{
 
     private void initAskList(Integer id , String semester){
 
-        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/course/list/ask/1/10/" + id + "/" + semester + "/2", null, 120);
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/course/list/ask/1/10/" + id + "/" + semester + "/2", null, 30);
         //执行请求
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {

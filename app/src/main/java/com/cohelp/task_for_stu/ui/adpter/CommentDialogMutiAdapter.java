@@ -81,7 +81,7 @@ public class CommentDialogMutiAdapter extends BaseMultiItemQuickAdapter<MultiIte
             @Override
             public void onClick(View view) {
                 new Thread(()->{
-                    OkHttpUtils.remark(item.getItemType(),Integer.valueOf(item.getId()));
+                    OkHttpUtils.topicLike(item.getItemType(),Integer.valueOf(item.getId()));
                 }).start();
 
             }

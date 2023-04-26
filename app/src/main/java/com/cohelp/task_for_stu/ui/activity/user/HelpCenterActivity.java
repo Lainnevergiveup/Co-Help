@@ -79,20 +79,12 @@ public class HelpCenterActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_center);
-        initTools();
         initView();
         initTab();
         initToolbar();
         initEvent();
         setTitle("互助");
     }
-
-    private void initTools(){
-//        intent = getIntent();
-//        user = (User) intent.getSerializableExtra("user");
-        
-    }
-
     private void initToolbar(){
 //        toolbar.setNavigationOnClickListener(onClickListener);
         toolbar.inflateMenu(R.menu.menu_help);
@@ -102,14 +94,12 @@ public class HelpCenterActivity extends BaseActivity {
 
     private void initTab(){
         fragmentList.clear();
-
         fragmentList.add(new BlankFragment3(this,"组团招人"));
         fragmentList.add(new BlankFragment3(this,"寻物启事"));
         fragmentList.add(new BlankFragment3(this,"跑腿代取"));
         fragmentList.add(new BlankFragment3(this,"问题求助"));
         fragmentList.add(new BlankFragment3(this,"其他"));
         MyFragmentPagerAdapter pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),getLifecycle(),fragmentList);
-//        mTabSegment.reset();
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(5);
         viewPager.registerOnPageChangeCallback(changeCallback);
@@ -123,7 +113,6 @@ public class HelpCenterActivity extends BaseActivity {
                 states[0] = new int[]{android.R.attr.state_selected};
                 states[1] = new int[]{};
 
-                int[] colors = new int[]{activeColor, normalColor};
                 currentTab = pages[position];
                 textView.setText(pages[position]);
                 textView.setTextSize(normalSize);
@@ -221,21 +210,6 @@ public class HelpCenterActivity extends BaseActivity {
 
 
 
-    private synchronized void getHelpList(){
-        Thread t1 = new Thread(()->{
-            helpList =OkHttpUtils.helpList(0);
-            cardViewListAdapter.setDetailResponseListList(helpList);
-        });
-        t1.start();
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
     private ViewPager2.OnPageChangeCallback changeCallback = new ViewPager2.OnPageChangeCallback() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -275,18 +249,6 @@ public class HelpCenterActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    private void toDetailActivity(int postion){
-        Intent intent = new Intent(HelpCenterActivity.this,DetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("detailResponse",helpList.get(postion));
-        intent.putExtras(bundle);
-        IdAndType idAndType = new IdAndType(helpList.get(postion).getIdByType(helpList.get(postion).getType()),1);
-        new Thread(()->{
-            System.out.println(OkHttpUtils.getDetail(idAndType));
-        }).start();
-        startActivity(intent);
-    }
-
     private void toCreateNewHelpActivity() {
         Intent intent = new Intent(this,CreateNewHelpActivity.class);
         startActivity(intent);
@@ -312,11 +274,6 @@ public class HelpCenterActivity extends BaseActivity {
         overridePendingTransition(0, 0); // 取消Activity跳转时的动画效果
         finish();
     }
-
-//    private  List<DetailResponse> changeTag(){
-//
-//        return helpList.stream().filter(x->x.getHelpVO().getHelpLabel().toString().equals(helpTag)).collect(Collectors.toList());
-//    }
 
 
 }

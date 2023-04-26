@@ -120,7 +120,7 @@ public class ScoreActivity extends BaseActivity {
     }
 
     public void getScorelist(Integer courseId){
-        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/teach/listscore/" + courseId, null, 300);
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/teach/listscore/" + courseId, null, 120);
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {

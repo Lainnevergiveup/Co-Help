@@ -370,7 +370,7 @@ public class QuestionStoreActivity extends BasicInfoActivity {
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                T.showToast("出错啦！"+e);
+
             }
 
             @Override

@@ -126,12 +126,11 @@ public class BlankFragment4 extends Fragment implements View.OnClickListener{
 
     private void initAskList(Integer id){
 
-        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/course/list/ask/1/50/"+id+"/2022-2023-2/2" , null, 120);
+        Request request = OKHttp.buildGetRequest(OkHttpUtils.baseURL + "/course/list/ask/1/30/"+id+"/2022-2023-2/2" , null, 30);
         //执行请求
         OKHttp.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Toast.makeText(MyCoHelp.getAppContext(), "数据获取失败", Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
