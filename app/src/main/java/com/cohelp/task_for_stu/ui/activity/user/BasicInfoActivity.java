@@ -23,6 +23,9 @@ import com.cohelp.task_for_stu.utils.ACache;
 import com.squareup.picasso.Picasso;
 import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
 
+import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
+
 /**
  * 普通用户的基本信息展示页
  */
@@ -44,7 +47,7 @@ public class BasicInfoActivity extends BaseActivity {
     LinearLayout HoleCenter;
     LinearLayout ScoreList;
     com.cohelp.task_for_stu.net.model.entity.User transferUser;
-
+    View view1,view2;
 
     Intent intent;
     String userIcon;
@@ -75,6 +78,8 @@ public class BasicInfoActivity extends BaseActivity {
         TaskCenter = findViewById(R.id.id_ll_activityCenter);
         UserCenter = findViewById(R.id.id_ll_userCenter);
         ScoreList = findViewById(R.id.id_ll_score);
+        view1 = findViewById(R.id.view1);
+        view2 = findViewById(R.id.view2);
         Setting = findViewById(R.id.id_ll_setting);
         Personal_homepage = findViewById(R.id.id_ll_personal_homepage);
 
@@ -196,6 +201,15 @@ public class BasicInfoActivity extends BaseActivity {
             @Override
             public void onClick(View v) { toPersonalHomepageActivity();}
         });
+
+        if(user.getType().equals(0)){
+            Setting.setVisibility(View.GONE);
+            ScoreList.setVisibility(View.GONE);
+            view1.setVisibility(View.GONE);
+            view2.setVisibility(View.GONE);
+        }else{
+
+        }
 //        Setting.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) { toSettingActivity();}

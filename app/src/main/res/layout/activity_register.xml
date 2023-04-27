@@ -28,7 +28,7 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_gravity="center_horizontal"
-        app:srcCompat="@drawable/logo" />
+        app:srcCompat="@mipmap/logolauncher" />
 
 
     <TextView
@@ -67,7 +67,7 @@
                 app:met_errorMessage="@string/tip_phone_number_error"
                 app:met_floatingLabel="normal"
                 app:met_floatingLabelText="@string/title_mail_number"
-                app:met_regexp="@string/regex_mainl" />
+                app:met_regexp="@string/regex_mail" />
 
         </FrameLayout>
 
@@ -140,7 +140,7 @@
                 app:met_errorMessage="@string/tip_phone_number_error"
                 app:met_floatingLabel="normal"
                 app:met_floatingLabelText="@string/title_phone_number"
-                app:met_regexp="@string/regex_mainl" />
+                app:met_regexp="@string/regex_mail" />
 
         </FrameLayout>
         <FrameLayout
@@ -165,7 +165,7 @@
                 app:met_errorMessage="@string/tip_phone_number_error"
                 app:met_floatingLabel="normal"
                 app:met_floatingLabelText="@string/title_phone_number"
-                app:met_regexp="@string/regex_mainl" />
+                app:met_regexp="@string/regex_mail" />
 
         </FrameLayout>
         <FrameLayout
@@ -190,7 +190,7 @@
                 app:met_errorMessage="@string/tip_phone_number_error"
                 app:met_floatingLabel="normal"
                 app:met_floatingLabelText="@string/title_phone_number"
-                app:met_regexp="@string/regex_mainl" />
+                app:met_regexp="@string/regex_mail" />
 
         </FrameLayout>
 
@@ -217,7 +217,7 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="忘记密码"
+                android:text=""
                 android:textColor="@color/xui_config_color_primary_text" />
 
         </FrameLayout>

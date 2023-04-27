@@ -58,18 +58,18 @@ public class LoginActivity extends BaseActivity {
         setUpToolBar();
         setTitle("登录");
 //
-//        SessionUtils.deleteActivityPreference(this);
+        SessionUtils.deleteActivityPreference(this);
         initView();
         initEvent();
     }
 
     private void initEvent() {
-//        toRegister.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//               toRegisterActivity();
-//            }
-//        });
+        toRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               toRegisterActivity();
+            }
+        });
 
         login.setOnClickListener(new View.OnClickListener() {
 
@@ -91,7 +91,7 @@ public class LoginActivity extends BaseActivity {
         loginRequest = new LoginRequest();
         loginRequest.setUserAccount(username.getText().toString());
         loginRequest.setUserPassword( password.getText().toString());
-        loginRequest.setUserAccount("1234567894");//debug
+        loginRequest.setUserAccount("1234567895");//debug
         loginRequest.setUserPassword( "1234567890");//debug
 
         if(StringUtils.isEmpty(loginRequest.getUserAccount()) || StringUtils.isEmpty(loginRequest.getUserPassword())){
@@ -119,6 +119,7 @@ public class LoginActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 // 通过Toast 显示信息
+
                                 Toast.makeText(MyCoHelp.getAppContext(), "网络连接异常", Toast.LENGTH_SHORT).show();
                             }
                         });

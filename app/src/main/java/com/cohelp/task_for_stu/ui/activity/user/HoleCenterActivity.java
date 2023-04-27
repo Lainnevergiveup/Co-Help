@@ -164,8 +164,7 @@ public class HoleCenterActivity extends BaseActivity implements View.OnClickList
             niceSpinner.setBackgroundResource(R.drawable.shape_for_custom_spinner);
             niceSpinner.setTextColor(0xFFFFFFFF);
             niceSpinner.setArrowTintColor(0xFFFFFFFF);
-            CustomArrayAdapter customArrayAdapter = new CustomArrayAdapter(this, coursename);
-            niceSpinner.setAdapter(customArrayAdapter);
+
             initSemesterList();
 
         }else {
