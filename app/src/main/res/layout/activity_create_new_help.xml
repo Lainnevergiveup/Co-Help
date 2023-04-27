@@ -58,6 +58,7 @@
                     android:layout_marginRight="20dp"
                     android:gravity="top"
                     android:background="@null"
+                    android:singleLine="false"
                     android:layout_marginBottom="10dp"
                     android:hint="互助详情描述..."
                     android:maxLines="5" />
